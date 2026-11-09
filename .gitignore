@@ -1,5 +1,6 @@
 .env
 fb-state.json
+debug.json
 result.json
 __pycache__/
 *.pyc

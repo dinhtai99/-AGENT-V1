@@ -37,6 +37,7 @@ Honest limits:
 
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -81,8 +82,58 @@ def _post_datetime(article) -> str:
     return ""
 
 
+def _post_link(article) -> str:
+    """Best-effort: find a real post link inside an article.
+
+    Facebook uses more than one format: /permalink/<id>/ and
+    /posts/<id>/ are both real post links. Anything else is not a post.
+    """
+    for pattern in ("/permalink/", "/posts/"):
+        try:
+            a = article.locator(f"a[href*='{pattern}']").first
+            if a.count():
+                href = a.get_attribute("href") or ""
+                if href.startswith("/"):
+                    href = "https://www.facebook.com" + href
+                return href
+        except Exception:
+            continue
+    return ""
+
+
+def _dump_debug(page, articles, count: int) -> None:
+    """Save what the page actually contains, so a failed run can be diagnosed.
+
+    Writes debug.json next to this file: final URL, how many articles
+    were found, the first links inside them, and short text samples.
+    No session cookies or tokens are written.
+    """
+    sample_links: list[str] = []
+    sample_texts: list[str] = []
+    try:
+        for i in range(min(count, 10)):
+            try:
+                hrefs = articles.nth(i).locator("a[href]").evaluate_all(
+                    "els => els.slice(0, 5).map(e => e.getAttribute('href'))")
+                sample_links.extend(h for h in hrefs if h)
+            except Exception:
+                pass
+            try:
+                sample_texts.append(articles.nth(i).inner_text(timeout=1000)[:200])
+            except Exception:
+                pass
+    except Exception:
+        pass
+    data = {"url": page.url, "article_count": count,
+            "sample_links": sample_links[:30], "sample_texts": sample_texts[:5]}
+    Path(__file__).parent.joinpath("debug.json").write_text(
+        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[debug] wrote debug.json: {count} articles at {page.url}")
+
+
 def fetch_group_posts(group_id: str, keyword: str, limit: int,
-                      date_from, date_to, state_path: Path) -> list[dict]:
+                      date_from, date_to, state_path: Path,
+                      debug: bool = False) -> list[dict]:
     """Open the group feed in a logged-in browser and extract posts."""
     if not state_path.exists():
         raise RuntimeError(
@@ -100,7 +151,14 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
         context = browser.new_context(storage_state=str(state_path))
         page = context.new_page()
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(4000)
+        page.wait_for_timeout(5000)
+        if "login" in page.url or "checkpoint" in page.url:
+            browser.close()
+            raise RuntimeError(
+                "Facebook redirected to a login/checkpoint page. "
+                "The saved session may have expired. Run again: "
+                "python browser_worker.py --login"
+            )
         # Scroll a few times to load more posts. Slow on purpose.
         for _ in range(4):
             if len(posts) >= limit:
@@ -109,6 +167,8 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
             page.wait_for_timeout(2500)
             articles = page.locator("div[role='article']")
             count = min(articles.count(), 40)
+            if debug and not posts:
+                _dump_debug(page, articles, count)
             for i in range(count):
                 if len(posts) >= limit:
                     break
@@ -119,19 +179,11 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
                     continue
                 if not text or len(text) < 10:
                     continue
-                link = ""
-                try:
-                    a = article.locator("a[href*='/permalink/']").first
-                    if a.count():
-                        link = a.get_attribute("href") or ""
-                        if link.startswith("/"):
-                            link = "https://www.facebook.com" + link
-                except Exception:
-                    pass
-                # A real group post always has a permalink. Anything
+                link = _post_link(article)
+                # A real group post always has a post link. Anything
                 # without one (people suggestions, ads, UI cards) is
                 # not a post — skip it instead of returning it as one.
-                if "/permalink/" not in link:
+                if "/permalink/" not in link and "/posts/" not in link:
                     continue
                 key = link
                 if key in seen:
@@ -142,8 +194,12 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
                     continue
                 if keyword and keyword.lower() not in text.lower():
                     continue
+                post_id = ""
+                m = re.search(r"/(?:permalink|posts)/(\d+)", link)
+                if m:
+                    post_id = m.group(1)
                 posts.append({
-                    "post_id": link.rsplit("/", 2)[-2] if "/permalink/" in link else "",
+                    "post_id": post_id,
                     "post_url": link,
                     "created_at": created,
                     "content": text[:4000],
@@ -156,12 +212,13 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
         raise RuntimeError(
             "No posts could be read from the group page. Facebook may have "
             "changed its layout, asked for a login check, or the group is "
-            "not viewable with this account. Try --login again."
+            "not viewable with this account. Try --login again, or run with "
+            "--debug and send debug.json to check what the page actually shows."
         )
     return posts
 
 
-def run_task(task: dict, state_path: Path, demo: bool) -> dict:
+def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> dict:
     task_id = task.get("task_id", "")
     action = task.get("action", "")
     if demo:
@@ -186,7 +243,8 @@ def run_task(task: dict, state_path: Path, demo: bool) -> dict:
     keyword = (task.get("post_keyword") or "").strip()
     try:
         raw = fetch_group_posts(group_id, keyword, limit,
-                                task.get("date_from"), task.get("date_to"), state_path)
+                                task.get("date_from"), task.get("date_to"), state_path,
+                                debug=debug)
         for post in raw:
             post["extracted"] = extract_fields(post.get("content", ""), wanted)
         return {"task_id": task_id, "status": "success", "errors": [],
@@ -205,6 +263,7 @@ def main(argv=None) -> int:
     parser.add_argument("--out", default="result.json")
     parser.add_argument("--login", action="store_true", help="Log in once and save fb-state.json")
     parser.add_argument("--demo", action="store_true", help="Replay bundled example, no browser")
+    parser.add_argument("--debug", action="store_true", help="Write debug.json with what the page actually shows")
     args = parser.parse_args(argv)
     root = Path(__file__).parent
     state_path = root / "fb-state.json"
@@ -219,7 +278,7 @@ def main(argv=None) -> int:
     if not task_path.exists():
         print(f"Task file not found: {task_path}", file=sys.stderr)
         return 2
-    result = run_task(load_json(task_path), state_path, demo=args.demo)
+    result = run_task(load_json(task_path), state_path, demo=args.demo, debug=args.debug)
     save_json(Path(args.out), result)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get("status") == "success" else 1
