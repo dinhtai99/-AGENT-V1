@@ -50,7 +50,7 @@ def _playwright():
             "Playwright is not installed. Run: pip install -r requirements-browser.txt "
             "then: playwright install chromium"
         ) from exc
-    return sync_playwright
+    return sync_playwright()
 
 
 def login(state_path: Path) -> None:
