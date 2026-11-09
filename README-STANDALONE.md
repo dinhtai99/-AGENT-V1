@@ -117,11 +117,11 @@ time). Combine with `"only_new": true` so each scan only reports posts
 you have not seen yet.
 
 Watch honestly: scanning too often raises the account risk above, and
-the browser worker is slow by design. 30–60 minutes between scans is
+the browser worker is slow by design. 20–60 minutes between scans is
 the sensible range. Do not run watch mode on many groups at once, and
 stop it when you have what you need. `example-task-watch.json` is a
 ready watch task: keyword "tuyển", levels TB+/TBK, price 40.000–
-100.000đ, only new posts, every 30 minutes.
+100.000đ, only new posts, every 20 minutes.
 
 ## Limits (same as the Muse worker)
 
