@@ -14,6 +14,13 @@ Usage (Windows PowerShell / cmd):
 The worker never invents posts. Without a Facebook token it returns
 status "error" and explains what is missing, except in --demo mode,
 which replays the bundled example result so you can check the format.
+
+NOTE (2026-11-09): Meta removed the Facebook Groups API on 22 April
+2024 (Graph API v19.0 changelog). This worker's group calls
+(/search?type=group, /{group_id}, /{group_id}/feed) are therefore
+expected to fail with a Meta error. The browser worker
+(browser_worker.py) is the primary standalone path; this file is kept
+for reference and for its demo mode.
 """
 
 import argparse
