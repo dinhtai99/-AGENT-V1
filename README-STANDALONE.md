@@ -110,20 +110,29 @@ one free-text description in the task as `customer_profile`, e.g.:
 "Nữ chơi cầu lông trình TB+, ở Hà Nội, cần sân buổi tối, giá dưới 100k"
 ```
 
-The worker pulls the criteria out of that text and keeps only posts
-matching all of them:
+The worker pulls the criteria out of that text and keeps a post when it
+**contradicts none of them and matches at least one**:
 
-- level: `TB+` in the text -> post must have level TB+
-- gender: `nữ` / `nam` in the text -> post must mention it
-- location: words after `ở` / `tại` / `khu vực` -> post must mention it
-- price: `dưới 100k` -> max price 100.000đ; `từ 40k đến 100k` -> range
-- time of day: `buổi tối` -> 17h-23h; `buổi sáng` -> 6h-11h; `buổi chiều` -> 12h-17h
+- level: `TB+` in the text -> post stating TBK contradicts it; a post
+  stating no level is unknown, not a fail.
+- gender: `nữ` / `nam` in the text -> post stating the other gender
+  contradicts it.
+- location: words after `ở` / `tại` / `khu vực` -> post mentioning it
+  matches; not mentioning it is unknown.
+- price: `dưới 100k` -> max price 100.000đ; a stated price above it
+  contradicts it; no stated price is unknown.
+- time of day: `buổi tối` -> 17h-23h; `buổi sáng` -> 6h-11h; `buổi chiều` -> 12h-17h.
 
-A post that lacks the info a criterion needs is dropped, never guessed.
-Each kept post carries `profile_match.criteria` listing which criteria
-it matched, so the manager agent can see why it was kept. No extra AI
-or API key is needed for this: it reuses the same extractors as the
+Missing info is never guessed and never a reason to drop a post on its
+own — real posts rarely state every detail. Each kept post carries
+`profile_match` with `matched`, `contradicted` and `unknown` lists, so
+the manager agent can see why it was kept and rank candidates. No extra
+AI or API key is needed for this: it reuses the same extractors as the
 other filters. `example-task-customer.json` is a ready example.
+
+Keyword matching is accent-insensitive everywhere: `post_keyword`
+"tuyển" also matches posts written "tuyen" without accents, and the
+same applies to `location_keyword` / `exclude_keywords`.
 
 ## Watch mode — auto-scan for new posts
 

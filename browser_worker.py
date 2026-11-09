@@ -43,7 +43,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from worker import (extract_fields, in_date_range, load_json,
+from worker import (contains_vn, extract_fields, in_date_range, load_json,
                     post_matches_filters, save_json)  # noqa: E402
 
 
@@ -202,7 +202,7 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
                 created = _post_datetime(article)
                 if not in_date_range(created, date_from, date_to):
                     continue
-                if keyword and keyword.lower() not in text.lower():
+                if keyword and not contains_vn(text, keyword):
                     continue
                 post_id = ""
                 m = re.search(r"/(?:permalink|posts)/(\d+)", link)
