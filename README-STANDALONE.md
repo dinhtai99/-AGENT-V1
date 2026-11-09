@@ -143,7 +143,9 @@ ready watch task: keyword "tuyển", levels TB+/TBK, price 40.000–
 - `task-test-browser-tuyen.json` — ready test: keyword "tuyển" in the
   badminton group, 2026-11-09, max 5 posts.
 - `example-task-watch.json` — ready watch task: only new "tuyển" posts,
-  levels TB+/TBK, price 40.000–100.000đ, every 30 minutes.
+  levels TB+/TBK, price 40.000–100.000đ, every 20 minutes.
+- `example-task-watch-loose.json` — same watch task with looser filters:
+  only new "tuyển" posts, no level or price filter, every 20 minutes.
 - `example-task.json` / `example-task-find-groups.json` — sample tasks.
 - `task-schema.json` — input/output contract.
 - `AGENT.md` / `WORKFLOW.md` — the worker rules and process.
