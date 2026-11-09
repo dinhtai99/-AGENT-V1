@@ -84,6 +84,45 @@ Real risks of browser automation, stated plainly:
 - Automating a logged-in account carries account risk. Keep each task
   small, run it only when you need results, and do not bulk-scrape.
 
+## Extra filters (optional task fields)
+
+Besides keyword and date, a task can filter further. All are optional;
+a post that lacks the info a filter needs is dropped, never guessed.
+
+- `levels`: e.g. `["TB+", "TBK"]` — only posts with one of these levels.
+- `min_price` / `max_price`: VND numbers, e.g. `40000` / `100000` —
+  only posts with a price in that range ("65k" = 65000, "2 triệu" = 2000000).
+- `location_keyword`: e.g. `"Trịnh Văn Bô"` — must appear in the
+  content or the extracted location.
+- `exclude_keywords`: e.g. `["bán cầu"]` — posts containing any of
+  these words are dropped.
+- `only_new`: `true` — only return posts never seen before. Seen post
+  ids are remembered in `seen.json` (gitignored, stays on your machine).
+  First run with `only_new` returns everything matching, later runs
+  only the new ones.
+
+## Watch mode — auto-scan for new posts
+
+Run the same task again and again, hands-free:
+
+```
+python browser_worker.py --task example-task-watch.json --out result.json --watch
+```
+
+It scans, waits `watch_interval_minutes` from the task file (default
+30, minimum 5), then scans again, until you press Ctrl+C. Each scan
+writes the latest result to `--out`, and every newly found post is
+appended to `watch-new.jsonl` (one JSON object per line, with the scan
+time). Combine with `"only_new": true` so each scan only reports posts
+you have not seen yet.
+
+Watch honestly: scanning too often raises the account risk above, and
+the browser worker is slow by design. 30–60 minutes between scans is
+the sensible range. Do not run watch mode on many groups at once, and
+stop it when you have what you need. `example-task-watch.json` is a
+ready watch task: keyword "tuyển", levels TB+/TBK, price 40.000–
+100.000đ, only new posts, every 30 minutes.
+
 ## Limits (same as the Muse worker)
 
 - Only groups the logged-in account can view: public groups, or groups
@@ -103,6 +142,8 @@ Real risks of browser automation, stated plainly:
 - `.env.example` — copy to `.env`, fill in your token (token worker only).
 - `task-test-browser-tuyen.json` — ready test: keyword "tuyển" in the
   badminton group, 2026-11-09, max 5 posts.
+- `example-task-watch.json` — ready watch task: only new "tuyển" posts,
+  levels TB+/TBK, price 40.000–100.000đ, every 30 minutes.
 - `example-task.json` / `example-task-find-groups.json` — sample tasks.
 - `task-schema.json` — input/output contract.
 - `AGENT.md` / `WORKFLOW.md` — the worker rules and process.

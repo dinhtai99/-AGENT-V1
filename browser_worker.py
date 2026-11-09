@@ -43,7 +43,8 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from worker import extract_fields, in_date_range, load_json, save_json  # noqa: E402
+from worker import (extract_fields, in_date_range, load_json,
+                    post_matches_filters, save_json)  # noqa: E402
 
 
 def _playwright():
@@ -221,6 +222,19 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
     return posts
 
 
+def load_seen(path: Path) -> dict:
+    """Seen post ids per group, from seen.json. Missing/corrupt file -> {}."""
+    try:
+        data = load_json(path)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def save_seen(path: Path, seen: dict) -> None:
+    save_json(path, seen)
+
+
 def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> dict:
     task_id = task.get("task_id", "")
     action = task.get("action", "")
@@ -250,11 +264,31 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
                                 debug=debug)
         for post in raw:
             post["extracted"] = extract_fields(post.get("content", ""), wanted)
+        kept = [post for post in raw if post_matches_filters(post, task)]
+        # only_new: keep only posts never seen before for this group.
+        # Seen ids live in seen.json next to this file (gitignored).
+        skipped_seen = 0
+        if task.get("only_new"):
+            seen_path = Path(__file__).parent / "seen.json"
+            seen = load_seen(seen_path)
+            known = set(seen.get(str(group_id), []))
+            fresh = []
+            for post in kept:
+                pid = post.get("post_id") or ""
+                if pid and pid in known:
+                    skipped_seen += 1
+                    continue
+                fresh.append(post)
+            kept = fresh
+            known.update(p.get("post_id") for p in kept if p.get("post_id"))
+            seen[str(group_id)] = sorted(known)[-500:]
+            save_seen(seen_path, seen)
+        new_note = f" ({skipped_seen} already seen skipped)" if skipped_seen else ""
         return {"task_id": task_id, "status": "success", "errors": [],
                 "group": {"id": str(group_id), "name": "",
                           "url": f"https://www.facebook.com/groups/{group_id}/"},
-                "posts": raw, "groups": [],
-                "summary": f"Found {len(raw)} posts in group {group_id} (browser)."}
+                "posts": kept, "groups": [],
+                "summary": f"Found {len(kept)} posts in group {group_id} (browser){new_note}."}
     except Exception as exc:  # noqa: BLE001 - worker must return JSON, not crash
         return {"task_id": task_id, "status": "error", "errors": [str(exc)],
                 "posts": [], "groups": [], "summary": f"Task failed: {exc}"}
@@ -267,6 +301,8 @@ def main(argv=None) -> int:
     parser.add_argument("--login", action="store_true", help="Log in once and save fb-state.json")
     parser.add_argument("--demo", action="store_true", help="Replay bundled example, no browser")
     parser.add_argument("--debug", action="store_true", help="Write debug.json with what the page actually shows")
+    parser.add_argument("--watch", action="store_true",
+                        help="Repeat the task every watch_interval_minutes (from the task file, default 30, min 5) until Ctrl+C")
     args = parser.parse_args(argv)
     root = Path(__file__).parent
     state_path = root / "fb-state.json"
@@ -281,10 +317,35 @@ def main(argv=None) -> int:
     if not task_path.exists():
         print(f"Task file not found: {task_path}", file=sys.stderr)
         return 2
-    result = run_task(load_json(task_path), state_path, demo=args.demo, debug=args.debug)
-    save_json(Path(args.out), result)
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0 if result.get("status") == "success" else 1
+    task = load_json(task_path)
+    if not args.watch:
+        result = run_task(task, state_path, demo=args.demo, debug=args.debug)
+        save_json(Path(args.out), result)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0 if result.get("status") == "success" else 1
+    # Watch mode: scan again and again, only new posts are reported.
+    # Combine with "only_new": true in the task so repeats are skipped.
+    interval = max(5, int(task.get("watch_interval_minutes", 30) or 30))
+    print(f"Watching every {interval} minute(s). Press Ctrl+C to stop.")
+    print("Tip: set \"only_new\": true in the task so each scan only reports new posts.")
+    watch_log = root / "watch-new.jsonl"
+    try:
+        while True:
+            result = run_task(task, state_path, demo=args.demo, debug=args.debug)
+            save_json(Path(args.out), result)
+            new_posts = result.get("posts", []) or []
+            print(f"[{time.strftime('%H:%M:%S')}] {result.get('summary', '')}")
+            if new_posts:
+                with watch_log.open("a", encoding="utf-8") as f:
+                    for post in new_posts:
+                        f.write(json.dumps({"scanned_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                                            "task_id": result.get("task_id", ""),
+                                            **post}, ensure_ascii=False) + "\n")
+                print(f"  -> {len(new_posts)} new post(s) appended to watch-new.jsonl")
+            time.sleep(interval * 60)
+    except KeyboardInterrupt:
+        print("\nWatch stopped.")
+        return 0
 
 
 if __name__ == "__main__":

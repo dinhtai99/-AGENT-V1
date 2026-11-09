@@ -118,6 +118,68 @@ def extract_fields(content: str, wanted: list[str]) -> dict:
     return out
 
 
+def parse_price_vnd(text: str | None) -> int | None:
+    """Convert an extracted price like '65k', '2 triệu', '100.000đ' to VND.
+
+    Returns None when the text has no usable price. 'k'/'nghìn' = 1,000,
+    'tr'/'triệu' = 1,000,000, 'đ'/'VND' = 1.
+    """
+    if not text:
+        return None
+    m = re.search(r"(\d+(?:[.,]\d+)?)\s*(triệu|nghìn|VND|tr|k|đ)?", str(text), re.IGNORECASE)
+    if not m:
+        return None
+    num = m.group(1).replace(".", "").replace(",", ".")
+    try:
+        value = float(num)
+    except ValueError:
+        return None
+    unit = (m.group(2) or "").lower()
+    if unit in ("triệu", "tr"):
+        value *= 1_000_000
+    elif unit in ("nghìn", "k"):
+        value *= 1_000
+    return int(value)
+
+
+def post_matches_filters(post: dict, task: dict) -> bool:
+    """Extra filters, all optional. A filter only applies when the task sets it.
+
+    - levels: list like ["TB+", "TBK"] — post must have one of these levels.
+    - min_price / max_price: VND numbers — post must have a price in range.
+    - location_keyword: text that must appear in the content or location.
+    - exclude_keywords: list — post is dropped if any appears in content.
+    A post that lacks the info a filter needs is dropped, never guessed.
+    """
+    content = (post.get("content") or "").lower()
+    extracted = post.get("extracted") or {}
+    levels = task.get("levels")
+    if levels:
+        wanted = {str(level).upper() for level in levels}
+        have = {str(level).upper() for level in (extracted.get("level") or [])}
+        if not (wanted & have):
+            return False
+    min_price = task.get("min_price")
+    max_price = task.get("max_price")
+    if min_price is not None or max_price is not None:
+        price = parse_price_vnd(extracted.get("price"))
+        if price is None:
+            return False
+        if min_price is not None and price < int(min_price):
+            return False
+        if max_price is not None and price > int(max_price):
+            return False
+    location_keyword = (task.get("location_keyword") or "").strip().lower()
+    if location_keyword:
+        location = str(extracted.get("location") or "").lower()
+        if location_keyword not in content and location_keyword not in location:
+            return False
+    for word in task.get("exclude_keywords") or []:
+        if str(word).strip().lower() and str(word).strip().lower() in content:
+            return False
+    return True
+
+
 # ------------------------------------------------------- Facebook Graph API
 
 class FacebookGraph:
@@ -245,7 +307,10 @@ def run_task(task: dict, fb: FacebookGraph | None, demo: bool) -> dict:
                 content = (raw.get("message") or "").lower()
                 if keyword and keyword not in content:
                     continue
-                posts.append(normalise_post(raw, wanted))
+                post = normalise_post(raw, wanted)
+                if not post_matches_filters(post, task):
+                    continue
+                posts.append(post)
                 if len(posts) >= limit:
                     break
             date_note = ""
