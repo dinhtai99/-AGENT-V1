@@ -87,7 +87,7 @@ def in_date_range(created_at: str, date_from: str | None, date_to: str | None) -
 # ---------------------------------------------------------------- extraction
 
 PHONE_RE = re.compile(r"(?:\+84|0)\d{8,9}\b")
-PRICE_RE = re.compile(r"(\d+(?:[.,]\d+)?\s*(?:k|K|nghìn|tr|triệu|đ|VND|vnd)?)", re.IGNORECASE)
+PRICE_RE = re.compile(r"(\d+(?:[.,]\d+)?\s*(?:triệu|nghìn|VND|tr|k|đ))", re.IGNORECASE)
 TIME_RE = re.compile(r"\b([01]?\d|2[0-3])h[0-5]\d?\b|\b([01]?\d|2[0-3]):[0-5]\d\b")
 LEVEL_RE = re.compile(r"\b(TBY|TBK|TB\+\+|TB\+|TB-|TB)\b")
 

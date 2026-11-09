@@ -95,6 +95,9 @@ def _post_link(article) -> str:
                 href = a.get_attribute("href") or ""
                 if href.startswith("/"):
                     href = "https://www.facebook.com" + href
+                # Drop tracking query params (?__cft__, ?__tn__, ...) so
+                # the saved link is a clean, shareable post URL.
+                href = href.split("?")[0]
                 return href
         except Exception:
             continue
