@@ -24,6 +24,9 @@ Honest limits:
 - Facebook changes its page layout often, so the post selectors below
   are best-effort and may need updating. When a selector finds nothing,
   the worker returns status "error" instead of fake posts.
+- It reads the group FEED only (never the search page, which mixes in
+  people/pages suggestions) and only accepts items with a real post
+  permalink, so suggestions and ads are skipped.
 - Post dates on Facebook are often relative ("2h", "Yesterday"), so the
   date filter only applies when a real datetime can be read from the
   page. Posts without a readable date are kept and flagged by leaving
@@ -85,10 +88,11 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
         raise RuntimeError(
             f"Missing login state {state_path}. Run first: python browser_worker.py --login"
         )
+    # Always read the group FEED, never the search page: the search page
+    # mixes in people/pages suggestions (e.g. profiles named like the
+    # keyword), which are not group posts. Keyword filtering happens
+    # locally below, the same way worker.py does it.
     url = f"https://www.facebook.com/groups/{group_id}/"
-    if keyword:
-        # Facebook group search page; if it redirects, we fall back to the feed.
-        url = f"https://www.facebook.com/groups/{group_id}/search/?q={keyword}"
     posts: list[dict] = []
     seen: set[str] = set()
     with _playwright() as p:
@@ -124,7 +128,12 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
                             link = "https://www.facebook.com" + link
                 except Exception:
                     pass
-                key = link or text[:120]
+                # A real group post always has a permalink. Anything
+                # without one (people suggestions, ads, UI cards) is
+                # not a post — skip it instead of returning it as one.
+                if "/permalink/" not in link:
+                    continue
+                key = link
                 if key in seen:
                     continue
                 seen.add(key)
