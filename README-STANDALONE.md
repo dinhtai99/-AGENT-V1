@@ -101,6 +101,30 @@ a post that lacks the info a filter needs is dropped, never guessed.
   First run with `only_new` returns everything matching, later runs
   only the new ones.
 
+## Customer profile — the target customer comes from the orchestrator
+
+The worker does not decide who the customer is. The manager agent sends
+one free-text description in the task as `customer_profile`, e.g.:
+
+```
+"Nữ chơi cầu lông trình TB+, ở Hà Nội, cần sân buổi tối, giá dưới 100k"
+```
+
+The worker pulls the criteria out of that text and keeps only posts
+matching all of them:
+
+- level: `TB+` in the text -> post must have level TB+
+- gender: `nữ` / `nam` in the text -> post must mention it
+- location: words after `ở` / `tại` / `khu vực` -> post must mention it
+- price: `dưới 100k` -> max price 100.000đ; `từ 40k đến 100k` -> range
+- time of day: `buổi tối` -> 17h-23h; `buổi sáng` -> 6h-11h; `buổi chiều` -> 12h-17h
+
+A post that lacks the info a criterion needs is dropped, never guessed.
+Each kept post carries `profile_match.criteria` listing which criteria
+it matched, so the manager agent can see why it was kept. No extra AI
+or API key is needed for this: it reuses the same extractors as the
+other filters. `example-task-customer.json` is a ready example.
+
 ## Watch mode — auto-scan for new posts
 
 Run the same task again and again, hands-free:
@@ -122,6 +146,16 @@ the sensible range. Do not run watch mode on many groups at once, and
 stop it when you have what you need. `example-task-watch.json` is a
 ready watch task: keyword "tuyển", levels TB+/TBK, price 40.000–
 100.000đ, only new posts, every 20 minutes.
+
+## Running 24/24
+
+Watch mode runs for as long as its PowerShell window stays open. For
+true 24/24 running, the machine must stay on (disable sleep) with that
+window open. If the machine restarts, start watch again with the same
+command — `seen.json` remembers the posts already seen, so it will not
+report the old ones again. A small always-on server (VPS) is the
+sturdier option for real 24/24 operation; the worker needs nothing
+else installed beyond Python, Playwright and Chromium.
 
 ## Limits (same as the Muse worker)
 
@@ -146,6 +180,8 @@ ready watch task: keyword "tuyển", levels TB+/TBK, price 40.000–
   levels TB+/TBK, price 40.000–100.000đ, every 20 minutes.
 - `example-task-watch-loose.json` — same watch task with looser filters:
   only new "tuyển" posts, no level or price filter, every 20 minutes.
+- `example-task-customer.json` — watch task with `customer_profile`:
+  nữ, trình TB+, ở Hà Nội, sân buổi tối, giá dưới 100k.
 - `example-task.json` / `example-task-find-groups.json` — sample tasks.
 - `task-schema.json` — input/output contract.
 - `AGENT.md` / `WORKFLOW.md` — the worker rules and process.

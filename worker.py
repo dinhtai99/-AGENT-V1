@@ -89,7 +89,7 @@ def in_date_range(created_at: str, date_from: str | None, date_to: str | None) -
 PHONE_RE = re.compile(r"(?:\+84|0)\d{8,9}\b")
 PRICE_RE = re.compile(r"(\d+(?:[.,]\d+)?\s*(?:triệu|nghìn|VND|tr|k|đ))", re.IGNORECASE)
 TIME_RE = re.compile(r"\b([01]?\d|2[0-3])h[0-5]\d?\b|\b([01]?\d|2[0-3]):[0-5]\d\b")
-LEVEL_RE = re.compile(r"\b(TBY|TBK|TB\+\+|TB\+|TB-|TB)\b")
+LEVEL_RE = re.compile(r"\b(TBY|TBK|TB\+\+|TB\+|TB-|TB)(?![A-Za-z0-9])")
 
 
 def extract_fields(content: str, wanted: list[str]) -> dict:
@@ -142,6 +142,124 @@ def parse_price_vnd(text: str | None) -> int | None:
     return int(value)
 
 
+def parse_customer_profile(profile: str) -> dict:
+    """Pull matchable criteria out of a free-text customer description.
+
+    The orchestrator sends one text, e.g.:
+    "Nữ chơi cầu lông trình TB+, ở Hà Nội, cần sân buổi tối, giá dưới 100k"
+    Only the criteria the text actually states are extracted:
+    - levels: via LEVEL_RE, e.g. ["TB+"]
+    - gender: "nữ" or "nam" (word match; both mentioned -> no criterion)
+    - locations: words after ở / tại / khu vực / quận / sân, e.g. ["Hà Nội"]
+    - price_min / price_max (VND): "từ X đến Y", "dưới X", "trên X"
+    - time_of_day: "sáng" (6-11h), "chiều" (12-17h), "tối" (17-23h)
+    Returns {} when the text yields nothing usable.
+    """
+    text = (profile or "").strip()
+    if not text:
+        return {}
+    out: dict = {}
+    levels = sorted(set(LEVEL_RE.findall(text)))
+    if levels:
+        out["levels"] = levels
+    low = text.lower()
+    has_nu = bool(re.search(r"\bnữ\b", low))
+    has_nam = bool(re.search(r"\bnam\b", low))
+    if has_nu and not has_nam:
+        out["gender"] = "nữ"
+    elif has_nam and not has_nu:
+        out["gender"] = "nam"
+    stop = {"cần", "tìm", "muốn", "và", "buổi", "giá", "chơi", "trình",
+            "độ", "sân", "người", "giao", "lưu", "ca", "từ", "đến"}
+    locations: list[str] = []
+    for m in re.finditer(r"(?:ở|tại|khu vực|quận|huyện|phường|thành phố|sân)\s+", low):
+        rest = low[m.end():]
+        words = re.split(r"[\s,;]+", rest)
+        picked: list[str] = []
+        for word in words:
+            word = word.strip(".,;:()")
+            if not word or word in stop or len(picked) >= 3:
+                break
+            picked.append(word)
+        if picked:
+            locations.append(" ".join(picked))
+    if locations:
+        out["locations"] = locations
+    m = re.search(r"từ\s*(\d+(?:[.,]\d+)?\s*(?:triệu|nghìn|VND|tr|k|đ))\s*đến\s*(\d+(?:[.,]\d+)?\s*(?:triệu|nghìn|VND|tr|k|đ))", low)
+    if m:
+        out["price_min"] = parse_price_vnd(m.group(1))
+        out["price_max"] = parse_price_vnd(m.group(2))
+    else:
+        m = re.search(r"(?:dưới|không quá|tối đa)\s*(\d+(?:[.,]\d+)?\s*(?:triệu|nghìn|VND|tr|k|đ))", low)
+        if m:
+            out["price_max"] = parse_price_vnd(m.group(1))
+        m = re.search(r"(?:trên|từ)\s*(\d+(?:[.,]\d+)?\s*(?:triệu|nghìn|VND|tr|k|đ))", low)
+        if m:
+            out["price_min"] = parse_price_vnd(m.group(1))
+    if "buổi sáng" in low or re.search(r"\bsáng\b", low):
+        out["time_of_day"] = (6, 11)
+    elif "buổi chiều" in low or re.search(r"\bchiều\b", low):
+        out["time_of_day"] = (12, 17)
+    elif "buổi tối" in low or re.search(r"\btối\b", low):
+        out["time_of_day"] = (17, 23)
+    elif re.search(r"\btrưa\b", low):
+        out["time_of_day"] = (11, 13)
+    return out
+
+
+def match_customer_profile(post: dict, profile: str) -> tuple[bool, list[str]]:
+    """Check one post against a free-text customer profile.
+
+    Returns (matched, matched_criteria). Every criterion the profile
+    states must pass; a post lacking the info a criterion needs is
+    dropped, never guessed. No criteria in the profile -> kept.
+    """
+    criteria = parse_customer_profile(profile)
+    if not criteria:
+        return True, ["no_criteria"]
+    content = (post.get("content") or "").lower()
+    extracted = post.get("extracted") or {}
+    matched: list[str] = []
+    if "levels" in criteria:
+        have = {str(level).upper() for level in (extracted.get("level") or [])}
+        if not ({str(level).upper() for level in criteria["levels"]} & have):
+            return False, matched
+        matched.append("level")
+    if "gender" in criteria:
+        if not re.search(rf"\b{re.escape(criteria['gender'])}\b", content):
+            return False, matched
+        matched.append("gender")
+    if "locations" in criteria:
+        location = str(extracted.get("location") or "").lower()
+        if not any(loc in content or loc in location for loc in criteria["locations"]):
+            return False, matched
+        matched.append("location")
+    price = parse_price_vnd(extracted.get("price"))
+    if "price_max" in criteria and criteria["price_max"] is not None:
+        if price is None or price > criteria["price_max"]:
+            return False, matched
+        matched.append("price_max")
+    if "price_min" in criteria and criteria["price_min"] is not None:
+        if price is None or price < criteria["price_min"]:
+            return False, matched
+        matched.append("price_min")
+    if "time_of_day" in criteria:
+        hour = None
+        t = extracted.get("time") or ""
+        m = re.search(r"(\d{1,2})h", str(t))
+        if m:
+            hour = int(m.group(1))
+        else:
+            m = re.search(r"(\d{1,2}):\d{2}", str(t))
+            if m:
+                hour = int(m.group(1))
+        start, end = criteria["time_of_day"]
+        if hour is None or not (start <= hour < end or (end == 23 and hour == 23)):
+            return False, matched
+        matched.append("time_of_day")
+    return True, matched
+
+
 def post_matches_filters(post: dict, task: dict) -> bool:
     """Extra filters, all optional. A filter only applies when the task sets it.
 
@@ -149,6 +267,10 @@ def post_matches_filters(post: dict, task: dict) -> bool:
     - min_price / max_price: VND numbers — post must have a price in range.
     - location_keyword: text that must appear in the content or location.
     - exclude_keywords: list — post is dropped if any appears in content.
+    - customer_profile: free text from the orchestrator describing the
+      target customer, e.g. "Nữ chơi cầu lông trình TB+, ở Hà Nội, cần
+      sân buổi tối, giá dưới 100k". Criteria pulled from the text
+      (level, gender, location, price, time of day) must all match.
     A post that lacks the info a filter needs is dropped, never guessed.
     """
     content = (post.get("content") or "").lower()
@@ -177,6 +299,12 @@ def post_matches_filters(post: dict, task: dict) -> bool:
     for word in task.get("exclude_keywords") or []:
         if str(word).strip().lower() and str(word).strip().lower() in content:
             return False
+    profile = (task.get("customer_profile") or "").strip()
+    if profile:
+        matched, details = match_customer_profile(post, profile)
+        if not matched:
+            return False
+        post["profile_match"] = {"criteria": details}
     return True
 
 
