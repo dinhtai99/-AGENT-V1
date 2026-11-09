@@ -1,4 +1,5 @@
 .env
+fb-state.json
 result.json
 __pycache__/
 *.pyc

@@ -21,6 +21,7 @@ import json
 import os
 import re
 import sys
+from datetime import date, datetime
 from pathlib import Path
 
 try:
@@ -49,6 +50,31 @@ def load_json(path: Path) -> dict:
 
 def save_json(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def parse_date(value: str | None) -> date | None:
+    """Parse YYYY-MM-DD (or an ISO datetime) to a date, else None."""
+    if not value:
+        return None
+    text = str(value).strip()
+    try:
+        return date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+
+
+def in_date_range(created_at: str, date_from: str | None, date_to: str | None) -> bool:
+    """True when a post's date is inside [date_from, date_to]. Missing dates pass."""
+    post_date = parse_date(created_at)
+    if post_date is None:
+        return True
+    start = parse_date(date_from)
+    end = parse_date(date_to)
+    if start and post_date < start:
+        return False
+    if end and post_date > end:
+        return False
+    return True
 
 
 # ---------------------------------------------------------------- extraction
@@ -156,7 +182,16 @@ def run_task(task: dict, fb: FacebookGraph | None, demo: bool) -> dict:
         sample = load_json(Path(__file__).parent / "example-result.json")
         sample["task_id"] = task_id or sample.get("task_id", "TASK-DEMO")
         sample["status"] = "success"
-        sample["summary"] = "Demo mode: replayed bundled example result, no Facebook call was made."
+        # Date filter also applies in demo mode, so you can test it offline.
+        date_from = task.get("date_from")
+        date_to = task.get("date_to")
+        kept = [p for p in sample.get("posts", [])
+                if in_date_range(p.get("created_at", ""), date_from, date_to)]
+        sample["posts"] = kept
+        sample["summary"] = (
+            f"Demo mode: replayed bundled example result, no Facebook call was made. "
+            f"Date filter {date_from or '...'} to {date_to or '...'} kept {len(kept)} post(s)."
+        )
         return sample
 
     if not task_id or not action:
@@ -191,22 +226,31 @@ def run_task(task: dict, fb: FacebookGraph | None, demo: bool) -> dict:
                         "posts": [], "groups": [], "summary": "Task rejected: missing group_id or group_name."}
             group = fb.group_details(group_id)
             keyword = (task.get("post_keyword") or "").strip().lower()
-            raw_posts = fb.group_posts(group["id"], limit * 2)
+            date_from = task.get("date_from")
+            date_to = task.get("date_to")
+            # Fetch extra posts: keyword + date filtering happen locally,
+            # so some fetched posts will be dropped before reaching `limit`.
+            raw_posts = fb.group_posts(group["id"], limit * 3)
             posts = []
             for raw in raw_posts:
+                if not in_date_range(raw.get("created_time", ""), date_from, date_to):
+                    continue
                 content = (raw.get("message") or "").lower()
                 if keyword and keyword not in content:
                     continue
                 posts.append(normalise_post(raw, wanted))
                 if len(posts) >= limit:
                     break
+            date_note = ""
+            if date_from or date_to:
+                date_note = f" from {date_from or '...'} to {date_to or '...'}"
             return {"task_id": task_id, "status": "success", "errors": [],
                     "group": {"id": group.get("id", ""), "name": group.get("name", ""),
                               "member_count": group.get("member_count"),
                               "url": f"https://www.facebook.com/groups/{group.get('id', '')}/",
                               "visibility": group.get("privacy", "")},
                     "posts": posts, "groups": [],
-                    "summary": f"Found {len(posts)} posts in group '{group.get('name', '')}'."}
+                    "summary": f"Found {len(posts)} posts in group '{group.get('name', '')}'{date_note}."}
 
         return {"task_id": task_id, "status": "error",
                 "errors": [f"Unknown action: {action}. Use search_group_posts or find_groups."],
