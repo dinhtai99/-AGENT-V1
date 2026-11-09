@@ -150,6 +150,11 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
     url = f"https://www.facebook.com/groups/{group_id}/"
     posts: list[dict] = []
     seen: set[str] = set()
+    # Did we see any article with a real post link at all? This
+    # distinguishes a real page problem (no post links anywhere) from
+    # "the visible posts just don't contain the keyword right now" —
+    # the second is a successful scan with 0 matches, not a failure.
+    saw_post_link = False
     with _playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(storage_state=str(state_path))
@@ -189,6 +194,7 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
                 # not a post — skip it instead of returning it as one.
                 if "/permalink/" not in link and "/posts/" not in link:
                     continue
+                saw_post_link = True
                 key = link
                 if key in seen:
                     continue
@@ -212,13 +218,15 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
                     "extracted": {},
                 })
         browser.close()
-    if not posts:
+    if not posts and not saw_post_link:
         raise RuntimeError(
             "No posts could be read from the group page. Facebook may have "
             "changed its layout, asked for a login check, or the group is "
             "not viewable with this account. Try --login again, or run with "
             "--debug and send debug.json to check what the page actually shows."
         )
+    # No post link at all -> page problem (above). Post links seen but
+    # none matched the keyword/date -> successful scan, 0 matching posts.
     return posts
 
 
