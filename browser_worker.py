@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-AGENT-V1 — Browser worker (experimental fallback).
+AGENT-V1 — Browser worker (the standalone worker).
 
-Same task/result contract as worker.py, but it reads Facebook through a
-real logged-in browser instead of the Graph API. Use it only when the
-Graph API refuses group access.
+Reads Facebook through a real logged-in browser. Meta removed the
+Groups API on 22 April 2024, so this browser path is the only
+standalone way to read group posts — there is no token-based worker.
 
 How it works:
   1. Login once and save the session (headed browser, you log in by hand):
@@ -43,8 +43,8 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from worker import (contains_vn, extract_fields, in_date_range, load_json,
-                    post_matches_filters, save_json)  # noqa: E402
+from filters import (contains_vn, extract_fields, in_date_range, load_json,
+                     post_matches_filters, save_json)  # noqa: E402
 
 
 def _playwright():
@@ -146,7 +146,7 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
     # Always read the group FEED, never the search page: the search page
     # mixes in people/pages suggestions (e.g. profiles named like the
     # keyword), which are not group posts. Keyword filtering happens
-    # locally below, the same way worker.py does it.
+    # locally below, the same way filters.py does it.
     url = f"https://www.facebook.com/groups/{group_id}/"
     posts: list[dict] = []
     seen: set[str] = set()
