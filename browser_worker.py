@@ -37,6 +37,8 @@ Honest limits:
 
 import argparse
 import json
+import os
+import random
 import re
 import sys
 import time
@@ -45,6 +47,47 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from filters import (contains_vn, extract_fields, in_date_range, load_json,
                      post_matches_filters, save_json)  # noqa: E402
+
+# How many failed scans in a row before the watch loop stops on purpose
+# (something is structurally wrong — layout change, network down — and
+# hammering Facebook won't fix it). The watchdog restarts a *crashed*
+# worker, never one that stopped on purpose; see watchdog.py.
+MAX_CONSECUTIVE_ERRORS = 3
+
+# Strings that mean the saved Facebook session is dead. A scan that hits
+# one of these will fail identically every time, so the loop stops at
+# once instead of retrying until the next scan.
+_SESSION_MARKERS = ("login/checkpoint", "Missing login state")
+
+
+def _is_session_error(msg: str) -> bool:
+    """True when a scan error means the login session expired."""
+    return any(m in (msg or "") for m in _SESSION_MARKERS)
+
+
+def _jittered(base: float, pct: float) -> float:
+    """Randomize a wait by +/-pct% so scans don't run on a mechanical clock.
+
+    Facebook notices perfectly regular page loads. A 30-minute interval
+    with 20% jitter sleeps 24-36 minutes; a 20-second group pause with
+    50% jitter sleeps 10-30 seconds. pct is clamped to 0-50.
+    """
+    if pct <= 0 or base <= 0:
+        return float(base)
+    span = base * min(pct, 50) / 100.0
+    return base + random.uniform(-span, span)
+
+
+def _write_status(root: Path, data: dict) -> None:
+    """Best-effort: write watch-status.json (heartbeat + last scan state).
+
+    The watchdog reads this file to decide whether the worker is alive.
+    A failed write must never kill a scan.
+    """
+    try:
+        save_json(root / "watch-status.json", data)
+    except Exception:
+        pass
 
 
 def _playwright():
@@ -160,7 +203,7 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
         context = browser.new_context(storage_state=str(state_path))
         page = context.new_page()
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(5000)
+        page.wait_for_timeout(random.randint(4000, 6000))
         if "login" in page.url or "checkpoint" in page.url:
             browser.close()
             raise RuntimeError(
@@ -168,12 +211,13 @@ def fetch_group_posts(group_id: str, keyword: str, limit: int,
                 "The saved session may have expired. Run again: "
                 "python browser_worker.py --login"
             )
-        # Scroll a few times to load more posts. Slow on purpose.
+        # Scroll a few times to load more posts. Slow on purpose, and
+        # slightly irregular on purpose: fixed waits look mechanical.
         for _ in range(4):
             if len(posts) >= limit:
                 break
             page.mouse.wheel(0, 2000)
-            page.wait_for_timeout(2500)
+            page.wait_for_timeout(random.randint(2000, 3500))
             articles = page.locator("div[role='article']")
             count = min(articles.count(), 40)
             if debug and not posts:
@@ -322,7 +366,9 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
     skipped_total = 0
     for i, group_id in enumerate(group_ids):
         if i > 0 and pause:
-            time.sleep(pause)
+            # Jitter the pause +/-50% (20s -> 10-30s) so group visits
+            # don't land on a perfectly regular rhythm.
+            time.sleep(_jittered(pause, 50))
         kept, skipped, error = _scan_one_group(task, group_id, state_path, seen, debug=debug)
         skipped_total += skipped
         posts.extend(kept)
@@ -347,6 +393,129 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
                       "url": f"https://www.facebook.com/groups/{group_ids[0]}/"},
             "posts": posts, "groups": groups_out,
             "summary": f"Found {len(posts)} posts in {ok_count}/{len(group_ids)} group(s) (browser){new_note}."}
+
+
+def watch_loop(task: dict, state_path: Path, out_path: Path, root: Path,
+               demo: bool = False, debug: bool = False,
+               sleep_fn=time.sleep, run_fn=None, max_cycles=None) -> int:
+    """Repeat the task until Ctrl+C or a stop condition (see below).
+
+    Stability rules for 24/24 running:
+    - One bad scan never kills the loop: exceptions are caught, counted,
+      and the loop waits out the normal interval before trying again.
+    - A dead login session stops the loop at once (every later scan
+      would fail identically). watch-status.json says "stopped" with
+      stop_reason "session_expired" — run --login, then start again.
+    - 3 failed scans in a row also stop the loop (stop_reason
+      "repeated_errors"): something structural is wrong.
+    - Every scan writes watch-status.json (heartbeat): last scan time,
+      status, consecutive errors, totals. watchdog.py reads it.
+    - The interval is jittered +/-watch_interval_jitter_percent
+      (default 20) so scans don't run on a mechanical clock.
+    Returns 0 on a clean stop, 1 when stopped by a stop condition.
+    sleep_fn / run_fn / max_cycles exist so tests can drive the loop
+    without a browser or real waiting.
+    """
+    if run_fn is None:
+        run_fn = run_task
+    interval = max(5, int(task.get("watch_interval_minutes", 30) or 30))
+    raw_jitter = task.get("watch_interval_jitter_percent", 20)
+    jitter_pct = 20 if raw_jitter is None else max(0, min(float(raw_jitter), 50))
+    print(f"Watching every ~{interval} minute(s) (+/-{jitter_pct:.0f}%). Press Ctrl+C to stop.")
+    print("Tip: set \"only_new\": true in the task so each scan only reports new posts.")
+    watch_log = root / "watch-new.jsonl"
+    pid_path = root / "watch.pid"
+    try:
+        pid_path.write_text(str(os.getpid()), encoding="utf-8")
+    except Exception:
+        pass
+    consecutive_errors = 0
+    scans_total = 0
+    found_total = 0
+    last_summary = ""
+    stop_reason = ""
+    try:
+        cycle = 0
+        while max_cycles is None or cycle < max_cycles:
+            cycle += 1
+            scans_total += 1
+            try:
+                result = run_fn(task, state_path, demo=demo, debug=debug)
+            except Exception as exc:  # noqa: BLE001 - one bad scan must not kill the loop
+                result = {"task_id": task.get("task_id", ""), "status": "error",
+                          "errors": [f"Scan crashed: {exc}"], "posts": [],
+                          "summary": f"Scan crashed: {exc}"}
+            try:
+                save_json(out_path, result)
+            except Exception:
+                pass
+            new_posts = result.get("posts", []) or []
+            found_total += len(new_posts)
+            last_summary = result.get("summary", "")
+            print(f"[{time.strftime('%H:%M:%S')}] {last_summary}")
+            if new_posts:
+                try:
+                    with watch_log.open("a", encoding="utf-8") as f:
+                        for post in new_posts:
+                            f.write(json.dumps({"scanned_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                                                "task_id": result.get("task_id", ""),
+                                                **post}, ensure_ascii=False) + "\n")
+                    print(f"  -> {len(new_posts)} new post(s) appended to watch-new.jsonl")
+                except Exception as exc:
+                    print(f"  !! could not append to watch-new.jsonl: {exc}")
+            status = "running"
+            if result.get("status") == "error":
+                consecutive_errors += 1
+                status = "error"
+                errors = result.get("errors", []) or []
+                if any(_is_session_error(e) for e in errors):
+                    stop_reason = "session_expired"
+                elif consecutive_errors >= MAX_CONSECUTIVE_ERRORS:
+                    stop_reason = "repeated_errors"
+            else:
+                consecutive_errors = 0
+            wait_seconds = _jittered(interval * 60, jitter_pct)
+            _write_status(root, {
+                "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "task_id": task.get("task_id", ""),
+                "status": "stopped" if stop_reason else status,
+                "stop_reason": stop_reason,
+                "last_summary": last_summary,
+                "consecutive_errors": consecutive_errors,
+                "scans_total": scans_total,
+                "found_total": found_total,
+                "next_scan_in_seconds": round(wait_seconds) if not stop_reason else None,
+            })
+            if stop_reason:
+                if stop_reason == "session_expired":
+                    print("STOP: Facebook session expired (login/checkpoint redirect).")
+                    print("Run again: python browser_worker.py --login  (then restart the watch)")
+                else:
+                    print(f"STOP: {consecutive_errors} failed scans in a row. "
+                          "Check the errors above / debug.json, fix the cause, then restart.")
+                return 1
+            sleep_fn(wait_seconds)
+    except KeyboardInterrupt:
+        stop_reason = "user_stopped"
+        print("\nWatch stopped.")
+    finally:
+        if stop_reason:
+            _write_status(root, {
+                "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "task_id": task.get("task_id", ""),
+                "status": "stopped",
+                "stop_reason": stop_reason,
+                "last_summary": last_summary,
+                "consecutive_errors": consecutive_errors,
+                "scans_total": scans_total,
+                "found_total": found_total,
+                "next_scan_in_seconds": None,
+            })
+        try:
+            pid_path.unlink(missing_ok=True)
+        except Exception:
+            pass
+    return 0
 
 
 def main(argv=None) -> int:
@@ -380,27 +549,10 @@ def main(argv=None) -> int:
         return 0 if result.get("status") == "success" else 1
     # Watch mode: scan again and again, only new posts are reported.
     # Combine with "only_new": true in the task so repeats are skipped.
-    interval = max(5, int(task.get("watch_interval_minutes", 30) or 30))
-    print(f"Watching every {interval} minute(s). Press Ctrl+C to stop.")
-    print("Tip: set \"only_new\": true in the task so each scan only reports new posts.")
-    watch_log = root / "watch-new.jsonl"
-    try:
-        while True:
-            result = run_task(task, state_path, demo=args.demo, debug=args.debug)
-            save_json(Path(args.out), result)
-            new_posts = result.get("posts", []) or []
-            print(f"[{time.strftime('%H:%M:%S')}] {result.get('summary', '')}")
-            if new_posts:
-                with watch_log.open("a", encoding="utf-8") as f:
-                    for post in new_posts:
-                        f.write(json.dumps({"scanned_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                            "task_id": result.get("task_id", ""),
-                                            **post}, ensure_ascii=False) + "\n")
-                print(f"  -> {len(new_posts)} new post(s) appended to watch-new.jsonl")
-            time.sleep(interval * 60)
-    except KeyboardInterrupt:
-        print("\nWatch stopped.")
-        return 0
+    # Stability rules (jitter, heartbeat, stop conditions) live in
+    # watch_loop(); watchdog.py restarts the worker if it crashes.
+    return watch_loop(task, state_path, Path(args.out), root,
+                      demo=args.demo, debug=args.debug)
 
 
 if __name__ == "__main__":

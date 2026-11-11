@@ -5,6 +5,11 @@ fb-state.json
 debug.json
 seen.json
 watch-new.jsonl
+watch-status.json
+watch.pid
+watchdog.pid
+watchdog.log
+watchdog-state.json
 result.json
 __pycache__/
 *.pyc

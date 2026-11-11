@@ -168,6 +168,48 @@ report the old ones again. A small always-on server (VPS) is the
 sturdier option for real 24/24 operation; the worker needs nothing
 else installed beyond Python, Playwright and Chromium.
 
+### Watchdog: restart the worker when it dies
+
+`watchdog.py` watches the worker and restarts it only when it died
+unexpectedly (crash, reboot). It never restarts a worker that stopped
+on purpose — check `watch-status.json` first:
+
+- `status: "stopped"`, `stop_reason: "session_expired"` — the Facebook
+  session is dead. Restarting would fail identically, so run
+  `python browser_worker.py --login` first, then start the watch again.
+- `status: "stopped"`, `stop_reason: "repeated_errors"` — 3 scans
+  failed in a row (layout change, network). Fix the cause first.
+- `status: "running"` / `"error"` with a fresh `updated_at` — the
+  worker is alive; leave it alone.
+
+Start everything with one double-click:
+
+```
+start-watch.bat
+```
+
+That starts the watchdog, which starts the worker
+(`example-task-multi.json`). To survive reboots, add the watchdog to
+Windows Task Scheduler: trigger "At log on", action
+`python watchdog.py --task example-task-multi.json`, start in the
+AGENT-V1 folder. The watchdog also restarts the worker after a
+reboot, because `seen.json` still remembers the old posts.
+
+Stability details built into the watch loop:
+
+- **Jitter:** each interval is randomized by
+  `watch_interval_jitter_percent` (default 20, so a 30-minute interval
+  sleeps 24–36 minutes), the pause between groups by ±50%, and scroll
+  waits by a few hundred ms — scans don't run on a mechanical clock.
+- **One bad scan never kills the loop:** exceptions are caught and
+  counted; the loop waits out the interval and tries again.
+- **Heartbeat:** every scan writes `watch-status.json` (last scan
+  time, status, consecutive errors, totals) — that is what the
+  watchdog reads.
+- **No auto re-login:** the worker cannot log in by itself without a
+  stored password, and passwords are never stored. When the session
+  expires the loop stops cleanly and says so in `watch-status.json`.
+
 ## Limits (same as the Muse worker)
 
 - Only groups the logged-in account can view: public groups, or groups
@@ -180,6 +222,8 @@ else installed beyond Python, Playwright and Chromium.
 ## Files
 
 - `browser_worker.py` — browser worker (the standalone worker).
+- `watchdog.py` — restarts the watch worker if it dies (never a worker
+  that stopped on purpose). `start-watch.bat` starts the watchdog.
 - `filters.py` — post extraction and filtering (no Facebook calls).
 - `requirements-browser.txt` — only `playwright`.
 - `task-test-browser-tuyen.json` — ready test: keyword "tuyển" in the
