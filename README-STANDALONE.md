@@ -122,6 +122,22 @@ same applies to `location_keyword` / `exclude_keywords`.
 
 ## Watch mode — auto-scan for new posts
 
+### Scanning several groups in one run
+
+One task can list several groups in `group_ids`. The worker scans them
+one after another (never in parallel), pausing `group_pause_seconds`
+(default 20) between groups. If one group fails (login check, layout),
+it is skipped and the run continues with the next group; the failure is
+reported in `errors` and in that group's entry in `groups`, without
+failing the whole run. Each group has its own seen-post memory in
+`seen.json`, so a post is only reported once per group. A post shared
+into two groups is two different posts and is reported twice.
+
+Keep the total load modest: 5 groups every 30 minutes means 10 group
+page loads per hour. Start with 2–3 groups, watch for login checks for
+a day, then add more. `example-task-multi.json` scans 5 Hanoi badminton
+groups with the customer profile, every 30 minutes.
+
 Run the same task again and again, hands-free:
 
 ```
@@ -174,6 +190,9 @@ else installed beyond Python, Playwright and Chromium.
   only new "tuyển" posts, no level or price filter, every 20 minutes.
 - `example-task-customer.json` — watch task with `customer_profile`:
   nữ, trình TB+, ở Hà Nội, sân buổi tối, giá dưới 100k.
+- `example-task-multi.json` — watch task scanning 5 Hanoi badminton
+  groups in turn (`group_ids`), same customer profile, every
+  30 minutes, 20 seconds pause between groups.
 - `example-task.json` — sample task.
 - `task-schema.json` — input/output contract.
 - `AGENT.md` / `WORKFLOW.md` — the worker rules and process.

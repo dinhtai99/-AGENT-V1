@@ -1,3 +1,5 @@
+# Bản chạy thử / test: các file này chỉ ở máy local, không đẩy lên GitHub.
+# (Máy chạy sẽ tự sinh ra khi test: kết quả, log quét, phiên đăng nhập.)
 .env
 fb-state.json
 debug.json

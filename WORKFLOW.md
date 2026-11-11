@@ -4,7 +4,7 @@
 Đọc lệnh JSON. Kiểm tra đủ: `task_id`, `action` (`search_group_posts`), `group_id`, `post_keyword`, `limit`, `fields_to_extract`. Thiếu trường bắt buộc thì trả `status: "error"`.
 
 ## Bước 2. Xác định nhóm
-Mở trang feed của nhóm `https://www.facebook.com/groups/<group_id>/` bằng trình duyệt đã đăng nhập. Nếu bị chuyển về trang đăng nhập / checkpoint thì dừng, báo hết phiên, cần chạy `--login` lại.
+Mở trang feed của nhóm `https://www.facebook.com/groups/<group_id>/` bằng trình duyệt đã đăng nhập. Nếu lệnh có `group_ids` thì quét lần lượt từng nhóm, nghỉ `group_pause_seconds` (mặc định 20 giây) giữa 2 nhóm. Nếu bị chuyển về trang đăng nhập / checkpoint thì dừng, báo hết phiên, cần chạy `--login` lại. Nhóm nào lỗi thì bỏ qua, quét nhóm tiếp theo.
 
 ## Bước 3. Tìm bài
 Đọc trang feed của nhóm (không dùng trang search của nhóm, vì trang đó trộn gợi ý người). Chỉ nhận bài có link thật dạng `/permalink/` hoặc `/posts/`. Lọc theo từ khóa (khớp cả có dấu lẫn không dấu). Cuộn trang tối đa 4 lần để đủ `limit` bài (tối đa 20).

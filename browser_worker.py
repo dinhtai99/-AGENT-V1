@@ -243,6 +243,44 @@ def save_seen(path: Path, seen: dict) -> None:
     save_json(path, seen)
 
 
+def _scan_one_group(task: dict, group_id: str, state_path: Path,
+                    seen: dict, debug: bool = False) -> tuple[list[dict], int, str | None]:
+    """Scan one group: fetch, extract, filter, drop already-seen posts.
+
+    Returns (kept_posts, skipped_seen_count, error_or_None). A failure
+    here must not stop the other groups in a multi-group task.
+    """
+    limit = max(1, min(int(task.get("limit", 10) or 10), 20))
+    wanted = task.get("fields_to_extract", []) or []
+    keyword = (task.get("post_keyword") or "").strip()
+    try:
+        raw = fetch_group_posts(group_id, keyword, limit,
+                                task.get("date_from"), task.get("date_to"), state_path,
+                                debug=debug)
+    except Exception as exc:  # noqa: BLE001 - one bad group must not kill the run
+        return [], 0, str(exc)
+    for post in raw:
+        post["group_id"] = str(group_id)
+        post["extracted"] = extract_fields(post.get("content", ""), wanted)
+    kept = [post for post in raw if post_matches_filters(post, task)]
+    # only_new: keep only posts never seen before for this group.
+    # Seen ids live in seen.json next to this file (gitignored).
+    skipped_seen = 0
+    if task.get("only_new"):
+        known = set(seen.get(str(group_id), []))
+        fresh = []
+        for post in kept:
+            pid = post.get("post_id") or ""
+            if pid and pid in known:
+                skipped_seen += 1
+                continue
+            fresh.append(post)
+        kept = fresh
+        known.update(p.get("post_id") for p in kept if p.get("post_id"))
+        seen[str(group_id)] = sorted(known)[-500:]
+    return kept, skipped_seen, None
+
+
 def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> dict:
     task_id = task.get("task_id", "")
     action = task.get("action", "")
@@ -257,49 +295,58 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
                 "errors": ["Browser worker v1 only supports action search_group_posts."],
                 "posts": [], "groups": [],
                 "summary": "Task rejected: browser worker supports search_group_posts only."}
-    group_id = task.get("group_id") or task.get("group_name", "")
-    if not group_id:
+    group_ids = task.get("group_ids") or []
+    if isinstance(group_ids, str):
+        group_ids = [group_ids]
+    group_ids = [str(g).strip() for g in group_ids if str(g).strip()]
+    if not group_ids:
+        single = task.get("group_id") or task.get("group_name", "")
+        if single:
+            group_ids = [str(single).strip()]
+    if not group_ids:
         return {"task_id": task_id, "status": "error",
-                "errors": ["Missing required field: group_id or group_name."],
+                "errors": ["Missing required field: group_id or group_ids."],
                 "posts": [], "groups": [],
-                "summary": "Task rejected: missing group_id or group_name."}
-    limit = max(1, min(int(task.get("limit", 10) or 10), 20))
-    wanted = task.get("fields_to_extract", []) or []
-    keyword = (task.get("post_keyword") or "").strip()
-    try:
-        raw = fetch_group_posts(group_id, keyword, limit,
-                                task.get("date_from"), task.get("date_to"), state_path,
-                                debug=debug)
-        for post in raw:
-            post["extracted"] = extract_fields(post.get("content", ""), wanted)
-        kept = [post for post in raw if post_matches_filters(post, task)]
-        # only_new: keep only posts never seen before for this group.
-        # Seen ids live in seen.json next to this file (gitignored).
-        skipped_seen = 0
-        if task.get("only_new"):
-            seen_path = Path(__file__).parent / "seen.json"
-            seen = load_seen(seen_path)
-            known = set(seen.get(str(group_id), []))
-            fresh = []
-            for post in kept:
-                pid = post.get("post_id") or ""
-                if pid and pid in known:
-                    skipped_seen += 1
-                    continue
-                fresh.append(post)
-            kept = fresh
-            known.update(p.get("post_id") for p in kept if p.get("post_id"))
-            seen[str(group_id)] = sorted(known)[-500:]
-            save_seen(seen_path, seen)
-        new_note = f" ({skipped_seen} already seen skipped)" if skipped_seen else ""
-        return {"task_id": task_id, "status": "success", "errors": [],
-                "group": {"id": str(group_id), "name": "",
-                          "url": f"https://www.facebook.com/groups/{group_id}/"},
-                "posts": kept, "groups": [],
-                "summary": f"Found {len(kept)} posts in group {group_id} (browser){new_note}."}
-    except Exception as exc:  # noqa: BLE001 - worker must return JSON, not crash
-        return {"task_id": task_id, "status": "error", "errors": [str(exc)],
-                "posts": [], "groups": [], "summary": f"Task failed: {exc}"}
+                "summary": "Task rejected: missing group_id or group_ids."}
+    # Pause between groups so the run looks like browsing one group at a
+    # time, not hammering many pages at once. Default 20 seconds; 0 means
+    # no pause (explicit None check: "or 20" would swallow a 0).
+    raw_pause = task.get("group_pause_seconds", 20)
+    pause = 20 if raw_pause is None else max(0, min(int(raw_pause), 300))
+    seen: dict = {}
+    if task.get("only_new"):
+        seen = load_seen(Path(__file__).parent / "seen.json")
+    posts: list[dict] = []
+    groups_out: list[dict] = []
+    errors: list[str] = []
+    skipped_total = 0
+    for i, group_id in enumerate(group_ids):
+        if i > 0 and pause:
+            time.sleep(pause)
+        kept, skipped, error = _scan_one_group(task, group_id, state_path, seen, debug=debug)
+        skipped_total += skipped
+        posts.extend(kept)
+        groups_out.append({"id": str(group_id),
+                           "url": f"https://www.facebook.com/groups/{group_id}/",
+                           "found": len(kept),
+                           "error": error or ""})
+        if error:
+            errors.append(f"Group {group_id}: {error}")
+    if task.get("only_new"):
+        save_seen(Path(__file__).parent / "seen.json", seen)
+    ok_count = sum(1 for g in groups_out if not g["error"])
+    new_note = f" ({skipped_total} already seen skipped)" if skipped_total else ""
+    if ok_count == 0:
+        return {"task_id": task_id, "status": "error", "errors": errors,
+                "group": {"id": str(group_ids[0]), "name": "",
+                          "url": f"https://www.facebook.com/groups/{group_ids[0]}/"},
+                "posts": [], "groups": groups_out,
+                "summary": f"Task failed in all {len(group_ids)} group(s): {errors[0] if errors else 'unknown error'}"}
+    return {"task_id": task_id, "status": "success", "errors": errors,
+            "group": {"id": str(group_ids[0]), "name": "",
+                      "url": f"https://www.facebook.com/groups/{group_ids[0]}/"},
+            "posts": posts, "groups": groups_out,
+            "summary": f"Found {len(posts)} posts in {ok_count}/{len(group_ids)} group(s) (browser){new_note}."}
 
 
 def main(argv=None) -> int:
