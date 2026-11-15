@@ -1,0 +1,62 @@
+{
+  "task_id": "TASK-SCAN-NEW-10-GROUPS",
+  "action": "search_group_posts",
+  "discover_joined_groups": false,
+  "group_ids": [
+    "khoinghiepkinhdoanhtoanquoc",
+    "843473343521813",
+    "430269788407785",
+    "668089722476397",
+    "703490412393692",
+    "VietnamJapan88",
+    "423137692951174",
+    "baitoraovat",
+    "partimetiengnhat",
+    "1190643196094963"
+  ],
+  "group_keywords": [
+    "baito",
+    "việc làm",
+    "tuyển dụng",
+    "kinh doanh",
+    "quán",
+    "nhà hàng",
+    "thực phẩm",
+    "nail",
+    "móng",
+    "mi",
+    "spa",
+    "làm đẹp"
+  ],
+  "max_groups": 25,
+  "group_pause_seconds": 35,
+  "post_keyword": "",
+  "only_small_business": true,
+  "customer_profile": "Cá nhân kinh doanh nhỏ hoặc chủ mô hình kinh doanh dưới 20 người tại Nhật Bản (chủ tiệm nail, mi, spa làm đẹp, quán ăn Việt, izakaya/quán nhậu, tiệm bánh/cafe, tạp hóa thực phẩm Việt, xưởng bento thực phẩm, shop online xách tay/order, cửa hàng đồ cũ thanh lý recycle, dịch vụ viễn thông sim/wifi, đại lý vé máy bay du lịch, bất động sản/thuê nhà, dịch vụ vận chuyển chuyển nhà)",
+  "exclude_keywords": [
+    "em cần tìm baito",
+    "mình cần tìm baito",
+    "em tìm việc",
+    "công ty phái cử",
+    "nghiệp đoàn",
+    "xuất khẩu lao động"
+  ],
+  "fields_to_extract": [
+    "phone",
+    "contact",
+    "line_id",
+    "zalo_id",
+    "business_type",
+    "shop_name",
+    "scale",
+    "location",
+    "station",
+    "wage",
+    "roles_needed",
+    "needs"
+  ],
+  "limit": 30,
+  "only_new": true,
+  "watch_interval_minutes": 15,
+  "watch_interval_jitter_percent": 20
+}

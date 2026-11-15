@@ -29,6 +29,8 @@ Run it from start-watch.bat, or add it to Windows Task Scheduler
 run at a time (guarded by watchdog.pid). Stdlib only, no Playwright.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -39,6 +41,12 @@ from pathlib import Path
 
 
 def _log(root: Path, msg: str) -> None:
+    for _stream in (sys.stdout, sys.stderr):
+        if hasattr(_stream, "reconfigure"):
+            try:
+                _stream.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
     line = f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {msg}"
     print(line)
     try:
@@ -184,7 +192,7 @@ def check_once(root: Path, task_file: str, out_file: str,
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="AGENT-V1 watchdog")
-    parser.add_argument("--task", default="example-task-multi.json")
+    parser.add_argument("--task", default="task-baito-nhom-da-tham-gia.json")
     parser.add_argument("--out", default="result.json")
     parser.add_argument("--root", default=None,
                         help="Folder holding the worker and status files "

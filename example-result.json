@@ -1,1 +1,86 @@
-{"errors":[],"group":{"id":"123456789","member_count":12000,"name":"Tên nhóm mẫu","url":"https://www.facebook.com/groups/ten-nhom-mau/","visibility":"OPEN"},"groups":[],"posts":[{"author_name":"Tên tác giả mẫu","comment_count":3,"content":"Nội dung bài mẫu...","created_at":"2026-11-08T10:00:00+07:00","extracted":{"location":null,"phone":null,"price":null},"post_id":"987654321","post_url":"https://www.facebook.com/groups/ten-nhom-mau/posts/987654321/","react_count":15}],"status":"success","summary":"Tìm được 1 bài trong nhóm Tên nhóm mẫu với từ khóa mẫu.","task_id":"TASK-001"}
+{
+  "task_id": "TASK-BAITO-JP-001",
+  "status": "success",
+  "errors": [],
+  "group": {
+    "id": "baito.tokyo.vn",
+    "name": "Cộng Đồng Baito Tokyo - Việc Làm Thêm Tại Nhật",
+    "url": "https://www.facebook.com/groups/baito.tokyo.vn/"
+  },
+  "groups": [
+    {
+      "id": "baito.tokyo.vn",
+      "name": "Cộng Đồng Baito Tokyo - Việc Làm Thêm Tại Nhật",
+      "url": "https://www.facebook.com/groups/baito.tokyo.vn/",
+      "found": 2,
+      "error": ""
+    }
+  ],
+  "posts": [
+    {
+      "post_id": "1002003001",
+      "post_url": "https://www.facebook.com/groups/baito.tokyo.vn/posts/1002003001/",
+      "author_name": "Nguyễn Thảo (Phở Hà Nội)",
+      "author_url": "https://www.facebook.com/profile.php?id=1000123456789",
+      "group_member_url": "https://www.facebook.com/groups/baito.tokyo.vn/user/1000123456789/",
+      "created_at": "2026-11-12T08:30:00+09:00",
+      "content": "Quán Phở Hà Nội tại ga Shin-Okubo (đi bộ 3 phút) cần tuyển gấp 2 bạn phụ bếp và chạy bàn ca tối (17h-23h) và cuối tuần. Lương 1200¥/h, hỗ trợ tàu xe đầy đủ, bao ăn tại quán. Quán mình mới mở thêm cơ sở 2 nên cần bạn làm lâu dài, có hỗ trợ chuyển visa Tokutei quán ăn. Liên hệ SĐT: 080-1234-5678 hoặc Line: thaopho88 / Inbox trực tiếp.",
+      "react_count": 12,
+      "comment_count": 5,
+      "extracted": {
+        "phone": "080-1234-5678",
+        "contact": "Line: thaopho88, Inbox FB",
+        "line_id": "thaopho88",
+        "zalo_id": null,
+        "business_type": "Nhà hàng / Quán ăn Việt Nam",
+        "shop_name": "Phở Hà Nội",
+        "scale": "Mô hình nhỏ (< 20 người) — Đang tuyển 2 người",
+        "location": "Ga Shin-Okubo | Shin-Okubo",
+        "station": "Shin-Okubo",
+        "wage": "1200¥/h",
+        "roles_needed": [
+          "Bếp / Phụ bếp (Kitchen)",
+          "Phục vụ / Chạy bàn (Hall)"
+        ],
+        "needs": [
+          "Thiếu hụt nhân sự khẩn cấp (cần người đi làm ngay, chủ quán đang chịu tải vận hành)",
+          "Đang mở mới / mở rộng cơ sở (cần đồng bộ nhân sự, quy trình, marketing, thiết bị)",
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)",
+          "Thiếu nhân sự ở nhiều khâu cùng lúc (Bếp / Phụ bếp (Kitchen), Phục vụ / Chạy bàn (Hall))",
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ]
+      }
+    },
+    {
+      "post_id": "1002003002",
+      "post_url": "https://www.facebook.com/groups/baito.tokyo.vn/posts/1002003002/",
+      "author_name": "Linh Hana Nail",
+      "author_url": "https://www.facebook.com/profile.php?id=1000987654321",
+      "group_member_url": "https://www.facebook.com/groups/baito.tokyo.vn/user/1000987654321/",
+      "created_at": "2026-11-12T09:00:00+09:00",
+      "content": "Tiệm Nail Hana ở ga Ikebukuro cần tuyển 1 bạn thợ nail và nối mi làm cuối tuần hoặc ca chiều. Lương 1250 yên/giờ + thưởng doanh thu, hỗ trợ tàu. Yêu cầu giao tiếp tiếng Nhật N3 vì tiệm chủ yếu khách Nhật. Liên hệ Zalo: 0912345678 hoặc ĐT: 090-8765-4321.",
+      "react_count": 8,
+      "comment_count": 2,
+      "extracted": {
+        "phone": "090-8765-4321",
+        "contact": "Zalo: 0912345678",
+        "line_id": null,
+        "zalo_id": "0912345678",
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "shop_name": "Nail Hana",
+        "scale": "Mô hình nhỏ (< 20 người) — Đang tuyển 1 người",
+        "location": "Ga Ikebukuro | Ikebukuro",
+        "station": "Ikebukuro",
+        "wage": "1250 yên/giờ",
+        "roles_needed": [
+          "Thợ Nail / Nối mi / Spa"
+        ],
+        "needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ]
+      }
+    }
+  ],
+  "leads": [],
+  "summary": "Tìm được 2 chủ mô hình kinh doanh nhỏ (< 20 người) trong nhóm Cộng Đồng Baito Tokyo."
+}

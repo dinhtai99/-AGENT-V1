@@ -1,0 +1,17 @@
+# Tự động chuẩn hóa xuống dòng khi dùng chung giữa macOS và Windows
+* text=auto eol=lf
+
+# Các file script của macOS bắt buộc dùng LF (nếu thành CRLF sẽ lỗi /bin/zsh^M trên Mac)
+*.command text eol=lf
+*.sh text eol=lf
+
+# Các file script của Windows bắt buộc dùng CRLF để cmd.exe đọc chuẩn tiếng Việt
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Code Python, JSON, HTML, Markdown thống nhất dùng LF trên cả 2 hệ điều hành
+*.py text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+*.csv text eol=lf

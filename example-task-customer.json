@@ -1,1 +1,33 @@
-{"action": "search_group_posts", "customer_profile": "Nữ chơi cầu lông trình TB+, ở Hà Nội, cần sân buổi tối, giá dưới 100k", "fields_to_extract": ["location", "time", "level", "phone", "price"], "group_id": "152334461768622", "limit": 10, "only_new": true, "post_keyword": "tuyển", "task_id": "TASK-CUSTOMER-001", "watch_interval_minutes": 20}
+{
+  "task_id": "TASK-BAITO-CUSTOMER-001",
+  "action": "search_group_posts",
+  "discover_joined_groups": true,
+  "group_keywords": [
+    "baito",
+    "việc làm",
+    "tuyển dụng",
+    "nhật",
+    "tokyo",
+    "osaka"
+  ],
+  "max_groups": 5,
+  "group_pause_seconds": 20,
+  "post_keyword": "tuyển",
+  "only_small_business": true,
+  "customer_profile": "Cá nhân kinh doanh nhỏ hoặc chủ mô hình kinh doanh nhỏ dưới 20 người tại Nhật Bản",
+  "fields_to_extract": [
+    "phone",
+    "contact",
+    "business_type",
+    "shop_name",
+    "scale",
+    "location",
+    "station",
+    "wage",
+    "roles_needed",
+    "needs"
+  ],
+  "limit": 10,
+  "only_new": true,
+  "watch_interval_minutes": 25
+}

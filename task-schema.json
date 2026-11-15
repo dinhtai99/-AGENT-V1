@@ -1,1 +1,131 @@
-{"$schema":"AGENT-V1 task contract v1","result":{"errors":["string"],"group":{"id":"string","member_count":"number","name":"string","url":"string","visibility":"OPEN | CLOSED | SECRET"},"groups":[{"description":"string","id":"string","member_count":"number","name":"string","url":"string"}],"posts":[{"author_name":"string","comment_count":"number","content":"string","created_at":"string","extracted":{},"post_id":"string","post_url":"string","react_count":"number"}],"status":"success | partial | error","summary":"string, 1 dòng: tìm được bao nhiêu nhóm / bài","task_id":"string, giống task_id lệnh vào"},"task":{"action":"string, bắt buộc. search_group_posts","customer_profile":"string, tùy chọn. Đoạn text mô tả đối tượng khách hàng do agent quản lý gửi xuống. VD: Nữ chơi cầu lông trình TB+, ở Hà Nội, cần sân buổi tối, giá dưới 100k","date_from":"string, ISO date, tùy chọn. VD: 2026-11-01","date_to":"string, ISO date, tùy chọn. VD: 2026-11-09","exclude_keywords":["string, tùy chọn. Bài chứa từ này sẽ bị loại. VD: bán cầu"],"fields_to_extract":["string, VD: price, phone, location, author_name"],"group_id":"string, dùng khi đã biết ID nhóm. VD: 123456789","group_ids":["string, tùy chọn. Quét lần lượt nhiều nhóm, mỗi nhóm nghỉ group_pause_seconds giây. VD: [\"123\",\"456\"]"],"group_name":"string, dùng khi đã biết tên vanity nhóm. VD: weekendhikers","group_pause_seconds":"number, tùy chọn. Giây nghỉ giữa 2 nhóm khi quét nhiều nhóm, mặc định 20","include_comments":"boolean, mặc định false","levels":["string, tùy chọn. Chỉ giữ bài có trình độ này. VD: TB+, TBK"],"limit":"number, tối đa 20 cho bài. Mặc định 10","location_keyword":"string, tùy chọn. Phải xuất hiện trong nội dung hoặc địa điểm. VD: Trịnh Văn Bô","max_price":"number, tùy chọn. Giá tối đa tính bằng VND. VD: 100000","min_price":"number, tùy chọn. Giá tối thiểu tính bằng VND. VD: 40000","only_new":"boolean, tùy chọn. Chỉ trả bài chưa từng thấy (ghi nhớ trong seen.json). Mặc định false","post_keyword":"string, từ khóa tìm bài trong nhóm. VD: cho thuê phòng","task_id":"string, bắt buộc. VD: TASK-001","watch_interval_minutes":"number, tùy chọn. Dùng với --watch: quét lại sau mỗi X phút, tối thiểu 5, mặc định 30","watch_interval_jitter_percent":"number, tùy chọn. Dùng với --watch: độ lệch ngẫu nhiên ±% quanh watch_interval_minutes (30 phút ±20% = 24–36 phút), mặc định 20, tối đa 50"}}
+{
+  "$schema": "AGENT-V1 task contract v2 (Baito Japan Small Business Lead Finder)",
+  "task": {
+    "task_id": "string, bắt buộc. VD: TASK-BAITO-JP-001",
+    "action": "string, bắt buộc. search_group_posts",
+    "discover_joined_groups": "boolean, tùy chọn (mặc định true khi không truyền group_id/group_ids). Tự động lấy danh sách các nhóm Baito mà tài khoản Facebook đã tham gia",
+    "group_keywords": [
+      "string, tùy chọn. Từ khóa lọc tên nhóm đã tham gia. VD: baito, việc làm, tuyển dụng, tokyo, osaka, nhật bản"
+    ],
+    "max_groups": "number, tùy chọn. Số nhóm tối đa quét trong 1 lượt khi tự tìm nhóm đã tham gia, mặc định 10",
+    "group_id": "string, tùy chọn. Dùng khi muốn chỉ định 1 ID nhóm cụ thể",
+    "group_ids": [
+      "string, tùy chọn. Quét lần lượt nhiều nhóm cố định, mỗi nhóm nghỉ group_pause_seconds giây"
+    ],
+    "group_pause_seconds": "number, tùy chọn. Giây nghỉ giữa 2 nhóm khi quét nhiều nhóm, mặc định 20",
+    "post_keyword": "string, tùy chọn. Từ khóa lọc bài trong nhóm (để trống nếu muốn phân tích mọi bài tuyển dụng trong nhóm Baito)",
+    "only_small_business": "boolean, tùy chọn (mặc định true cho bài toán Baito). Chỉ giữ lại bài của cá nhân kinh doanh nhỏ / chủ mô hình dưới 20 người; loại bỏ người đi tìm việc và công ty môi giới/haken lớn",
+    "customer_profile": "string, tùy chọn. Mô tả đối tượng chủ kinh doanh mục tiêu. VD: Cá nhân kinh doanh nhỏ hoặc chủ mô hình kinh doanh nhỏ dưới 20 người tại Nhật Bản",
+    "exclude_keywords": [
+      "string, tùy chọn. Bài chứa từ này sẽ bị loại. VD: em cần tìm baito, công ty phái cử, nghiệp đoàn"
+    ],
+    "fields_to_extract": [
+      "string. VD: phone, contact, line_id, zalo_id, business_type, shop_name, scale, location, station, wage, roles_needed, needs"
+    ],
+    "date_from": "string, ISO date, tùy chọn. VD: 2026-11-01",
+    "date_to": "string, ISO date, tùy chọn. VD: 2026-11-12",
+    "limit": "number, tối đa 20 bài mỗi nhóm. Mặc định 15",
+    "only_new": "boolean, tùy chọn. Chỉ trả bài chưa từng thấy (ghi nhớ trong seen.json). Mặc định true",
+    "watch_interval_minutes": "number, tùy chọn. Dùng với --watch: quét lại sau mỗi X phút, tối thiểu 5, mặc định 30",
+    "watch_interval_jitter_percent": "number, tùy chọn. Độ lệch ngẫu nhiên ±% quanh watch_interval_minutes, mặc định 20"
+  },
+  "result": {
+    "task_id": "string, giống task_id lệnh vào",
+    "status": "success | partial | error",
+    "errors": [
+      "string"
+    ],
+    "group": {
+      "id": "string",
+      "name": "string",
+      "url": "string"
+    },
+    "groups": [
+      {
+        "id": "string",
+        "name": "string",
+        "url": "string",
+        "found": "number",
+        "error": "string"
+      }
+    ],
+    "posts": [
+      {
+        "post_id": "string",
+        "post_url": "string",
+        "author_name": "string, tên Facebook của chủ quán / người đăng",
+        "author_url": "string, link trang Facebook cá nhân",
+        "group_member_url": "string, link hồ sơ người đăng trong nhóm Baito",
+        "created_at": "string",
+        "content": "string",
+        "extracted": {},
+        "business_analysis": {
+          "is_target_owner": "boolean",
+          "post_category": "small_business_owner | job_seeker | agency_or_large | unknown",
+          "business_type": "string, ngành nghề kinh doanh",
+          "shop_name": "string, tên quán/tiệm nếu có",
+          "scale_estimate": "string, quy mô ước tính (< 20 người)",
+          "location": "string, ga tàu và khu vực tại Nhật",
+          "wage": "string, mức lương đề xuất",
+          "roles_needed": [
+            "string, vị trí đang thiếu"
+          ],
+          "shifts_needed": [
+            "string, ca làm việc đang thiếu"
+          ],
+          "shop_customer_segment": "string, tệp khách của quán suy từ yêu cầu tiếng Nhật",
+          "pain_points_and_needs": [
+            "string, phân tích sâu nhu cầu & nỗi đau vận hành của chủ quán"
+          ]
+        }
+      }
+    ],
+    "leads": [
+      {
+        "lead_key": "string, khóa định danh duy nhất của chủ quán",
+        "personal_info": {
+          "author_name": "string",
+          "author_url": "string",
+          "group_member_url": "string",
+          "phone": "string",
+          "line_id": "string",
+          "zalo_id": "string",
+          "contact_methods": [
+            "string"
+          ]
+        },
+        "step1_business_model": {
+          "business_type": "string, đang kinh doanh gì",
+          "shop_name": "string",
+          "scale_estimate": "string",
+          "location": "string",
+          "stations": [
+            "string"
+          ],
+          "areas": [
+            "string"
+          ]
+        },
+        "step2_deep_needs": {
+          "roles_needed": [
+            "string"
+          ],
+          "shifts_needed": [
+            "string"
+          ],
+          "wage_offered": "string",
+          "japanese_requirement": "string",
+          "shop_customer_segment": "string",
+          "benefits_offered": [
+            "string"
+          ],
+          "pain_points_and_needs": [
+            "string"
+          ]
+        },
+        "source_posts": []
+      }
+    ],
+    "summary": "string, 1 dòng tổng kết số bài và số chủ kinh doanh nhỏ tìm được"
+  }
+}
