@@ -504,6 +504,130 @@
 
   <section class="kpis" id="kpis" aria-label="Tổng quan"></section>
 
+  <!-- 🎯 TÌM KIẾM NHÓM THEO TỪ KHÓA TỰ CHỌN (>5K FL), TÍCH CHỌN & QUÉT TRỰC TIẾP TRÊN WEB -->
+  <section class="disc-section" id="disc-section" aria-label="Tìm kiếm và chọn nhóm Facebook" style="margin:14px 0 22px;border:2px solid var(--accent);border-radius:12px;background:var(--surface);box-shadow:0 4px 18px rgba(0,0,0,0.08);overflow:hidden;display:block">
+    <div style="padding:15px 20px;background:linear-gradient(135deg, rgba(230,126,34,0.12) 0%, rgba(241,196,15,0.09) 100%);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:21px">🎯</span>
+          <h2 id="disc-main-title" style="margin:0;font-size:16px;font-weight:800">Tìm Nhóm Theo Từ Khóa Tự Chọn (&gt;5.000 FL) &amp; Tích Chọn Nhóm Để Quét</h2>
+          <span class="tag ok" id="disc-main-badge" style="font-weight:700">Chống trùng nhóm đã quét</span>
+        </div>
+        <p class="muted" style="margin:5px 0 0;font-size:12.5px;max-width:880px">
+          Nhập <b>từ khóa tự chọn bất kỳ</b> hoặc bấm các nút từ khóa gợi ý bên dưới để bot tìm nhóm Facebook có <b>&gt;5.000 thành viên/followers</b> (tự động loại trừ nhóm đã quét), sau đó <b>tích chọn (☑️) các nhóm muốn quét</b>.
+        </p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-warning" id="btn-scan-selected-deep" type="button" style="font-weight:750;box-shadow:0 2px 8px rgba(230,126,34,0.3)">
+          🚀 Quét sâu 1 năm (<span class="sel-group-count">0</span> nhóm đã chọn)
+        </button>
+        <button class="btn btn-primary" id="btn-scan-selected-fast" type="button" style="font-weight:700">
+          ⚡ Quét bài mới (<span class="sel-group-count">0</span> nhóm)
+        </button>
+        <button class="btn btn-sm" id="disc-toggle-btn" type="button" aria-expanded="true">
+          Thu gọn
+        </button>
+      </div>
+    </div>
+
+    <div id="disc-grid-wrap" style="padding:14px 20px">
+      <!-- BƯỚC 1: NHẬP TỪ KHÓA TỰ CHỌN HOẶC BẤM TỪ KHÓA GỢI Ý ĐỂ TÌM NHÓM >5K FL -->
+      <div id="disc-search-controls" style="display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:12px;padding:14px;background:var(--surface-2);border:1.5px solid var(--border-strong);border-radius:10px">
+        <form id="form-inline-search-groups" style="display:flex;flex-wrap:wrap;gap:8px;align-items:end">
+          <div style="flex:1;min-width:210px">
+            <label for="inline-sg-query" style="display:block;font-size:12px;font-weight:750;margin-bottom:4px;color:var(--accent)">
+              🔍 Bước 1 — Nhập từ khóa tự chọn để tìm nhóm FB mới (&gt;5k FL):
+            </label>
+            <input id="inline-sg-query" type="text" value="kinh doanh tại nhật" placeholder="Gõ từ khóa bất kỳ: chợ việt tại nhật, mua bán tại nhật, nail tại nhật..." style="width:100%;height:36px;padding:0 12px;border-radius:7px;border:1.5px solid var(--accent);background:var(--surface);font-size:13px;font-weight:600">
+          </div>
+          <div style="width:125px">
+            <label for="inline-sg-min" style="display:block;font-size:11.5px;font-weight:700;margin-bottom:4px">Follower / TV tối thiểu:</label>
+            <select id="inline-sg-min" style="width:100%;height:36px;padding:0 8px;border-radius:7px;border:1px solid var(--border-strong);background:var(--surface);font-size:12.5px;font-weight:600">
+              <option value="1000">&ge; 1.000 FL</option>
+              <option value="3000">&ge; 3.000 FL</option>
+              <option value="5000" selected>&ge; 5.000 FL</option>
+              <option value="10000">&ge; 10.000 FL</option>
+              <option value="20000">&ge; 20.000 FL</option>
+              <option value="50000">&ge; 50.000 FL</option>
+            </select>
+          </div>
+          <div style="width:95px">
+            <label for="inline-sg-limit" style="display:block;font-size:11.5px;font-weight:700;margin-bottom:4px">Lấy tối đa:</label>
+            <select id="inline-sg-limit" style="width:100%;height:36px;padding:0 8px;border-radius:7px;border:1px solid var(--border-strong);background:var(--surface);font-size:12.5px;font-weight:600">
+              <option value="10">10 nhóm</option>
+              <option value="20" selected>20 nhóm</option>
+              <option value="30">30 nhóm</option>
+              <option value="50">50 nhóm</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="btn-inline-search-groups" type="submit" style="height:36px;font-weight:750;padding:0 14px">
+            🔍 Tìm Nhóm &gt;5k FL Ngay
+          </button>
+
+          <div style="width:100%;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center">
+            <span style="font-size:11.5px;font-weight:700;color:var(--muted)">⚡ Ấn chọn nhanh từ khóa (1 chạm):</span>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="kinh doanh tại nhật" style="padding:3px 9px;font-size:11.5px;font-weight:600">💼 Kinh doanh tại Nhật</button>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="chợ việt tại nhật" style="padding:3px 9px;font-size:11.5px;font-weight:600">🛒 Chợ Việt tại Nhật</button>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="mua bán tại nhật" style="padding:3px 9px;font-size:11.5px;font-weight:600">📦 Mua bán sỉ lẻ tại Nhật</button>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="quán ăn thực phẩm việt tại nhật" style="padding:3px 9px;font-size:11.5px;font-weight:600">🍜 Quán ăn &amp; Thực phẩm Việt</button>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="nail mi spa tại nhật" style="padding:3px 9px;font-size:11.5px;font-weight:600">💅 Nail, Mi &amp; Spa Nhật</button>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="baito việc làm tokyo osaka" style="padding:3px 9px;font-size:11.5px;font-weight:600">💴 Baito Tokyo / Osaka</button>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="thanh lý đồ cũ nhà ở tại nhật" style="padding:3px 9px;font-size:11.5px;font-weight:600">🏠 Đồ cũ &amp; Nhà ở Nhật</button>
+            <button type="button" class="btn btn-sm btn-kw-preset" data-kw="cộng đồng người việt tại nhật" style="padding:3px 9px;font-size:11.5px;font-weight:600">✈️ Cộng đồng người Việt</button>
+          </div>
+        </form>
+
+        <form id="form-inline-add-custom" style="display:flex;flex-direction:column;justify-content:space-between;gap:6px;border-left:1px dashed var(--border-strong);padding-left:14px">
+          <div>
+            <label for="inline-custom-group" style="display:block;font-size:12px;font-weight:750;margin-bottom:4px">
+              ➕ Hoặc dán trực tiếp Link / ID nhóm Facebook tự chọn:
+            </label>
+            <div style="display:flex;gap:6px">
+              <input id="inline-custom-group" type="text" placeholder="Dán link FB group hoặc ID (cách nhau dấu phẩy)..." style="flex:1;height:36px;padding:0 10px;border-radius:7px;border:1px solid var(--border-strong);background:var(--surface);font-size:12.5px">
+              <button class="btn btn-sm" type="submit" style="height:36px;font-weight:750;white-space:nowrap">➕ Thêm vào bảng</button>
+            </div>
+          </div>
+          <div class="muted" style="font-size:11.5px;line-height:1.4">
+            💡 <b>Bước 2:</b> Sau khi tìm hoặc thêm nhóm, tích chọn <b>☑️</b> các nhóm ở bảng dưới rồi bấm <b>"🚀 Quét sâu 1 năm"</b>.
+          </div>
+        </form>
+      </div>
+
+      <!-- Thanh công cụ chọn nhanh Checkbox -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;padding:8px 12px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span style="font-size:12px;font-weight:750;margin-right:4px">☑️ Bước 2 — Chọn nhóm để quét:</span>
+          <button type="button" class="btn btn-sm" id="btn-sel-all">☑️ Chọn tất cả</button>
+          <button type="button" class="btn btn-sm" id="btn-sel-none">⬜ Bỏ chọn hết</button>
+          <button type="button" class="btn btn-sm" id="btn-sel-unscanned">🆕 Chỉ chọn nhóm Chưa quét</button>
+          <button type="button" class="btn btn-sm" id="btn-sel-public">🔓 Chỉ chọn nhóm Công khai</button>
+        </div>
+        <div style="font-size:12.5px;font-weight:750;color:var(--accent)">
+          Đã tích chọn: <span class="sel-group-count">0</span> / <span id="disc-total-count">0</span> nhóm
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table style="width:100%;font-size:12.5px">
+          <thead>
+            <tr>
+              <th style="width:36px;text-align:center"><input type="checkbox" id="disc-check-all" title="Chọn / Bỏ chọn tất cả" style="width:16px;height:16px;cursor:pointer"></th>
+              <th style="width:40px">#</th>
+              <th>Tên nhóm Facebook (Bấm dòng để tích chọn)</th>
+              <th style="text-align:right;width:140px">Số lượng thành viên</th>
+              <th style="width:110px">Quyền riêng tư</th>
+              <th style="width:170px">Trạng thái quét</th>
+              <th style="text-align:center;width:130px">Thao tác lẻ</th>
+            </tr>
+          </thead>
+          <tbody id="disc-table-body">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <!-- TOP 10 NGÀNH NGHỀ KINH DOANH SHOWCASE -->
   <section class="top10-section" id="top10-section" aria-label="Top 10 ngành nghề kinh doanh">
     <div class="top10-header">
@@ -520,49 +644,6 @@
     </div>
     <div class="top10-grid" id="top10-grid">
       <!-- Injected by JavaScript -->
-    </div>
-  </section>
-
-  <!-- 🎯 10 NHÓM FACEBOOK KINH DOANH MỚI KHÁM PHÁ (>5K THÀNH VIÊN) -->
-  <section class="disc-section" id="disc-section" aria-label="10 nhóm kinh doanh mới khám phá" style="margin-bottom:24px;border:1.5px solid var(--accent);border-radius:12px;background:var(--surface);box-shadow:0 4px 16px rgba(0,0,0,0.06);overflow:hidden;display:none">
-    <div style="padding:16px 20px;background:linear-gradient(135deg, rgba(230,126,34,0.09) 0%, rgba(241,196,15,0.08) 100%);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-      <div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span style="font-size:20px">🎯</span>
-          <h2 style="margin:0;font-size:16px;font-weight:750">Top 10 Nhóm "Kinh Doanh Tại Nhật" Quy Mô Lớn Đã Khám Phá (&gt;5.000 Thành Viên)</h2>
-          <span class="tag ok" style="font-weight:700">10 nhóm · 38k - 149k members</span>
-        </div>
-        <p class="muted" style="margin:6px 0 0;font-size:12.5px;max-width:850px">
-          Bot đã tự động tìm kiếm trên Facebook theo từ khóa <b>"kinh doanh tại nhật"</b> và lọc ra 10 nhóm đông thành viên nhất. Bấm <b>"Quét sâu 1 năm"</b> để hệ thống tự động bóc tách toàn bộ bài đăng tuyển dụng, buôn bán để trích xuất chủ quán.
-        </p>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-warning btn-scan-discovered-trigger" type="button" style="font-weight:750;box-shadow:0 2px 8px rgba(230,126,34,0.3)">
-          🚀 Bắt đầu quét sâu 1 năm cả 10 nhóm này
-        </button>
-        <button class="btn btn-sm" id="disc-toggle-btn" type="button" aria-expanded="true">
-          Thu gọn
-        </button>
-      </div>
-    </div>
-    <div id="disc-grid-wrap" style="padding:14px 20px">
-      <div class="table-wrap">
-        <table style="width:100%;font-size:12.5px">
-          <thead>
-            <tr>
-              <th style="width:40px">#</th>
-              <th>Tên nhóm Facebook</th>
-              <th style="text-align:right;width:150px">Số lượng thành viên</th>
-              <th style="width:120px">Quyền riêng tư</th>
-              <th style="width:160px">Trạng thái quét</th>
-              <th style="text-align:center;width:120px">Link Facebook</th>
-            </tr>
-          </thead>
-          <tbody id="disc-table-body">
-            <!-- Rendered dynamically -->
-          </tbody>
-        </table>
-      </div>
     </div>
   </section>
 
@@ -751,42 +832,65 @@
 </dialog>
 
 <!-- Search Facebook Groups Dialog -->
-<dialog id="dlg-search-groups" aria-labelledby="dlg-search-groups-title" style="max-width:760px;width:95%">
+<dialog id="dlg-search-groups" aria-labelledby="dlg-search-groups-title" style="max-width:860px;width:95%">
   <div class="dlg-head">
-    <h2 id="dlg-search-groups-title">🔍 Tìm &amp; Khám phá Nhóm Facebook Kinh Doanh (&gt;5k Thành viên)</h2>
+    <h2 id="dlg-search-groups-title">🔍 Tìm Nhóm Theo Từ Khóa Tự Chọn (&gt;5k FL) &amp; Tích Chọn Nhóm Để Quét</h2>
     <button class="btn btn-ghost btn-sm" type="button" id="dlg-search-groups-close" aria-label="Đóng"><svg class="icon"><use href="#i-x"/></svg></button>
   </div>
   <div class="dlg-body" style="padding:16px">
-    <p class="muted" style="margin:0 0 12px;font-size:12.5px">
-      Hệ thống sẽ dùng bot trình duyệt mở tìm kiếm Facebook, chọn tab Nhóm và lọc ra các hội nhóm có từ 5.000 thành viên trở lên.
+    <p class="muted" style="margin:0 0 10px;font-size:12.5px">
+      Nhập <b>từ khóa tự chọn bất kỳ</b> hoặc bấm các nút từ khóa gợi ý bên dưới để bot tìm nhóm Facebook có <b>&gt;5.000 thành viên/followers</b> (tự động loại trừ nhóm đã quét).
     </p>
-    <form id="form-search-groups" style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px">
+    <form id="form-search-groups" style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:10px">
       <div class="form-group" style="margin:0">
-        <label for="sg-query" style="font-size:12px;font-weight:600">Từ khóa tìm kiếm:</label>
-        <input id="sg-query" type="text" value="kinh doanh tại nhật" placeholder="Ví dụ: kinh doanh tại nhật..." style="height:32px;padding:0 8px;border-radius:6px;border:1px solid var(--border)">
+        <label for="sg-query" style="font-size:12px;font-weight:700;color:var(--accent)">🔍 Nhập từ khóa tự chọn:</label>
+        <input id="sg-query" type="text" value="kinh doanh tại nhật" placeholder="Gõ từ khóa bất kỳ: chợ việt tại nhật, nail tại nhật..." style="height:34px;padding:0 10px;border-radius:6px;border:1.5px solid var(--accent);font-weight:600">
       </div>
       <div class="form-group" style="margin:0">
-        <label for="sg-min" style="font-size:12px;font-weight:600">Thành viên tối thiểu:</label>
-        <input id="sg-min" type="number" value="5000" min="500" step="500" style="height:32px;padding:0 8px;border-radius:6px;border:1px solid var(--border)">
+        <label for="sg-min" style="font-size:12px;font-weight:600">Follower / TV tối thiểu:</label>
+        <input id="sg-min" type="number" value="5000" min="100" step="500" style="height:34px;padding:0 8px;border-radius:6px;border:1px solid var(--border)">
       </div>
       <div class="form-group" style="margin:0">
         <label for="sg-limit" style="font-size:12px;font-weight:600">Số lượng nhóm:</label>
-        <input id="sg-limit" type="number" value="10" min="1" max="25" style="height:32px;padding:0 8px;border-radius:6px;border:1px solid var(--border)">
+        <input id="sg-limit" type="number" value="20" min="1" max="50" style="height:34px;padding:0 8px;border-radius:6px;border:1px solid var(--border)">
       </div>
-      <button class="btn btn-primary" id="btn-submit-search-groups" type="submit" style="height:32px">Tìm kiếm</button>
+      <button class="btn btn-primary" id="btn-submit-search-groups" type="submit" style="height:34px;font-weight:750">🔍 Tìm nhóm &gt;5k FL</button>
     </form>
 
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <div style="font-size:13px;font-weight:650">Top 10 nhóm mục tiêu đã khám phá (<span id="sg-count">10</span> nhóm):</div>
-      <button class="btn btn-warning btn-sm" id="btn-scan-discovered-all" type="button" style="font-weight:700">🚀 Quét sâu 1 năm cả 10 nhóm này</button>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center">
+      <span style="font-size:11.5px;font-weight:700;color:var(--muted)">⚡ Ấn chọn nhanh từ khóa:</span>
+      <button type="button" class="btn btn-sm btn-kw-preset" data-kw="kinh doanh tại nhật" style="padding:2px 8px;font-size:11px">💼 Kinh doanh tại Nhật</button>
+      <button type="button" class="btn btn-sm btn-kw-preset" data-kw="chợ việt tại nhật" style="padding:2px 8px;font-size:11px">🛒 Chợ Việt tại Nhật</button>
+      <button type="button" class="btn btn-sm btn-kw-preset" data-kw="mua bán tại nhật" style="padding:2px 8px;font-size:11px">📦 Mua bán sỉ lẻ</button>
+      <button type="button" class="btn btn-sm btn-kw-preset" data-kw="quán ăn thực phẩm việt tại nhật" style="padding:2px 8px;font-size:11px">🍜 Quán ăn &amp; Thực phẩm</button>
+      <button type="button" class="btn btn-sm btn-kw-preset" data-kw="nail mi spa tại nhật" style="padding:2px 8px;font-size:11px">💅 Nail, Mi &amp; Spa</button>
+      <button type="button" class="btn btn-sm btn-kw-preset" data-kw="baito việc làm tokyo osaka" style="padding:2px 8px;font-size:11px">💴 Baito Tokyo/Osaka</button>
+      <button type="button" class="btn btn-sm btn-kw-preset" data-kw="thanh lý đồ cũ nhà ở tại nhật" style="padding:2px 8px;font-size:11px">🏠 Đồ cũ &amp; Nhà ở</button>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;padding:7px 10px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-size:12px;font-weight:700">Chọn nhanh:</span>
+        <button type="button" class="btn btn-sm" id="btn-modal-sel-all">☑️ Tất cả</button>
+        <button type="button" class="btn btn-sm" id="btn-modal-sel-none">⬜ Bỏ chọn</button>
+        <button type="button" class="btn btn-sm" id="btn-modal-sel-unscanned">🆕 Chưa quét</button>
+        <button type="button" class="btn btn-sm" id="btn-modal-sel-public">🔓 Công khai</button>
+        <span style="font-size:12px;font-weight:700;color:var(--accent);margin-left:4px">
+          Đã chọn: <span class="sel-group-count">0</span> / <span id="sg-count">20</span>
+        </span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-warning btn-sm" id="btn-scan-discovered-all" type="button" style="font-weight:700">🚀 Quét sâu 1 năm (<span class="sel-group-count">0</span> nhóm đã chọn)</button>
+      </div>
     </div>
 
     <div class="table-wrap" style="max-height:300px;overflow-y:auto">
       <table style="width:100%;font-size:12.5px">
         <thead>
           <tr>
+            <th style="width:34px;text-align:center"><input type="checkbox" id="sg-check-all" title="Chọn / Bỏ chọn tất cả" style="width:15px;height:15px;cursor:pointer"></th>
             <th>#</th>
-            <th>Tên nhóm</th>
+            <th>Tên nhóm (Bấm để tích chọn)</th>
             <th style="text-align:right">Số thành viên</th>
             <th>Quyền riêng tư</th>
             <th style="text-align:center">Link Facebook</th>
@@ -1333,23 +1437,81 @@
       }).join("") + "</tbody></table></div>";
   }
 
-  // ---------- groups ----------
+  // ---------- groups & selection ----------
+  var selectedDiscGroups = {};
+  var discSelectionInitialized = false;
+
+  function updateSelectedGroupCountUI() {
+    var disc = (DATA && DATA.discovered_groups) || {};
+    var list = disc.groups || [];
+    var selCount = 0;
+    list.forEach(function (g) {
+      if (g && g.id && selectedDiscGroups[g.id]) selCount++;
+    });
+    document.querySelectorAll(".sel-group-count").forEach(function (el) {
+      el.textContent = String(selCount);
+    });
+    var totalEl = document.getElementById("disc-total-count");
+    if (totalEl) totalEl.textContent = String(list.length);
+    var checkAllMain = document.getElementById("disc-check-all");
+    if (checkAllMain) checkAllMain.checked = list.length > 0 && selCount === list.length;
+    var checkAllModal = document.getElementById("sg-check-all");
+    if (checkAllModal) checkAllModal.checked = list.length > 0 && selCount === list.length;
+  }
+
+  function getSelectedDiscoveredGroupIds() {
+    var disc = (DATA && DATA.discovered_groups) || {};
+    var list = disc.groups || [];
+    var out = [];
+    list.forEach(function (g) {
+      if (g && g.id && selectedDiscGroups[g.id]) out.push(String(g.id));
+    });
+    return out;
+  }
+
   function renderDiscoveredGroups() {
     var disc = (DATA && DATA.discovered_groups) || {};
     var list = disc.groups || [];
+
+    // Initialize default selection: prefer unscanned public groups, or all public groups if all scanned
+    if (!discSelectionInitialized && list.length) {
+      var anyUnscanned = false;
+      list.forEach(function (g) {
+        var scannedGroup = GROUPS.find(function (item) { return item.id === g.id; });
+        var isScanned = scannedGroup && scannedGroup.raw_posts_read > 0;
+        var isPrivate = (g.privacy || "").toLowerCase().indexOf("riêng tư") !== -1;
+        if (!isScanned && !isPrivate) anyUnscanned = true;
+      });
+      list.forEach(function (g) {
+        var scannedGroup = GROUPS.find(function (item) { return item.id === g.id; });
+        var isScanned = scannedGroup && scannedGroup.raw_posts_read > 0;
+        var isPrivate = (g.privacy || "").toLowerCase().indexOf("riêng tư") !== -1;
+        selectedDiscGroups[g.id] = anyUnscanned ? (!isScanned && !isPrivate) : !isPrivate;
+      });
+      discSelectionInitialized = true;
+    }
+
     var countEl = document.getElementById("sg-count");
     if (countEl) countEl.textContent = list.length;
+    var qLabel = disc.query || "kinh doanh tại nhật";
+    var mainTitle = document.getElementById("disc-main-title");
+    if (mainTitle && list.length) {
+      mainTitle.textContent = 'Bảng Chọn & Quét Nhóm Facebook: "' + qLabel + '" (' + list.length + ' Nhóm · >' + ((disc.min_members || 5000).toLocaleString()) + ' TV)';
+    }
+    var mainBadge = document.getElementById("disc-main-badge");
+    if (mainBadge && list.length) mainBadge.textContent = list.length + ' nhóm · Tích chọn để quét';
     var tbody = document.getElementById("sg-table-body");
     var discTbody = document.getElementById("disc-table-body");
     var discSection = document.getElementById("disc-section");
 
     if (discSection) {
-      discSection.style.display = list.length ? "block" : "none";
+      discSection.style.display = "block";
     }
 
     if (!list.length) {
-      if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="muted" style="text-align:center;padding:18px">Chưa có nhóm nào được tìm thấy. Hãy bấm "Tìm kiếm" ở trên!</td></tr>';
-      if (discTbody) discTbody.innerHTML = '<tr><td colspan="6" class="muted" style="text-align:center;padding:18px">Chưa có nhóm nào được tìm thấy.</td></tr>';
+      if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="muted" style="text-align:center;padding:18px">Chưa có nhóm nào trong danh sách. Hãy nhập từ khóa và bấm "🔍 Tìm nhóm" ở trên!</td></tr>';
+      if (discTbody) discTbody.innerHTML = '<tr><td colspan="7" class="muted" style="text-align:center;padding:18px">Chưa có nhóm nào. Hãy nhập từ khóa tìm kiếm hoặc dán link nhóm ở trên!</td></tr>';
+      updateSelectedGroupCountUI();
       return;
     }
 
@@ -1358,97 +1520,92 @@
 
     list.forEach(function (g, idx) {
       var u = safeUrl(g.url);
+      var isChecked = !!selectedDiscGroups[g.id];
       var memBadge = '<span class="tag ok" style="font-weight:750">' + (g.member_text || (g.member_count ? g.member_count.toLocaleString() + ' mem' : '—')) + '</span>';
-      
+      var isPrivate = (g.privacy || "").toLowerCase().indexOf("riêng tư") !== -1;
+      var privBadge = isPrivate
+        ? '<span class="tag danger" style="font-size:11px">🔒 Riêng tư</span>'
+        : '<span class="tag info" style="font-size:11px">🔓 Công khai</span>';
+
       // Match scan status with GROUPS list
       var scannedGroup = GROUPS.find(function (item) { return item.id === g.id; });
       var statusBadge = '<span class="tag" style="background:rgba(230,126,34,0.12);color:var(--accent);font-weight:600">⏳ Chờ quét 1 năm</span>';
       if (scannedGroup && scannedGroup.raw_posts_read > 0) {
         statusBadge = '<span class="tag ok" style="font-weight:700">✅ Đã quét ' + scannedGroup.raw_posts_read + ' bài (' + scannedGroup.leads_found + ' khách)</span>';
+      } else if (scannedGroup && isPrivate) {
+        statusBadge = '<span class="tag" style="font-size:11px">🔒 Đã bỏ qua (Riêng tư)</span>';
       }
 
-      htmlModal += '<tr>' +
+      var rowBg = isChecked ? ' style="background:rgba(230,126,34,0.06);cursor:pointer"' : ' style="cursor:pointer"';
+
+      htmlModal += '<tr class="disc-selectable-row" data-gid="' + esc(g.id) + '"' + rowBg + '>' +
+        '<td style="text-align:center"><input type="checkbox" class="disc-group-cb" data-gid="' + esc(g.id) + '"' + (isChecked ? ' checked' : '') + ' style="width:15px;height:15px;cursor:pointer"></td>' +
         '<td style="font-weight:700">#' + (idx + 1) + '</td>' +
         '<td><b>' + esc(g.name) + '</b><div class="muted" style="font-size:11px">ID: ' + esc(g.id) + '</div></td>' +
         '<td style="text-align:right">' + memBadge + '</td>' +
-        '<td><span class="muted" style="font-size:11.5px">' + esc(g.privacy || 'Công khai') + '</span></td>' +
+        '<td>' + privBadge + '</td>' +
         '<td style="text-align:center">' + (u ? '<a class="btn btn-sm" href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">Mở nhóm ↗</a>' : '—') + '</td>' +
       '</tr>';
 
-      htmlMain += '<tr>' +
+      htmlMain += '<tr class="disc-selectable-row" data-gid="' + esc(g.id) + '"' + rowBg + '>' +
+        '<td style="text-align:center"><input type="checkbox" class="disc-group-cb" data-gid="' + esc(g.id) + '"' + (isChecked ? ' checked' : '') + ' style="width:16px;height:16px;cursor:pointer"></td>' +
         '<td style="font-weight:750">#' + (idx + 1) + '</td>' +
         '<td><a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer" style="font-weight:650;color:var(--text);text-decoration:none">' + esc(g.name) + ' <svg class="icon" style="width:11px;height:11px;vertical-align:middle"><use href="#i-link"/></svg></a><div class="muted" style="font-size:11px">ID: ' + esc(g.id) + '</div></td>' +
         '<td style="text-align:right">' + memBadge + '</td>' +
-        '<td><span class="muted" style="font-size:11.5px">' + esc(g.privacy || 'Công khai') + '</span></td>' +
+        '<td>' + privBadge + '</td>' +
         '<td>' + statusBadge + '</td>' +
         '<td style="text-align:center"><div style="display:inline-flex;gap:6px;align-items:center">' +
           (u ? '<a class="btn btn-sm" href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">Mở ↗</a>' : '') +
-          '<button class="btn btn-sm btn-warning btn-scan-single-group" data-gid="' + esc(g.id) + '" title="Quét sâu 1 năm chỉ nhóm này">Quét</button>' +
+          '<button class="btn btn-sm btn-warning btn-scan-single-group" data-gid="' + esc(g.id) + '" title="Quét sâu 1 năm chỉ riêng nhóm này">Quét 1 năm</button>' +
         '</div></td>' +
       '</tr>';
     });
 
     if (tbody) tbody.innerHTML = htmlModal;
     if (discTbody) discTbody.innerHTML = htmlMain;
+    updateSelectedGroupCountUI();
   }
 
   function renderGroups() {
     document.getElementById("c-groups").textContent = GROUPS.length;
     renderDiscoveredGroups();
-    var disc = (DATA && DATA.discovered_groups) || {};
-    var discList = disc.groups || [];
-    var discHtml = "";
-    if (discList.length) {
-      discHtml = '<div class="card" style="margin-bottom:20px;padding:16px;border:1.5px solid var(--accent);background:var(--surface);box-shadow:0 4px 16px rgba(0,0,0,0.06)">' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">' +
-          '<div>' +
-            '<h3 style="margin:0;font-size:15px;display:flex;align-items:center;gap:8px">' +
-              '<span>🎯 Top 10 Nhóm "Kinh Doanh Tại Nhật" Lớn Nhất (&gt;5k Thành Viên)</span>' +
-              '<span class="tag ok">Bot Tự Khám Phá</span>' +
-            '</h3>' +
-            '<p class="muted" style="margin:4px 0 0;font-size:12px">Danh sách hội nhóm kinh doanh, buôn bán lớn nhất tại Nhật có từ 38.000 đến 149.000 thành viên do bot lọc tự động.</p>' +
-          '</div>' +
-          '<button class="btn btn-warning" id="btn-scan-disc-inline" type="button" style="font-weight:700">🚀 Quét sâu 1 năm cả 10 nhóm này</button>' +
-        '</div>' +
-        '<div class="table-wrap"><table style="width:100%;font-size:12.5px">' +
-          '<thead><tr><th>#</th><th>Tên nhóm</th><th style="text-align:right">Số lượng thành viên</th><th>Quyền riêng tư</th><th style="text-align:center">Link Facebook</th></tr></thead>' +
-          '<tbody>' +
-            discList.map(function (g, idx) {
-              var u = safeUrl(g.url);
-              return '<tr>' +
-                '<td style="font-weight:700">#' + (idx + 1) + '</td>' +
-                '<td><b>' + esc(g.name) + '</b><div class="muted" style="font-size:11px">ID: ' + esc(g.id) + '</div></td>' +
-                '<td style="text-align:right"><span class="tag ok" style="font-weight:700">' + (g.member_text || (g.member_count ? g.member_count.toLocaleString() + ' mem' : '—')) + '</span></td>' +
-                '<td><span class="muted" style="font-size:11.5px">' + esc(g.privacy || 'Công khai') + '</span></td>' +
-                '<td style="text-align:center">' + (u ? '<a class="btn btn-sm" href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">Mở nhóm ↗</a>' : '—') + '</td>' +
-              '</tr>';
-            }).join("") +
-          '</tbody>' +
-        '</table></div>' +
-      '</div>';
-    }
 
     if (!GROUPS.length) {
-      document.getElementById("groups-view").innerHTML = discHtml + '<div class="empty"><h3>Chưa có dữ liệu nhóm</h3></div>';
+      document.getElementById("groups-view").innerHTML = '<div class="empty"><h3>Chưa có dữ liệu nhóm</h3></div>';
       return;
     }
-    document.getElementById("groups-view").innerHTML = discHtml + GROUPS.map(function (g) {
+
+    var toolbarHtml = '<div class="card" style="grid-column:1/-1;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border:1.5px solid var(--border-strong);background:var(--surface)">' +
+      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+        '<span style="font-weight:750;font-size:13.5px">📋 Chọn từ ' + GROUPS.length + ' nhóm đã quét để quét lại:</span>' +
+        '<button type="button" class="btn btn-sm" id="btn-gview-sel-all">☑️ Chọn tất cả</button>' +
+        '<button type="button" class="btn btn-sm" id="btn-gview-sel-none">⬜ Bỏ chọn</button>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+        '<button type="button" class="btn btn-warning btn-sm" id="btn-gview-scan-deep" style="font-weight:700">🚀 Quét sâu 1 năm các nhóm đã tích</button>' +
+        '<button type="button" class="btn btn-primary btn-sm" id="btn-gview-scan-fast" style="font-weight:700">⚡ Quét bài mới các nhóm đã tích</button>' +
+      '</div>' +
+    '</div>';
+
+    document.getElementById("groups-view").innerHTML = toolbarHtml + GROUPS.map(function (g) {
       var u = safeUrl(g.url);
       var raw = g.raw_posts_read || 0, found = g.leads_found || 0;
       var pct = raw ? Math.round(found / raw * 100) : 0;
-      return '<article class="group-card"><h3>' + esc(g.name) + "</h3>" +
-        '<div class="muted" style="font-size:12px">ID: ' + esc(g.id) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">Mở nhóm ↗</a>' : "") + "</div>" +
+      return '<article class="group-card" style="position:relative">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">' +
+          '<label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;flex:1">' +
+            '<input type="checkbox" class="scanned-group-cb" value="' + esc(g.id) + '" style="width:16px;height:16px;margin-top:2px;cursor:pointer">' +
+            '<div><h3 style="margin:0 0 2px">' + esc(g.name) + '</h3>' +
+            '<div class="muted" style="font-size:12px">ID: ' + esc(g.id) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">Mở nhóm ↗</a>' : "") + '</div></div>' +
+          '</label>' +
+          '<button type="button" class="btn btn-sm btn-warning btn-scan-single-group" data-gid="' + esc(g.id) + '" title="Quét sâu 1 năm nhóm này">Quét</button>' +
+        '</div>' +
         '<div class="group-stats"><div><b>' + raw + "</b><span>bài đọc được</span></div><div><b>" + found + "</b><span>chủ KD nhỏ</span></div><div><b>" + pct + "%</b><span>tỉ lệ khách</span></div></div>" +
         '<div class="bar" aria-hidden="true"><i style="width:' + pct + '%;background:var(--accent)"></i></div>' +
         (g.error ? '<div class="alert danger"><b>Không đọc được nhóm này.</b> ' + esc(g.error_hint) + "</div>" :
-          (raw === 0 ? '<div class="alert info">Chưa quét nhóm này.</div>' : "")) +
+          (raw === 0 ? '<div class="alert info">Nhóm Riêng tư / 0 bài đọc được.</div>' : "")) +
       "</article>";
     }).join("");
-
-    var btnScanDiscInline = document.getElementById("btn-scan-disc-inline");
-    if (btnScanDiscInline) {
-      btnScanDiscInline.addEventListener("click", handleScanDiscovered);
-    }
   }
 
   // ---------- CSV export ----------
@@ -1615,6 +1772,7 @@
       RAW = data.raw_posts || [];
       GROUPS = data.groups || [];
       META = data.meta || {};
+      discSelectionInitialized = false;
       indexLeads();
       renderHeader();
       renderKpis();
@@ -1743,24 +1901,67 @@
     if (isServerMode) fetch("/api/logs/clear", { method: "POST" }).catch(function () {});
   });
 
-  function handleScanDiscovered() {
+  function handleScanSelectedGroups(isDeep, explicitIds) {
     if (!isServerMode) {
-      alert("Để quét trực tiếp trên web, bạn hãy mở terminal và chạy start-web.command trên máy Mac!");
+      alert("Để quét trực tiếp trên web, bạn hãy mở start-web.bat (Windows) hoặc start-web.command (Mac)!");
       return;
     }
-    if (confirm("Kích hoạt QUÉT SÂU 1 NĂM trên toàn bộ các nhóm mới khám phá (>5k thành viên)?\n\nHệ thống sẽ tự động thêm các nhóm này vào danh sách mục tiêu và cào bài viết trong 365 ngày qua để tìm khách hàng.")) {
+    var gids = explicitIds || getSelectedDiscoveredGroupIds();
+    if (!gids.length) {
+      alert("Vui lòng tích chọn ít nhất 1 nhóm trong bảng trước khi bấm Quét!");
+      return;
+    }
+    var modeName = isDeep ? "QUÉT SÂU 1 NĂM" : "QUÉT BÀI MỚI GẦN ĐÂY";
+    if (confirm("Kích hoạt " + modeName + " cho " + gids.length + " nhóm bạn đã tích chọn?\n\nHệ thống sẽ lần lượt quét " + gids.length + " nhóm này, tự động bỏ qua các nhóm khóa/riêng tư và lưu cộng dồn khách hàng vào hệ thống.")) {
       document.getElementById("console-drawer").hidden = false;
       fetch("/api/groups/add-and-scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deep: true })
+        body: JSON.stringify({ group_ids: gids, deep: !!isDeep, force_selected: true })
       }).then(function (res) { return res.json(); }).then(function (r) {
-        toast(r.message || "Đã khởi động quét sâu các nhóm mới!");
+        toast(r.message || ("Đã khởi động quét " + gids.length + " nhóm đã chọn!"));
         pollServerStatus();
       }).catch(function () {
-        toast("Lỗi gửi lệnh quét nhóm mới.");
+        toast("Lỗi gửi lệnh quét nhóm đã chọn.");
       });
     }
+  }
+
+  function handleScanDiscovered() {
+    handleScanSelectedGroups(true);
+  }
+
+  function triggerGroupSearchRequest(query, minMem, limit, btnEl) {
+    if (!isServerMode) {
+      alert("Để tìm nhóm trực tiếp từ Facebook, hãy mở start-web.bat (Windows) hoặc start-web.command (Mac)!");
+      return;
+    }
+    var origText = btnEl ? btnEl.textContent : "🔍 Tìm nhóm";
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.textContent = "Đang tìm...";
+    }
+    document.getElementById("console-drawer").hidden = false;
+    toast("Đang tìm nhóm '" + query + "' trên Facebook...");
+
+    fetch("/api/groups/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: query, min_members: minMem, limit: limit })
+    }).then(function (res) { return res.json(); }).then(function (r) {
+      toast(r.message || "Đã bắt đầu tìm nhóm FB!");
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = origText;
+      }
+      pollServerStatus();
+    }).catch(function (err) {
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = origText;
+      }
+      toast("Lỗi tìm nhóm: " + err);
+    });
   }
 
   // Search Groups Dialog Handlers
@@ -1781,41 +1982,133 @@
   if (formSearchGroups) {
     formSearchGroups.addEventListener("submit", function (e) {
       e.preventDefault();
-      if (!isServerMode) {
-        alert("Để tìm nhóm trực tiếp từ Facebook, hãy mở start-web.command trên máy Mac!");
-        return;
-      }
       var query = document.getElementById("sg-query").value.trim() || "kinh doanh tại nhật";
       var minMem = parseInt(document.getElementById("sg-min").value, 10) || 5000;
-      var limit = parseInt(document.getElementById("sg-limit").value, 10) || 10;
-      var submitBtn = document.getElementById("btn-submit-search-groups");
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Đang tìm...";
-      document.getElementById("console-drawer").hidden = false;
-      toast("Đang tìm nhóm trên Facebook...");
-
-      fetch("/api/groups/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query, min_members: minMem, limit: limit })
-      }).then(function (res) { return res.json(); }).then(function (r) {
-        toast(r.message || "Đã bắt đầu tìm nhóm FB!");
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Tìm kiếm";
-        pollServerStatus();
-      }).catch(function (err) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Tìm kiếm";
-        toast("Lỗi tìm nhóm: " + err);
-      });
+      var limit = parseInt(document.getElementById("sg-limit").value, 10) || 20;
+      triggerGroupSearchRequest(query, minMem, limit, document.getElementById("btn-submit-search-groups"));
     });
   }
 
+  var formInlineSearchGroups = document.getElementById("form-inline-search-groups");
+  if (formInlineSearchGroups) {
+    formInlineSearchGroups.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var query = document.getElementById("inline-sg-query").value.trim() || "kinh doanh tại nhật";
+      var minMem = parseInt(document.getElementById("inline-sg-min").value, 10) || 5000;
+      var limit = parseInt(document.getElementById("inline-sg-limit").value, 10) || 20;
+      triggerGroupSearchRequest(query, minMem, limit, document.getElementById("btn-inline-search-groups"));
+    });
+  }
+
+  var formInlineAddCustom = document.getElementById("form-inline-add-custom");
+  if (formInlineAddCustom) {
+    formInlineAddCustom.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var inputEl = document.getElementById("inline-custom-group");
+      var raw = (inputEl && inputEl.value || "").trim();
+      if (!raw) {
+        toast("Hãy dán link hoặc ID nhóm Facebook cần thêm!");
+        return;
+      }
+      var parts = raw.split(/[\n,]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+      var parsedIds = [];
+      parts.forEach(function (s) {
+        var m = s.match(/facebook\.com\/groups\/([^/?&#]+)/i);
+        var gid = m ? m[1].trim() : s.replace(/^\/+|\/+$/g, "");
+        if (gid && parsedIds.indexOf(gid) === -1) parsedIds.push(gid);
+      });
+      if (!parsedIds.length) return;
+
+      if (!DATA.discovered_groups) DATA.discovered_groups = { groups: [] };
+      if (!DATA.discovered_groups.groups) DATA.discovered_groups.groups = [];
+      var list = DATA.discovered_groups.groups;
+      parsedIds.forEach(function (gid) {
+        var exists = list.some(function (g) { return String(g.id).toLowerCase() === gid.toLowerCase(); });
+        if (!exists) {
+          list.unshift({
+            id: gid,
+            name: "Nhóm tùy chọn (" + gid + ")",
+            url: "https://www.facebook.com/groups/" + gid + "/",
+            member_count: 0,
+            member_text: "Tùy chọn",
+            privacy: "Công khai"
+          });
+        }
+        selectedDiscGroups[gid] = true;
+      });
+      if (inputEl) inputEl.value = "";
+      renderDiscoveredGroups();
+      toast("Đã thêm và tích chọn " + parsedIds.length + " nhóm!");
+
+      if (isServerMode) {
+        fetch("/api/groups/add-custom", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ groups: parsedIds })
+        }).catch(function () {});
+      }
+    });
+  }
+
+  var btnScanSelectedDeep = document.getElementById("btn-scan-selected-deep");
+  if (btnScanSelectedDeep) {
+    btnScanSelectedDeep.addEventListener("click", function () { handleScanSelectedGroups(true); });
+  }
+  var btnScanSelectedFast = document.getElementById("btn-scan-selected-fast");
+  if (btnScanSelectedFast) {
+    btnScanSelectedFast.addEventListener("click", function () { handleScanSelectedGroups(false); });
+  }
   var btnScanDiscAll = document.getElementById("btn-scan-discovered-all");
   if (btnScanDiscAll) {
     btnScanDiscAll.addEventListener("click", function () {
       if (dlgSearchGroups) dlgSearchGroups.close();
-      handleScanDiscovered();
+      handleScanSelectedGroups(true);
+    });
+  }
+
+  function applyQuickGroupSelection(mode) {
+    var disc = (DATA && DATA.discovered_groups) || {};
+    var list = disc.groups || [];
+    list.forEach(function (g) {
+      if (!g || !g.id) return;
+      var scannedGroup = GROUPS.find(function (item) { return item.id === g.id; });
+      var isScanned = scannedGroup && scannedGroup.raw_posts_read > 0;
+      var isPrivate = (g.privacy || "").toLowerCase().indexOf("riêng tư") !== -1;
+      if (mode === "all") selectedDiscGroups[g.id] = true;
+      else if (mode === "none") selectedDiscGroups[g.id] = false;
+      else if (mode === "unscanned") selectedDiscGroups[g.id] = !isScanned && !isPrivate;
+      else if (mode === "public") selectedDiscGroups[g.id] = !isPrivate;
+    });
+    renderDiscoveredGroups();
+  }
+
+  ["btn-sel-all", "btn-modal-sel-all"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("click", function () { applyQuickGroupSelection("all"); });
+  });
+  ["btn-sel-none", "btn-modal-sel-none"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("click", function () { applyQuickGroupSelection("none"); });
+  });
+  ["btn-sel-unscanned", "btn-modal-sel-unscanned"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("click", function () { applyQuickGroupSelection("unscanned"); });
+  });
+  ["btn-sel-public", "btn-modal-sel-public"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("click", function () { applyQuickGroupSelection("public"); });
+  });
+
+  var discCheckAll = document.getElementById("disc-check-all");
+  if (discCheckAll) {
+    discCheckAll.addEventListener("change", function () {
+      applyQuickGroupSelection(discCheckAll.checked ? "all" : "none");
+    });
+  }
+  var sgCheckAll = document.getElementById("sg-check-all");
+  if (sgCheckAll) {
+    sgCheckAll.addEventListener("change", function () {
+      applyQuickGroupSelection(sgCheckAll.checked ? "all" : "none");
     });
   }
 
@@ -1826,7 +2119,7 @@
     btnDiscToggle.addEventListener("click", function () {
       var isHidden = discGridWrap.style.display === "none";
       discGridWrap.style.display = isHidden ? "block" : "none";
-      btnDiscToggle.textContent = isHidden ? "Thu gọn" : "Xem 10 nhóm";
+      btnDiscToggle.textContent = isHidden ? "Thu gọn" : "Mở bảng chọn nhóm";
     });
   }
 
@@ -1839,12 +2132,57 @@
     });
   }
 
-  // Delegated click for any scan-discovered button
+  // Delegated click & change for group selection and presets
+  document.addEventListener("change", function (e) {
+    var cb = e.target && e.target.closest && e.target.closest(".disc-group-cb");
+    if (cb) {
+      var gid = cb.getAttribute("data-gid");
+      if (gid) {
+        selectedDiscGroups[gid] = !!cb.checked;
+        renderDiscoveredGroups();
+      }
+    }
+  });
+
   document.addEventListener("click", function (e) {
+    var kwPreset = e.target && e.target.closest && e.target.closest(".btn-kw-preset");
+    if (kwPreset) {
+      var kw = kwPreset.getAttribute("data-kw") || "";
+      var inp1 = document.getElementById("inline-sg-query");
+      var inp2 = document.getElementById("sg-query");
+      if (inp1 && kw) inp1.value = kw;
+      if (inp2 && kw) inp2.value = kw;
+      if (dlgSearchGroups && dlgSearchGroups.open && inp2) inp2.focus();
+      else if (inp1) inp1.focus();
+      toast('Đã điền từ khóa "' + kw + '" — Bấm nút "🔍 Tìm Nhóm >5k FL" để bắt đầu tìm!');
+      return;
+    }
+
+    var gviewSelAll = e.target && e.target.closest && e.target.closest("#btn-gview-sel-all");
+    if (gviewSelAll) {
+      document.querySelectorAll(".scanned-group-cb").forEach(function (c) { c.checked = true; });
+      return;
+    }
+    var gviewSelNone = e.target && e.target.closest && e.target.closest("#btn-gview-sel-none");
+    if (gviewSelNone) {
+      document.querySelectorAll(".scanned-group-cb").forEach(function (c) { c.checked = false; });
+      return;
+    }
+    var gviewScanDeep = e.target && e.target.closest && e.target.closest("#btn-gview-scan-deep");
+    var gviewScanFast = e.target && e.target.closest && e.target.closest("#btn-gview-scan-fast");
+    if (gviewScanDeep || gviewScanFast) {
+      var checkedIds = [];
+      document.querySelectorAll(".scanned-group-cb:checked").forEach(function (c) {
+        if (c.value) checkedIds.push(c.value);
+      });
+      handleScanSelectedGroups(!!gviewScanDeep, checkedIds);
+      return;
+    }
+
     var trigger = e.target && e.target.closest && e.target.closest(".btn-scan-discovered-trigger");
     if (trigger) {
       if (dlgSearchGroups && dlgSearchGroups.open) dlgSearchGroups.close();
-      handleScanDiscovered();
+      handleScanSelectedGroups(true);
       return;
     }
 
@@ -1853,7 +2191,7 @@
       var gid = btnSingle.getAttribute("data-gid");
       if (gid) {
         if (!isServerMode) {
-          alert("Để quét tự động từ Facebook, hãy mở start-web.command trên máy Mac!");
+          alert("Để quét tự động từ Facebook, hãy mở start-web.bat (Windows) hoặc start-web.command (Mac)!");
           return;
         }
         btnSingle.disabled = true;
@@ -1863,17 +2201,28 @@
         fetch("/api/groups/add-and-scan", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ group_ids: [gid], deep: true })
+          body: JSON.stringify({ group_ids: [gid], deep: true, force_selected: true })
         }).then(function (res) { return res.json(); }).then(function (r) {
           toast(r.message || ("Đang quét nhóm " + gid));
           btnSingle.disabled = false;
-          btnSingle.textContent = "Quét";
+          btnSingle.textContent = "Quét 1 năm";
           pollServerStatus();
         }).catch(function (err) {
           btnSingle.disabled = false;
-          btnSingle.textContent = "Quét";
+          btnSingle.textContent = "Quét 1 năm";
           toast("Lỗi quét nhóm: " + err);
         });
+      }
+      return;
+    }
+
+    // Click on row toggles checkbox unless clicking a link, button, or input
+    var row = e.target && e.target.closest && e.target.closest(".disc-selectable-row");
+    if (row && !e.target.closest("a,button,input,label")) {
+      var rowGid = row.getAttribute("data-gid");
+      if (rowGid) {
+        selectedDiscGroups[rowGid] = !selectedDiscGroups[rowGid];
+        renderDiscoveredGroups();
       }
     }
   });
@@ -2037,16 +2386,26 @@
     pollServerStatus();
     setInterval(pollServerStatus, 3000);
   } else {
-    // Static Cloud Viewer Mode (Netlify / Vercel / GitHub Pages / file://)
-    // Hide worker controls so viewer has a pristine, error-free presentation UI
-    ["btn-scan", "btn-scan-deep", "btn-scan-stop", "btn-watch", "btn-login", "btn-search-groups", "btn-settings", "btn-logs", "console-drawer"].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) el.style.display = "none";
+    // Probe local server on 127.0.0.1:8080 in case user opened dashboard.html or GitHub Pages on their PC/Mac
+    fetch("http://127.0.0.1:8080/api/status").then(function (r) {
+      if (r.ok) {
+        isServerMode = true;
+        var origFetch = window.fetch;
+        window.fetch = function (u, opts) {
+          if (typeof u === "string" && u.indexOf("/api/") === 0) {
+            u = "http://127.0.0.1:8080" + u;
+          }
+          return origFetch(u, opts);
+        };
+        pollServerStatus();
+        setInterval(pollServerStatus, 3000);
+      }
+    }).catch(function () {
+      var dot = document.getElementById("server-dot");
+      var txt = document.getElementById("server-text");
+      if (dot) { dot.className = "pulse-dot"; dot.style.background = "#10b981"; }
+      if (txt) { txt.textContent = "Bản trực tuyến 24/7"; }
     });
-    var dot = document.getElementById("server-dot");
-    var txt = document.getElementById("server-text");
-    if (dot) { dot.className = "pulse-dot"; dot.style.background = "#10b981"; }
-    if (txt) { txt.textContent = "Bản trực tuyến 24/7"; }
   }
 })();
 </script>

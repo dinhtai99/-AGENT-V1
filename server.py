@@ -247,7 +247,7 @@ class WorkerManager:
                 if cancel_before_start:
                     self.add_log("Đã hủy lượt quét trước khi bắt đầu.", "warn")
                     return
-                child_env = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+                child_env = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1", "AGENT_UTF8_PIPE": "1"}
                 proc = subprocess.Popen(
                     cmd,
                     cwd=str(self.root),
@@ -380,7 +380,7 @@ class WorkerManager:
                     pass
         return True, "Đã gửi lệnh dừng lượt quét thành công."
 
-    def start_group_search(self, query: str = "kinh doanh tại nhật", min_members: int = 5000, limit: int = 10) -> tuple[bool, str]:
+    def start_group_search(self, query: str = "kinh doanh tại nhật", min_members: int = 5000, limit: int = 20) -> tuple[bool, str]:
         with self.lock:
             if self.is_scanning or self.remote_login.is_active():
                 return False, "Worker đang quét hoặc tìm kiếm. Vui lòng đợi hoàn tất."
@@ -402,7 +402,7 @@ class WorkerManager:
                 "--debug",
             ]
             try:
-                child_env = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+                child_env = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1", "AGENT_UTF8_PIPE": "1"}
                 proc = subprocess.Popen(
                     cmd,
                     cwd=str(self.root),
@@ -450,7 +450,46 @@ class WorkerManager:
         th.start()
         return True, "Đã khởi động tiến trình tìm kiếm nhóm Facebook."
 
-    def add_groups_and_scan(self, group_ids: list[str], deep: bool = True) -> tuple[bool, str]:
+    def add_custom_groups(self, raw_inputs: list[str]) -> tuple[bool, str, list[dict]]:
+        import re
+        disc_path = self.root / "discovered_groups.json"
+        disc = self._read_json("discovered_groups.json")
+        if not isinstance(disc, dict):
+            disc = {"updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "query": "tùy chọn", "min_members": 0, "total_found": 0, "groups": []}
+        groups = disc.get("groups") if isinstance(disc.get("groups"), list) else []
+        existing_ids = {str(g.get("id", "")).strip().lower() for g in groups if isinstance(g, dict)}
+        added = 0
+        for item in raw_inputs:
+            s = str(item or "").strip()
+            if not s:
+                continue
+            m = re.search(r"facebook\.com/groups/([^/?&#]+)", s, re.I)
+            gid = m.group(1).strip() if m else s.strip("/ ")
+            if not gid or gid.lower() in existing_ids:
+                continue
+            groups.insert(0, {
+                "id": gid,
+                "name": f"Nhóm tùy chọn ({gid})",
+                "url": f"https://www.facebook.com/groups/{gid}/",
+                "member_count": 0,
+                "member_text": "Tùy chọn",
+                "privacy": "Công khai",
+            })
+            existing_ids.add(gid.lower())
+            added += 1
+        disc["groups"] = groups
+        disc["total_found"] = len(groups)
+        disc["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+        with open(disc_path, "w", encoding="utf-8") as f:
+            json.dump(disc, f, ensure_ascii=False, indent=2)
+        try:
+            with self.crm_lock:
+                dashboard.generate(self.root, save_leads=False)
+        except Exception:
+            pass
+        return True, f"Đã thêm {added} nhóm mới vào bảng chọn trên web.", groups
+
+    def add_groups_and_scan(self, group_ids: list[str], deep: bool = True, force_selected: bool = False) -> tuple[bool, str]:
         # Master task file persistence
         task_path = self.root / "task-baito-nhom-da-tham-gia.json"
         task = self._read_json(task_path.name) or {}
@@ -463,32 +502,37 @@ class WorkerManager:
         with open(task_path, "w", encoding="utf-8") as f:
             json.dump(task, f, ensure_ascii=False, indent=2)
 
-        # Check which groups have ALREADY been scanned in result.json
-        res = self._read_json("result.json") or {}
-        scanned_gids = {
-            str(g["id"]): g
-            for g in res.get("groups", [])
-            if g.get("id") and g.get("raw_posts_read", 0) > 0 and not g.get("error")
-        }
-
-        # Filter strictly: only scan the new requested groups that haven't been scanned!
-        groups_to_scan = [gid for gid in group_ids if str(gid).strip() not in scanned_gids]
-        if not groups_to_scan:
-            # If all were somehow in result.json, scan the requested group_ids anyway
+        if force_selected:
             groups_to_scan = [str(gid).strip() for gid in group_ids if str(gid).strip()]
+        else:
+            # Check which groups have ALREADY been scanned in result.json
+            res = self._read_json("result.json") or {}
+            scanned_gids = {
+                str(g["id"]): g
+                for g in res.get("groups", [])
+                if g.get("id") and g.get("raw_posts_read", 0) > 0 and not g.get("error")
+            }
+
+            # Filter strictly: only scan the new requested groups that haven't been scanned!
+            groups_to_scan = [gid for gid in group_ids if str(gid).strip() not in scanned_gids]
+            if not groups_to_scan:
+                # If all were somehow in result.json, scan the requested group_ids anyway
+                groups_to_scan = [str(gid).strip() for gid in group_ids if str(gid).strip()]
 
         # Create a dedicated task file containing ONLY the target groups
         run_task = dict(task)
-        run_task["task_id"] = "TASK-SCAN-NEW-10-GROUPS"
+        run_task["task_id"] = f"TASK-SCAN-SELECTED-{len(groups_to_scan)}-GROUPS"
         run_task["group_ids"] = groups_to_scan
         run_task["discover_joined_groups"] = False  # NEVER re-scan other joined groups!
+        run_task["max_groups"] = max(25, len(groups_to_scan))
 
         run_task_file = "task-scan-discovered.json"
         with open(self.root / run_task_file, "w", encoding="utf-8") as f:
             json.dump(run_task, f, ensure_ascii=False, indent=2)
 
+        mode_label = "quét sâu 1 năm" if deep else "quét bài mới"
         self.add_log(
-            f"🎯 Bắt đầu quét sâu 1 năm CHỈ DÀNH CHO {len(groups_to_scan)} nhóm mới tìm thấy (Bỏ qua hoàn toàn các nhóm cũ đã quét).",
+            f"🎯 Bắt đầu {mode_label} cho {len(groups_to_scan)} nhóm đã chọn trên Website.",
             "info"
         )
         return self.start_scan(deep=deep, task_file=run_task_file)
@@ -614,6 +658,14 @@ class LeadRequestHandler(BaseHTTPRequestHandler):
 
     server_version = "AgentV1ControlServer/2.0"
 
+    def do_OPTIONS(self) -> None:
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Requested-With")
+        self.send_header("Access-Control-Allow-Private-Network", "true")
+        self.end_headers()
+
     def send_json(self, data: dict | list, status_code: int = 200, extra_headers: dict | None = None) -> None:
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
         self.send_response(status_code)
@@ -622,6 +674,10 @@ class LeadRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Requested-With")
+        self.send_header("Access-Control-Allow-Private-Network", "true")
         for name, value in (extra_headers or {}).items():
             self.send_header(name, value)
         self.end_headers()
@@ -760,17 +816,27 @@ class LeadRequestHandler(BaseHTTPRequestHandler):
         elif path == "/api/groups/search":
             query = str(data.get("query") or "kinh doanh tại nhật").strip()
             min_members = int(data.get("min_members") or 5000)
-            limit = int(data.get("limit") or 10)
+            limit = int(data.get("limit") or 20)
             ok, msg = MANAGER.start_group_search(query=query, min_members=min_members, limit=limit)
             self.send_json({"ok": ok, "message": msg}, status_code=200 if ok else 409)
 
+        elif path == "/api/groups/add-custom":
+            raw_inputs = data.get("groups") or []
+            if isinstance(raw_inputs, str):
+                raw_inputs = [x.strip() for x in raw_inputs.replace(",", "\n").splitlines() if x.strip()]
+            ok, msg, groups = MANAGER.add_custom_groups(raw_inputs)
+            self.send_json({"ok": ok, "message": msg, "groups": groups}, status_code=200 if ok else 400)
+
         elif path == "/api/groups/add-and-scan":
-            group_ids = data.get("group_ids") or []
+            raw_gids = data.get("group_ids")
+            has_explicit_gids = bool(raw_gids)
+            group_ids = raw_gids or []
             if not group_ids:
                 disc = MANAGER._read_json("discovered_groups.json") or {}
                 group_ids = [g["id"] for g in disc.get("groups") or []]
             deep = bool(data.get("deep", True))
-            ok, msg = MANAGER.add_groups_and_scan(group_ids=group_ids, deep=deep)
+            force_selected = bool(data.get("force_selected", has_explicit_gids))
+            ok, msg = MANAGER.add_groups_and_scan(group_ids=group_ids, deep=deep, force_selected=force_selected)
             self.send_json({"ok": ok, "message": msg}, status_code=200 if ok else 409)
 
         elif path == "/api/access/rotate":

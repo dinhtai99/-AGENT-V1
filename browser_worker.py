@@ -32,13 +32,34 @@ from datetime import date, timedelta
 from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
+import builtins as _builtins
+import unicodedata as _unicodedata
+
 sys.path.insert(0, str(Path(__file__).parent))
+_USE_UTF8_STDIO = os.name != "nt" or os.environ.get("AGENT_UTF8_PIPE") == "1"
 for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         try:
-            _stream.reconfigure(encoding="utf-8", errors="replace")
+            _stream.reconfigure(
+                encoding="utf-8" if _USE_UTF8_STDIO else "ascii",
+                errors="replace",
+            )
         except Exception:
             pass
+
+if not _USE_UTF8_STDIO:
+    _orig_print = _builtins.print
+
+    def _ascii_safe_str(s: str) -> str:
+        s = s.replace("đ", "d").replace("Đ", "D")
+        nfkd = _unicodedata.normalize("NFKD", s)
+        return "".join(c for c in nfkd if not _unicodedata.combining(c)).encode("ascii", "ignore").decode("ascii")
+
+    def _safe_print(*args, **kwargs):
+        safe_args = [_ascii_safe_str(str(a)) for a in args]
+        return _orig_print(*safe_args, **kwargs)
+
+    _builtins.print = _safe_print
 from filters import (  # noqa: E402
     analyze_business_and_needs,
     build_leads_list,
@@ -183,7 +204,9 @@ def _clean_group_name(raw_text: str, fallback_id: str) -> str:
             continue
         if low.startswith("chua doc"):
             continue
-        clean_lines.append(ln)
+        ln = re.sub(r"^(?:Ảnh đại diện của|Anh dai dien cua|Profile picture of)\s+", "", ln, flags=re.IGNORECASE).strip()
+        if ln:
+            clean_lines.append(ln)
     return (clean_lines[0] if clean_lines else fallback_id)[:120]
 
 
@@ -288,16 +311,32 @@ def discover_joined_groups(
 
 
 def parse_member_count(text: str) -> int:
-    """Parse strings like '15K thành viên', '8,2 nghìn thành viên', '5.1K members', '12.000 thành viên'."""
+    """Parse member/follower counts like '15K thành viên', '45 N thành viên', '1,2 Tr thành viên', '5.1K followers', '12.000 thành viên'."""
     text = (text or "").lower()
-    m_k = re.search(r"(\d+(?:[.,]\d+)?)\s*(?:k|nghìn|nghin)", text)
+    m_tr = re.search(
+        r"(\d+(?:[.,]\d+)?)\s*(?:tr|triệu|trieu|m)\s*(?:thành viên|thanh vien|members|người|nguoi|followers|theo dõi|theo doi)?",
+        text,
+    )
+    if m_tr:
+        val_str = m_tr.group(1).replace(",", ".")
+        try:
+            return int(float(val_str) * 1_000_000)
+        except ValueError:
+            pass
+    m_k = re.search(
+        r"(\d+(?:[.,]\d+)?)\s*(?:k|nghìn|nghin|n\b)\s*(?:thành viên|thanh vien|members|người|nguoi|followers|theo dõi|theo doi)?",
+        text,
+    )
     if m_k:
         val_str = m_k.group(1).replace(",", ".")
         try:
             return int(float(val_str) * 1000)
         except ValueError:
             pass
-    m_full = re.search(r"(\d{1,3}(?:[.,]\d{3})+|\d+)\s*(?:thành viên|thanh vien|members|người|nguoi)", text)
+    m_full = re.search(
+        r"(\d{1,3}(?:[.,]\d{3})+|\d+)\s*(?:thành viên|thanh vien|members|người|nguoi|followers|theo dõi|theo doi)",
+        text,
+    )
     if m_full:
         val_str = re.sub(r"[.,]", "", m_full.group(1))
         try:
@@ -307,121 +346,228 @@ def parse_member_count(text: str) -> int:
     return 0
 
 
+def _get_already_scanned_group_ids(root: Path) -> set[str]:
+    """Return set of group IDs (lowercased and raw) that have already been scanned."""
+    scanned: set[str] = set()
+
+    def _add(gid: str | None) -> None:
+        if gid:
+            s = str(gid).strip()
+            if s:
+                scanned.add(s)
+                scanned.add(s.lower())
+
+    res = load_json(root / "result.json") if (root / "result.json").exists() else {}
+    if isinstance(res, dict):
+        for g in res.get("groups") or []:
+            if isinstance(g, dict) and g.get("id") and (g.get("raw_posts_read", 0) > 0 and not g.get("error")):
+                _add(g.get("id"))
+        for p in res.get("posts") or []:
+            if isinstance(p, dict) and p.get("group_id"):
+                _add(p.get("group_id"))
+
+    leads_doc = load_json(root / "leads.json") if (root / "leads.json").exists() else {}
+    leads_list = (
+        leads_doc.get("leads", [])
+        if isinstance(leads_doc, dict)
+        else leads_doc if isinstance(leads_doc, list) else []
+    )
+    for lead in leads_list:
+        if isinstance(lead, dict):
+            for sp in lead.get("source_posts") or []:
+                if isinstance(sp, dict) and sp.get("group_id"):
+                    _add(sp.get("group_id"))
+
+    seen_doc = load_json(root / "seen.json") if (root / "seen.json").exists() else {}
+    if isinstance(seen_doc, dict):
+        for gid, pids in seen_doc.items():
+            if pids:
+                _add(gid)
+
+    return scanned
+
+
 def search_facebook_groups(
     query: str = "kinh doanh tại nhật",
     min_members: int = 5000,
-    limit: int = 10,
+    limit: int = 20,
     state_path: Path | None = None,
     debug: bool = False,
+    exclude_scanned: bool = True,
 ) -> list[dict]:
-    """Search Facebook for groups matching query and filter by minimum member count (e.g. >= 5000)."""
-    state_path = Path(state_path or Path(__file__).parent / "fb-state.json")
+    """Search Facebook for groups matching query, filter by >= min_members, and exclude already-scanned groups."""
+    root = Path(__file__).parent
+    state_path = Path(state_path or root / "fb-state.json")
     if not state_path.exists():
         raise RuntimeError(f"Missing login state {state_path}. Run first: python browser_worker.py --login")
+
+    already_scanned = _get_already_scanned_group_ids(root) if exclude_scanned else set()
+    if already_scanned:
+        print(f"🛡️ Chống trùng: Đã ghi nhận {len({g.lower() for g in already_scanned})} nhóm đã quét trước đó để loại trừ.")
+
+    discovered: dict[str, dict] = {}
+    seen_lower: set[str] = set()
+
+    # Keep previously discovered UNSCANNED groups >= min_members so we never lose valid groups already found
+    prev_disc_path = root / "discovered_groups.json"
+    if prev_disc_path.exists():
+        try:
+            prev_disc = load_json(prev_disc_path)
+            if isinstance(prev_disc, dict):
+                for g in prev_disc.get("groups") or []:
+                    gid = str(g.get("id") or "").strip()
+                    mc = int(g.get("member_count") or 0)
+                    if gid and mc >= min_members and gid not in already_scanned and gid.lower() not in already_scanned:
+                        discovered[gid] = dict(g)
+                        seen_lower.add(gid.lower())
+        except Exception:
+            pass
+
+    def _ingest_links(links_data: list[dict]) -> int:
+        added_now = 0
+        for item in links_data:
+            gid = (item.get("gid") or "").strip()
+            href = item.get("href") or ""
+            if not gid or gid.lower() in _RESERVED_GROUP_SLUGS:
+                continue
+            if re.search(r"/(?:posts|permalink|user|members|about|media|files)", href):
+                continue
+            if gid in already_scanned or gid.lower() in already_scanned:
+                continue
+            card_text = item.get("cardText") or ""
+            link_text = (item.get("linkText") or "").strip()
+            count = parse_member_count(card_text)
+            name = _clean_group_name(link_text, gid)
+            if (not name or name == gid) and card_text:
+                first_lines = [ln.strip() for ln in card_text.splitlines() if len(ln.strip()) >= 4 and not re.search(r"thành viên|members|bài viết|công khai|riêng tư", ln.lower())]
+                if first_lines:
+                    name = _clean_group_name(first_lines[0], gid)
+            if not name or len(name) < 3 or "chưa đọc" in name.lower():
+                continue
+
+            if gid not in discovered and gid.lower() not in seen_lower:
+                discovered[gid] = {
+                    "id": gid,
+                    "name": name,
+                    "url": f"https://www.facebook.com/groups/{gid}/",
+                    "member_count": count,
+                    "member_text": f"{count:,} thành viên" if count else "",
+                    "privacy": "Công khai" if "công khai" in card_text.lower() or "public" in card_text.lower() else "Riêng tư",
+                }
+                seen_lower.add(gid.lower())
+                if count >= min_members:
+                    added_now += 1
+            elif gid in discovered:
+                if count > discovered[gid]["member_count"]:
+                    discovered[gid]["member_count"] = count
+                    discovered[gid]["member_text"] = f"{count:,} thành viên"
+                if len(name) > len(discovered[gid]["name"]) and discovered[gid]["name"] == gid:
+                    discovered[gid]["name"] = name
+        return added_now
+
+    def _qualifying_count() -> int:
+        return sum(1 for g in discovered.values() if g["member_count"] >= min_members)
+
+    # Primary query first; if Facebook search results for primary query exhaust before `limit` new >5k groups,
+    # expand with closely related Japan business/community queries to guarantee reaching `limit` groups.
+    search_queries = [query]
+    fallback_queries = [
+        "kinh doanh nhật bản",
+        "buôn bán tại nhật",
+        "chợ việt tại nhật",
+        "mua bán tại nhật bản",
+        "cộng đồng kinh doanh tại nhật",
+        "rao vặt tại nhật",
+    ]
+    for fq in fallback_queries:
+        if fq.lower() != query.lower() and fq not in search_queries:
+            search_queries.append(fq)
 
     with _playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(storage_state=str(state_path))
         page = context.new_page()
 
-        # Step 1: Go to FB home and ensure logged in
         try:
             page.goto("https://www.facebook.com/", wait_until="domcontentloaded", timeout=45000)
         except Exception:
             pass
-        page.wait_for_timeout(3000)
+        page.wait_for_timeout(2500)
 
-        # Handle one-click profile resume if shown
         profile_btn = page.locator('div[role="button"][aria-label*="Tiếp tục"]').first
         if profile_btn.count() > 0:
             profile_btn.click()
-            page.wait_for_timeout(4000)
+            page.wait_for_timeout(3500)
 
-        # Step 2: Use Facebook search input
-        search_input = page.locator("input[placeholder*='Tìm kiếm'], input[placeholder*='Search Facebook'], input[placeholder*='Search'], input[aria-label*='Tìm kiếm'], input[type='search']").first
-        if search_input.count() > 0:
-            _human_type(search_input, query)
-            page.wait_for_timeout(random.randint(600, 1100))
-            search_input.press("Enter")
-            page.wait_for_timeout(random.randint(4500, 6500))
-        else:
-            # Fallback to direct URL if search input not found
-            encoded = quote(query)
+        if "login" in page.url or "checkpoint" in page.url:
+            browser.close()
+            raise RuntimeError(
+                "Facebook chuyển hướng sang trang đăng nhập/checkpoint. Phiên fb-state.json đã hết hạn."
+            )
+
+        for q_idx, cur_query in enumerate(search_queries):
+            if _qualifying_count() >= limit:
+                break
+            if q_idx == 0:
+                print(f"🔎 Đang tìm nhóm với từ khóa chính: '{cur_query}' (cần {limit} nhóm mới >= {min_members:,} thành viên)...", flush=True)
+            else:
+                print(f"🔎 Mở rộng tìm kiếm thêm với từ khóa liên quan: '{cur_query}' (đã có {_qualifying_count()}/{limit} nhóm mới)...", flush=True)
+
+            encoded = quote(cur_query)
             try:
-                page.goto(f"https://www.facebook.com/search/groups/?q={encoded}", wait_until="domcontentloaded", timeout=45000)
+                page.goto(f"https://www.facebook.com/search/groups/?q={encoded}", wait_until="domcontentloaded", timeout=30000)
             except Exception:
                 pass
-            page.wait_for_timeout(5000)
+            page.wait_for_timeout(random.randint(2500, 3500))
 
-        # Step 3: Switch to 'Nhóm' / 'Groups' tab if not already on it
-        if "search/groups" not in page.url:
-            group_tab = page.locator("a[href*='search/groups'], span:has-text('Nhóm'), span:has-text('Groups'), div[role='tab']:has-text('Nhóm')").first
-            if group_tab.count() > 0:
-                group_tab.click()
-                page.wait_for_timeout(5000)
+            max_scrolls = 12 if q_idx == 0 else 6
+            stale_rounds = 0
+            for scroll_i in range(max_scrolls):
+                links_data = page.evaluate("""() => {
+                    const results = [];
+                    const links = Array.from(document.querySelectorAll("a[href*='/groups/']"));
+                    for (const a of links) {
+                        const href = a.getAttribute('href') || '';
+                        const m = href.match(/\\/groups\\/([^\\/?#]+)/);
+                        if (!m) continue;
+                        const gid = m[1];
+                        if (['feed', 'joins', 'discover', 'categories'].includes(gid.toLowerCase())) continue;
+                        let container = a.closest("div[role='feed'] > div") || a.closest("div[role='article']") || a.parentElement?.parentElement?.parentElement?.parentElement || a.parentElement?.parentElement?.parentElement;
+                        const cardText = container ? container.innerText : a.innerText;
+                        results.push({
+                            href: href,
+                            gid: gid,
+                            linkText: (a.innerText || a.getAttribute('aria-label') || '').trim(),
+                            cardText: cardText || ''
+                        });
+                    }
+                    return results;
+                }""")
+                before_q = _qualifying_count()
+                _ingest_links(links_data)
+                after_q = _qualifying_count()
+                if after_q > before_q:
+                    print(f"  -> Đã lọc được {after_q}/{limit} nhóm mới (>={min_members:,} thành viên, không trùng nhóm cũ)...", flush=True)
+                    stale_rounds = 0
+                else:
+                    stale_rounds += 1
 
-        # Step 4: Scroll down to load search result cards like a human
-        for _ in range(4):
-            _human_scroll_and_read(page, total_pixels=1400, min_read_sec=4.0, max_read_sec=7.0)
+                if after_q >= limit or stale_rounds >= 2:
+                    break
 
-        # Step 5: Extract group links and container texts
-        links_data = page.evaluate("""() => {
-            const results = [];
-            const links = Array.from(document.querySelectorAll("a[href*='/groups/']"));
-            for (const a of links) {
-                const href = a.getAttribute('href') || '';
-                const m = href.match(/\\/groups\\/([^\\/?#]+)/);
-                if (!m) continue;
-                const gid = m[1];
-                if (['feed', 'joins', 'discover', 'categories'].includes(gid.toLowerCase())) continue;
-                
-                let container = a.closest("div[role='feed'] > div") || a.closest("div[role='article']") || a.parentElement?.parentElement?.parentElement;
-                const cardText = container ? container.innerText : a.innerText;
-                results.push({
-                    href: href,
-                    gid: gid,
-                    linkText: (a.innerText || '').trim(),
-                    cardText: cardText || ''
-                });
-            }
-            return results;
-        }""")
+                _human_scroll_and_read(page, total_pixels=1800, min_read_sec=1.5, max_read_sec=2.5)
+
         browser.close()
 
-    discovered: dict[str, dict] = {}
-    for item in links_data:
-        gid = item["gid"]
-        if gid.lower() in _RESERVED_GROUP_SLUGS or re.search(r"/(?:posts|permalink|user|members|about|media|files)", item["href"]):
-            continue
-        card_text = item["cardText"]
-        link_text = item["linkText"].strip()
-        count = parse_member_count(card_text)
-        name = _clean_group_name(link_text, gid)
-        if not name or len(name) < 3 or "chưa đọc" in name.lower():
-            continue
-
-        if gid not in discovered:
-            discovered[gid] = {
-                "id": gid,
-                "name": name,
-                "url": f"https://www.facebook.com/groups/{gid}/",
-                "member_count": count,
-                "member_text": f"{count:,} thành viên" if count else "",
-                "privacy": "Công khai" if "công khai" in card_text.lower() else "Riêng tư",
-            }
-        else:
-            if count > discovered[gid]["member_count"]:
-                discovered[gid]["member_count"] = count
-                discovered[gid]["member_text"] = f"{count:,} thành viên"
-            if len(name) > len(discovered[gid]["name"]):
-                discovered[gid]["name"] = name
-
-    # Filter >= min_members and sort descending by member count
-    qualifying = [g for g in discovered.values() if g["member_count"] >= min_members]
+    qualifying = [
+        g for g in discovered.values()
+        if g["member_count"] >= min_members
+        and g["id"] not in already_scanned
+        and g["id"].lower() not in already_scanned
+    ]
     qualifying.sort(key=lambda x: x["member_count"], reverse=True)
 
-    result = qualifying[:limit]
-    return result
+    return qualifying[:limit]
 
 
 def _post_datetime(article) -> str:
@@ -570,18 +716,21 @@ def _post_author_from_links(links: list[dict], group_id: str) -> dict:
 def _check_fb_session(page, context) -> None:
     """Verify that the browser session is authenticated on Facebook.
 
-    If Facebook has logged out, redirected to checkpoint/login, or is showing
-    login inputs, IMMEDIATELY raises RuntimeError to halt scanning and alert the user.
+    Only raises RuntimeError when Facebook explicitly redirected to login/checkpoint
+    or when the authentication cookie (c_user) is genuinely missing.
+    Never raises a false positive on secondary login banners inside restricted groups
+    while c_user is still valid.
     """
-    # 1. Check URL
+    # 1. Check URL redirect
     url = (page.url or "").lower()
-    if any(k in url for k in ("login", "checkpoint", "recover", "help/contact", "two_factor")):
+    if any(k in url for k in ("/login", "checkpoint", "recover", "help/contact", "two_factor")):
         raise RuntimeError(
             "🚨 BỊ ĐĂNG XUẤT (LOGOUT): Facebook đã chuyển hướng sang trang đăng nhập/xác minh danh tính. "
             "Vui lòng bấm 'Đăng nhập FB' trên thanh công cụ để đăng nhập lại!"
         )
 
-    # 2. Check live cookies
+    # 2. Check live cookies (authoritative check)
+    has_c_user = None
     try:
         cookies = context.cookies()
         has_c_user = any(c.get("name") == "c_user" and c.get("value") for c in cookies)
@@ -595,18 +744,15 @@ def _check_fb_session(page, context) -> None:
     except Exception:
         pass
 
-    # 3. Check DOM markers (Login form / 'Đăng nhập / Bạn quên tài khoản ư?')
+    # 3. Only check DOM login form if cookie check could not confirm c_user
+    if has_c_user is True:
+        return
+
     try:
         has_login_input = page.locator('input[name="email"], input[name="pass"]').count() > 0
         if has_login_input:
             raise RuntimeError(
                 "🚨 BỊ ĐĂNG XUẤT (LOGOUT): Facebook hiển thị khung đăng nhập (Tài khoản đã bị thoát). "
-                "Vui lòng bấm 'Đăng nhập FB' trên thanh công cụ để đăng nhập lại!"
-            )
-        body_sample = (page.locator("body").inner_text(timeout=1000) or "").lower()[:2000]
-        if "bạn quên tài khoản ư?" in body_sample or "log in to facebook" in body_sample:
-            raise RuntimeError(
-                "🚨 BỊ ĐĂNG XUẤT (LOGOUT): Facebook yêu cầu đăng nhập để xem nội dung. "
                 "Vui lòng bấm 'Đăng nhập FB' trên thanh công cụ để đăng nhập lại!"
             )
     except RuntimeError:
@@ -1023,28 +1169,47 @@ def fetch_group_posts_deep_search(
     seen_pids: set[str] = set()
     seen_text_hashes: set[str] = set()
 
+    total_raw_cards = 0
     with _playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(storage_state=str(state_path))
         page = context.new_page()
 
         for q_idx, query in enumerate(queries):
+            print(f"  🔎 [Từ khóa {q_idx + 1}/{len(queries)}] Tìm '{query}' trong nhóm {group_id}...", flush=True)
             url = f"https://www.facebook.com/groups/{group_id}/search/?q={quote(query)}"
             try:
                 page.goto(url, wait_until="domcontentloaded", timeout=40000)
             except Exception:
                 pass
-            page.wait_for_timeout(random.randint(3500, 5000))
+            page.wait_for_timeout(random.randint(3000, 4500))
             try:
                 _check_fb_session(page, context)
             except RuntimeError:
                 browser.close()
                 raise
 
+            if q_idx == 0:
+                try:
+                    body_low = (page.locator("body").inner_text(timeout=1500) or "").lower()[:2500]
+                    if any(
+                        m in body_low
+                        for m in (
+                            "bạn hiện không xem được nội dung này",
+                            "this content isn't available",
+                            "tham gia nhóm để xem",
+                            "join group to see",
+                        )
+                    ):
+                        print(f"  ⚠️ Nhóm {group_id} là Nhóm Riêng Tư chưa tham gia hoặc bị giới hạn quyền xem -> Bỏ qua nhanh!", flush=True)
+                        break
+                except Exception:
+                    pass
+
             max_scrolls = max(3, limit_per_query // 3)
-            for _ in range(max_scrolls):
-                # Human scrolling & reading pause (5s - 10s)
-                _human_scroll_and_read(page, total_pixels=1600, min_read_sec=5.0, max_read_sec=10.0)
+            for scroll_step in range(max_scrolls):
+                # Human scrolling & reading pause (3.5s - 6.5s)
+                _human_scroll_and_read(page, total_pixels=1600, min_read_sec=3.5, max_read_sec=6.5)
 
                 for label in ("Xem thêm", "See more", "さらに表示"):
                     try:
@@ -1057,8 +1222,24 @@ def fetch_group_posts_deep_search(
                     except Exception:
                         pass
 
-            raw_cards = page.evaluate(_DOM_EXTRACT_CARDS_JS)
-            for card in raw_cards or []:
+            try:
+                raw_cards = page.evaluate(_DOM_EXTRACT_CARDS_JS) or []
+            except Exception:
+                raw_cards = []
+            total_raw_cards += len(raw_cards)
+
+            if q_idx == 0 and not raw_cards:
+                try:
+                    body_low = (page.locator("body").inner_text(timeout=1200) or "").lower()[:2500]
+                    if any(k in body_low for k in ("riêng tư", "private", "tham gia nhóm", "join group")):
+                        print(f"  ⚠️ Nhóm {group_id} là Nhóm Riêng Tư (0 bài đọc được ở từ khóa đầu) -> Bỏ qua nhanh!", flush=True)
+                        break
+                except Exception:
+                    pass
+            if q_idx >= 1 and total_raw_cards == 0:
+                print(f"  ⚠️ Nhóm {group_id} không đọc được bài viết nào sau 2 từ khóa đầu -> Bỏ qua nhanh sang nhóm tiếp theo!", flush=True)
+                break
+            for card in raw_cards:
                 raw_text = card.get("text") or ""
                 link_objs = card.get("links") or []
                 hrefs = [obj.get("href") or "" for obj in link_objs if obj.get("href")]
@@ -1111,8 +1292,9 @@ def fetch_group_posts_deep_search(
                     "extracted": {},
                 })
 
+            print(f"    -> Đã gom luỹ kế {len(posts)} bài viết từ nhóm {group_id}", flush=True)
             if q_idx < len(queries) - 1:
-                inter_delay = int(random.uniform(7.0, 12.0) * 1000)
+                inter_delay = int(random.uniform(4.0, 7.5) * 1000)
                 _human_mouse_move(page)
                 page.wait_for_timeout(inter_delay)
 
@@ -1350,8 +1532,24 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
         if single and str(single).strip() != "THAY_TEN_NHOM_O_DAY":
             group_ids = [str(single).strip()]
 
+    disc_name_map: dict[str, str] = {}
+    try:
+        disc_file = root / "discovered_groups.json"
+        if disc_file.exists():
+            disc_data = load_json(disc_file)
+            if isinstance(disc_data, dict):
+                for dg in disc_data.get("groups") or []:
+                    if isinstance(dg, dict) and dg.get("id") and dg.get("name"):
+                        disc_name_map[str(dg["id"]).strip()] = str(dg["name"]).strip()
+    except Exception:
+        pass
+
     for gid in group_ids:
-        group_entries.append({"id": gid, "name": "", "url": f"https://www.facebook.com/groups/{gid}/"})
+        group_entries.append({
+            "id": gid,
+            "name": disc_name_map.get(gid, ""),
+            "url": f"https://www.facebook.com/groups/{gid}/",
+        })
 
     if task.get("discover_joined_groups") or not group_entries:
         try:
@@ -1408,17 +1606,17 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
         gname = g_entry.get("name", "")
         if i > 0 and pause:
             pause_time = _jittered(pause, 35)
-            print(f"[human-pause] Nghỉ tự nhiên {pause_time:.1f}s giữa các nhóm để tránh nghi ngờ...")
+            print(f"[human-pause] Nghỉ tự nhiên {pause_time:.1f}s giữa các nhóm để tránh nghi ngờ...", flush=True)
             time.sleep(pause_time)
+        print(f"📂 [{i + 1}/{len(group_entries)}] Đang quét nhóm: {gname or gid} (ID: {gid})...", flush=True)
         try:
             kept, skipped, error, stats = _scan_one_group(
                 task, gid, state_path, seen, debug=debug, group_name=gname
             )
         except Exception as exc:
             err_text = str(exc)
-            print(f"🚨 [DỪNG KHẨN CẤP] {err_text}", file=sys.stderr)
             errors.append(err_text)
-            groups_out.append({
+            g_err_item = {
                 "id": str(gid),
                 "name": gname,
                 "url": f"https://www.facebook.com/groups/{gid}/",
@@ -1426,14 +1624,18 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
                 "classification_breakdown": {},
                 "found": 0,
                 "error": err_text,
-            })
-            # Break immediately on fatal session error
-            break
+            }
+            groups_out.append(g_err_item)
+            if any(k in err_text for k in ("không còn cookie c_user", "checkpoint", "two_factor")):
+                print(f"🚨 [DỪNG KHẨN CẤP] {err_text}", file=sys.stderr, flush=True)
+                break
+            print(f"⚠️ [BỎ QUA NHÓM LỖI {gid}] {err_text} -> Tiếp tục quét nhóm kế tiếp!", flush=True)
+            continue
 
         skipped_total += skipped
         raw_total += stats.get("raw_posts_read", 0)
         posts.extend(kept)
-        groups_out.append({
+        g_out_item = {
             "id": str(gid),
             "name": gname,
             "url": f"https://www.facebook.com/groups/{gid}/",
@@ -1441,9 +1643,42 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
             "classification_breakdown": stats.get("classification_breakdown", {}),
             "found": len(kept),
             "error": error or "",
-        })
+        }
+        groups_out.append(g_out_item)
         if error:
             errors.append(f"Group {gid}: {error}")
+
+        print(
+            f"✅ [{i + 1}/{len(group_entries)}] Xong nhóm {gid}: đọc {stats.get('raw_posts_read', 0)} bài "
+            f"-> khớp {len(kept)} bài chủ KD nhỏ.",
+            flush=True,
+        )
+
+        # Incremental save after EVERY group so progress is immediately visible and never lost
+        if task.get("only_new"):
+            save_seen(root / "seen.json", seen)
+        if kept:
+            _update_leads_files(root, kept)
+        try:
+            res_file = root / "result.json"
+            prev_res = load_json(res_file) if res_file.exists() else {}
+            if not isinstance(prev_res, dict):
+                prev_res = {}
+            merged_groups = {str(g["id"]): g for g in (prev_res.get("groups") or []) if isinstance(g, dict) and g.get("id")}
+            merged_groups[str(gid)] = g_out_item
+            merged_posts = {str(p.get("post_id")): p for p in (prev_res.get("posts") or []) if isinstance(p, dict) and p.get("post_id")}
+            for p in kept:
+                if p.get("post_id"):
+                    merged_posts[str(p["post_id"])] = p
+            prev_res["task_id"] = task_id
+            prev_res["status"] = "success"
+            prev_res["groups"] = list(merged_groups.values())
+            prev_res["posts"] = list(merged_posts.values())
+            save_json(res_file, prev_res)
+            from dashboard import generate as generate_dashboard
+            generate_dashboard(root, save_leads=False)
+        except Exception:
+            pass
 
     if task.get("only_new"):
         save_seen(root / "seen.json", seen)
@@ -1669,8 +1904,8 @@ def main(argv=None) -> int:
     parser.add_argument(
         "--limit-groups",
         type=int,
-        default=10,
-        help="Maximum number of discovered groups to return (default: 10)",
+        default=20,
+        help="Maximum number of discovered groups to return (default: 20)",
     )
     args = parser.parse_args(argv)
     root = Path(__file__).parent
@@ -1720,10 +1955,28 @@ def main(argv=None) -> int:
             }
             disc_path = root / "discovered_groups.json"
             save_json(disc_path, out_disc)
-            print(f"Đã tìm thấy {len(groups)} nhóm đạt tiêu chuẩn >= {args.min_members:,} thành viên!")
+
+            # Update task-scan-discovered.json with the newly discovered unscanned groups
+            base_task_path = root / "task-baito-nhom-da-tham-gia.json"
+            base_task = load_json(base_task_path) if base_task_path.exists() else {}
+            if isinstance(base_task, dict) and groups:
+                new_gids = [str(g["id"]).strip() for g in groups if g.get("id")]
+                scan_task = dict(base_task)
+                scan_task["task_id"] = f"TASK-SCAN-NEW-{len(new_gids)}-GROUPS"
+                scan_task["discover_joined_groups"] = False
+                scan_task["group_ids"] = new_gids
+                scan_task["max_groups"] = max(25, len(new_gids))
+                save_json(root / "task-scan-discovered.json", scan_task)
+
+            print(f"Đã tìm thấy {len(groups)} nhóm MỚI (chưa quét) đạt tiêu chuẩn >= {args.min_members:,} thành viên!")
             for idx, g in enumerate(groups, 1):
                 print(f"  #{idx}: {g['name']} ({g['member_count']:,} mem) -> {g['url']}")
-            print(f"Đã lưu danh sách nhóm vào {disc_path}")
+            print(f"Đã lưu danh sách nhóm vào {disc_path} và task-scan-discovered.json")
+            try:
+                from dashboard import generate as generate_dashboard
+                generate_dashboard(root, save_leads=False)
+            except Exception:
+                pass
             print(json.dumps(out_disc, ensure_ascii=False, indent=2))
         except RuntimeError as exc:
             print(str(exc), file=sys.stderr)
@@ -1757,7 +2010,10 @@ def main(argv=None) -> int:
             except Exception:
                 pass
         save_json(out_path, result)
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        if args.demo:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            print(f"🎯 Kết quả tổng kết: {result.get('summary', '')}", flush=True)
         return 0 if result.get("status") == "success" else 1
     return watch_loop(task, state_path, Path(args.out), root, demo=args.demo, debug=args.debug)
 
