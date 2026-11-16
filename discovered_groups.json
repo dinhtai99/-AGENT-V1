@@ -1,39 +1,31 @@
 {
-  "updated_at": "2026-11-14T14:30:14",
+  "updated_at": "2026-11-15T13:38:43",
   "query": "kinh doanh tại nhật",
   "min_members": 5000,
-  "total_found": 10,
+  "total_found": 20,
   "groups": [
-    {
-      "id": "khoinghiepkinhdoanhtoanquoc",
-      "name": "KHỞI NGHIỆP - KINH DOANH - NGUỒN HÀNG TOÀN QUỐC",
-      "url": "https://www.facebook.com/groups/khoinghiepkinhdoanhtoanquoc/",
-      "member_count": 149000,
-      "member_text": "149,000 thành viên",
-      "privacy": "Công khai"
-    },
-    {
-      "id": "843473343521813",
-      "name": "Kinh Doanh Tại Nhật Group",
-      "url": "https://www.facebook.com/groups/843473343521813/",
-      "member_count": 112000,
-      "member_text": "112,000 thành viên",
-      "privacy": "Công khai"
-    },
-    {
-      "id": "430269788407785",
-      "name": "Chợ Việt Nam Top 1 Tại Nhật ( 日本のベトナム市場)",
-      "url": "https://www.facebook.com/groups/430269788407785/",
-      "member_count": 104000,
-      "member_text": "104,000 thành viên",
-      "privacy": "Công khai"
-    },
     {
       "id": "668089722476397",
       "name": "Kinh doanh tại Nhật - THUẾ DOANH NGHIỆP",
       "url": "https://www.facebook.com/groups/668089722476397/",
       "member_count": 101000,
       "member_text": "101,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "truongbahau",
+      "name": "Cộng đồng người Việt tại Kansai Nhật  Bản 日本の関西でベトナム人のグループ",
+      "url": "https://www.facebook.com/groups/truongbahau/",
+      "member_count": 80000,
+      "member_text": "80,000 thành viên",
+      "privacy": "Riêng tư"
+    },
+    {
+      "id": "341461416052465",
+      "name": "Cộng Đồng Nail & Spa Người Việt Tại Nhật",
+      "url": "https://www.facebook.com/groups/341461416052465/",
+      "member_count": 59000,
+      "member_text": "59,000 thành viên",
       "privacy": "Công khai"
     },
     {
@@ -82,6 +74,94 @@
       "url": "https://www.facebook.com/groups/1190643196094963/",
       "member_count": 38000,
       "member_text": "38,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "987071735690266",
+      "name": "ĐỒ ĂN VẶT TẠI NHẬT",
+      "url": "https://www.facebook.com/groups/987071735690266/",
+      "member_count": 38000,
+      "member_text": "38,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "771275540457610",
+      "name": "Chợ Đầu Mối Thực Phẩm Tại Nhật",
+      "url": "https://www.facebook.com/groups/771275540457610/",
+      "member_count": 38000,
+      "member_text": "38,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "400743570075798",
+      "name": "Việc Làm Cho Người Việt Nam Biết Tiếng Nhật(日本語仕事）",
+      "url": "https://www.facebook.com/groups/400743570075798/",
+      "member_count": 37000,
+      "member_text": "37,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "2530188793907642",
+      "name": "Kinh Doanh Tại Nhật",
+      "url": "https://www.facebook.com/groups/2530188793907642/",
+      "member_count": 28000,
+      "member_text": "28,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "809205157066899",
+      "name": "Chợ Việt tại Nhật (ベトナム市場)",
+      "url": "https://www.facebook.com/groups/809205157066899/",
+      "member_count": 17000,
+      "member_text": "17,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "1871952520076787",
+      "name": "Hỏi đáp Visa kỹ sư Nhật (技術・人文知識・国際業務に関するQ&A)",
+      "url": "https://www.facebook.com/groups/1871952520076787/",
+      "member_count": 14000,
+      "member_text": "14,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "387081242530503",
+      "name": "HỘI ĐỔ SỈ HÀNG VIỆT NAM TẠI NHẬT",
+      "url": "https://www.facebook.com/groups/387081242530503/",
+      "member_count": 14000,
+      "member_text": "14,000 thành viên",
+      "privacy": "Riêng tư"
+    },
+    {
+      "id": "kinhdoanhtainhat",
+      "name": "Kinh Doanh Tại Nhật",
+      "url": "https://www.facebook.com/groups/kinhdoanhtainhat/",
+      "member_count": 13000,
+      "member_text": "13,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "331265518930398",
+      "name": "CỘNG ĐỒNG QUÁN VIỆT TẠI NHẬT BẢN",
+      "url": "https://www.facebook.com/groups/331265518930398/",
+      "member_count": 9800,
+      "member_text": "9,800 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "hocboki",
+      "name": "Học Boki tại Nhật - 日商簿記",
+      "url": "https://www.facebook.com/groups/hocboki/",
+      "member_count": 8700,
+      "member_text": "8,700 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "2307413842703905",
+      "name": "BJTビジネス日本語能力テストTiếng Nhật Thương Mại BJT",
+      "url": "https://www.facebook.com/groups/2307413842703905/",
+      "member_count": 8600,
+      "member_text": "8,600 thành viên",
       "privacy": "Công khai"
     }
   ]
