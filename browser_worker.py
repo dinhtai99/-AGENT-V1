@@ -744,7 +744,29 @@ def _check_fb_session(page, context) -> None:
     except Exception:
         pass
 
-    # 3. Only check DOM login form if cookie check could not confirm c_user
+    # 3. Check if Facebook displayed an automated-behavior / rate-limit warning modal
+    try:
+        body_check = (page.locator("body").inner_text(timeout=900) or "").lower()[:2500]
+        if any(
+            w in body_check
+            for w in (
+                "nghi ngờ có hành vi tự động",
+                "suspect automated behavior",
+                "tạm thời bị chặn",
+                "temporarily blocked",
+            )
+        ):
+            raise RuntimeError(
+                "🚨 CẢNH BÁO TÀI KHOẢN: Facebook vừa hiện cảnh báo 'nghi ngờ hành vi tự động'. "
+                "Hệ thống đã DỪNG QUÉT NGAY LẬP TỨC để bảo vệ tài khoản! "
+                "Hãy mở Facebook bấm 'Đóng' thông báo và cho tài khoản nghỉ ngơi vài giờ trước khi quét tiếp."
+            )
+    except RuntimeError:
+        raise
+    except Exception:
+        pass
+
+    # 4. Only check DOM login form if cookie check could not confirm c_user
     if has_c_user is True:
         return
 
@@ -1002,17 +1024,12 @@ _DOM_EXTRACT_CARDS_JS = """() => {
 DEFAULT_GENERAL_SEARCH_QUERIES = [
     "tuyển",
     "quán",
-    "nail",
-    "thực phẩm",
     "thanh lý",
-    "xe ghép",
 ]
 
 DEFAULT_BEAUTY_SEARCH_QUERIES = [
     "tuyển thợ",
     "nối mi",
-    "mẫu",
-    "spa",
     "tiệm",
 ]
 
@@ -1214,9 +1231,10 @@ def fetch_group_posts_deep_search(
                 for label in ("Xem thêm", "See more", "さらに表示"):
                     try:
                         btns = page.locator(f"div[role='button']:has-text('{label}')")
-                        for b_idx in range(min(btns.count(), 4)):
+                        for b_idx in range(min(btns.count(), 2)):
                             try:
-                                btns.nth(b_idx).click(timeout=300)
+                                btns.nth(b_idx).click(timeout=350)
+                                page.wait_for_timeout(random.randint(450, 900))
                             except Exception:
                                 pass
                     except Exception:
@@ -1294,10 +1312,14 @@ def fetch_group_posts_deep_search(
 
             print(f"    -> Đã gom luỹ kế {len(posts)} bài viết từ nhóm {group_id}", flush=True)
             if q_idx < len(queries) - 1:
-                inter_delay = int(random.uniform(4.0, 7.5) * 1000)
+                inter_delay = int(random.uniform(10.0, 18.0) * 1000)
                 _human_mouse_move(page)
                 page.wait_for_timeout(inter_delay)
 
+        try:
+            context.storage_state(path=str(state_path))
+        except Exception:
+            pass
         browser.close()
 
     return posts
@@ -1415,7 +1437,7 @@ def _scan_one_group(
             )
     except Exception as exc:
         err_msg = str(exc)
-        if any(marker in err_msg for marker in ("BỊ ĐĂNG XUẤT", "LOGOUT", "checkpoint", "hết hạn")):
+        if any(marker in err_msg for marker in ("BỊ ĐĂNG XUẤT", "LOGOUT", "checkpoint", "hết hạn", "CẢNH BÁO TÀI KHOẢN", "nghi ngờ hành vi tự động")):
             raise
         return [], 0, err_msg, {"raw_posts_read": 0}
 
@@ -1590,8 +1612,8 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
             "summary": "Task failed: no matching joined Baito groups found.",
         }
 
-    raw_pause = task.get("group_pause_seconds", 35)
-    pause = 35 if (raw_pause is None or raw_pause < 25) else max(25, min(int(raw_pause), 300))
+    raw_pause = task.get("group_pause_seconds", 60)
+    pause = 60 if (raw_pause is None or raw_pause < 45) else max(45, min(int(raw_pause), 300))
     seen: dict = {}
     if task.get("only_new"):
         seen = load_seen(root / "seen.json")
@@ -1605,9 +1627,17 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
         gid = g_entry["id"]
         gname = g_entry.get("name", "")
         if i > 0 and pause:
-            pause_time = _jittered(pause, 35)
-            print(f"[human-pause] Nghỉ tự nhiên {pause_time:.1f}s giữa các nhóm để tránh nghi ngờ...", flush=True)
-            time.sleep(pause_time)
+            if i % 4 == 0:
+                coffee_break = random.uniform(110.0, 165.0)
+                print(
+                    f"☕ [Nghỉ giải lao bảo vệ tài khoản] Đã quét {i} nhóm -> Nghỉ {coffee_break:.0f}s như người thật để tránh FB nghi ngờ...",
+                    flush=True,
+                )
+                time.sleep(coffee_break)
+            else:
+                pause_time = _jittered(pause, 35)
+                print(f"[human-pause] Nghỉ tự nhiên {pause_time:.1f}s giữa các nhóm để tránh nghi ngờ...", flush=True)
+                time.sleep(pause_time)
         print(f"📂 [{i + 1}/{len(group_entries)}] Đang quét nhóm: {gname or gid} (ID: {gid})...", flush=True)
         try:
             kept, skipped, error, stats = _scan_one_group(
@@ -1626,7 +1656,7 @@ def run_task(task: dict, state_path: Path, demo: bool, debug: bool = False) -> d
                 "error": err_text,
             }
             groups_out.append(g_err_item)
-            if any(k in err_text for k in ("không còn cookie c_user", "checkpoint", "two_factor")):
+            if any(k in err_text for k in ("không còn cookie c_user", "checkpoint", "two_factor", "CẢNH BÁO TÀI KHOẢN", "nghi ngờ hành vi tự động")):
                 print(f"🚨 [DỪNG KHẨN CẤP] {err_text}", file=sys.stderr, flush=True)
                 break
             print(f"⚠️ [BỎ QUA NHÓM LỖI {gid}] {err_text} -> Tiếp tục quét nhóm kế tiếp!", flush=True)
