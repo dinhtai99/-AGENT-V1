@@ -1,23 +1,39 @@
 {
-  "updated_at": "2026-11-16T09:09:16",
-  "query": "ngành nghề kinh doanh ngách ở Nhật",
-  "min_members": 5000,
+  "updated_at": "2026-11-17T08:53:41",
+  "query": "hair salon tại nhật",
+  "min_members": 5100,
   "total_found": 10,
   "groups": [
     {
-      "id": "hotroduhocnhatban",
-      "name": "Cộng Đồng Du Học Việt Nhật",
-      "url": "https://www.facebook.com/groups/hotroduhocnhatban/",
-      "member_count": 335000,
-      "member_text": "335,000 thành viên",
+      "id": "reviewsalon.reviewshairsalon",
+      "name": "Review Salon Làm Tóc Đẹp ở Hà Nội",
+      "url": "https://www.facebook.com/groups/reviewsalon.reviewshairsalon/",
+      "member_count": 120000,
+      "member_text": "120,000 thành viên",
       "privacy": "Công khai"
     },
     {
-      "id": "quanlythuctapsinhtainhat",
-      "name": "Phiên Dịch & Quản Lý Thực Tập Sinh Tại Nhật",
-      "url": "https://www.facebook.com/groups/quanlythuctapsinhtainhat/",
-      "member_count": 83000,
-      "member_text": "83,000 thành viên",
+      "id": "salontochanoi",
+      "name": "Review Hair Salon Làm Tóc Đẹp ở Hà Nội",
+      "url": "https://www.facebook.com/groups/salontochanoi/",
+      "member_count": 109000,
+      "member_text": "109,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "565880647368357",
+      "name": "REVIEWS Hair Salon Địa Chỉ Làm Tóc Đẹp Uy Tín Tại Sài Gòn (TPHCM)",
+      "url": "https://www.facebook.com/groups/565880647368357/",
+      "member_count": 107000,
+      "member_text": "107,000 thành viên",
+      "privacy": "Công khai"
+    },
+    {
+      "id": "1425004377739565",
+      "name": "Hội Spa Làm Đẹp Tại Nhật Bản",
+      "url": "https://www.facebook.com/groups/1425004377739565/",
+      "member_count": 97000,
+      "member_text": "97,000 thành viên",
       "privacy": "Công khai"
     },
     {
@@ -29,11 +45,11 @@
       "privacy": "Riêng tư"
     },
     {
-      "id": "1306263853167116",
-      "name": "HỖ TRỢ THỰC TẬP SINH VÀ LAO ĐỘNG VIỆT NAM－ベトナム人技能実習生支援友会",
-      "url": "https://www.facebook.com/groups/1306263853167116/",
-      "member_count": 80000,
-      "member_text": "80,000 thành viên",
+      "id": "276324013387405",
+      "name": "Xóm Việt Nhật",
+      "url": "https://www.facebook.com/groups/276324013387405/",
+      "member_count": 44000,
+      "member_text": "44,000 thành viên",
       "privacy": "Công khai"
     },
     {
@@ -45,43 +61,27 @@
       "privacy": "Công khai"
     },
     {
-      "id": "387081242530503",
-      "name": "HỘI ĐỔ SỈ HÀNG VIỆT NAM TẠI NHẬT",
-      "url": "https://www.facebook.com/groups/387081242530503/",
-      "member_count": 14000,
-      "member_text": "14,000 thành viên",
-      "privacy": "Riêng tư"
-    },
-    {
-      "id": "2045999282409749",
-      "name": "Tìm kiếm luật sư ở Nhật,hỏi đáp các vấn đề Visa,pháp luật ở Nhật.",
-      "url": "https://www.facebook.com/groups/2045999282409749/",
-      "member_count": 14000,
-      "member_text": "14,000 thành viên",
+      "id": "1077695306431170",
+      "name": "Hỏi đáp Visa kỹ sư Nhật (技術・人文知識・国際業務に関するQ&A)",
+      "url": "https://www.facebook.com/groups/1077695306431170/",
+      "member_count": 40000,
+      "member_text": "40,000 thành viên",
       "privacy": "Công khai"
     },
     {
-      "id": "493980157639514",
-      "name": "Kinh doanh ở Nhật",
-      "url": "https://www.facebook.com/groups/493980157639514/",
-      "member_count": 6700,
-      "member_text": "6,700 thành viên",
+      "id": "490905918697486",
+      "name": "Hội Nail tại Nhật",
+      "url": "https://www.facebook.com/groups/490905918697486/",
+      "member_count": 34000,
+      "member_text": "34,000 thành viên",
       "privacy": "Công khai"
     },
     {
-      "id": "1412459365737292",
-      "name": "THỰC TẬP SINH NHẬT BẢN",
-      "url": "https://www.facebook.com/groups/1412459365737292/",
-      "member_count": 6500,
-      "member_text": "6,500 thành viên",
-      "privacy": "Công khai"
-    },
-    {
-      "id": "2956228034675209",
-      "name": "Cho Thuê Mặt Bằng Kinh Doanh – Nhà Ở TP Vinh Nghệ An",
-      "url": "https://www.facebook.com/groups/2956228034675209/",
-      "member_count": 6100,
-      "member_text": "6,100 thành viên",
+      "id": "tiktakbanglaixetainhat",
+      "name": "Tiktak-bằng lái xe tại Nhật (App học bằng lái xe tốt nhất)",
+      "url": "https://www.facebook.com/groups/tiktakbanglaixetainhat/",
+      "member_count": 25000,
+      "member_text": "25,000 thành viên",
       "privacy": "Công khai"
     }
   ]
