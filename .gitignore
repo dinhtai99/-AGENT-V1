@@ -1,26 +1,23 @@
-# Bản chạy thử / test: các file này chỉ ở máy local, không đẩy lên GitHub.
-# (Máy chạy sẽ tự sinh ra khi test: kết quả, danh sách leads, log quét, phiên đăng nhập.)
+# Thông tin bảo mật cá nhân / phiên đăng nhập Facebook (Bắt buộc giữ bí mật, không đẩy lên Git)
 .env
 .netlify-config.json
 fb-state.json
 .web-access-key
+
+# Các file tạm / PID của watchdog
 debug.json
 debug-groups.json
-seen.json
 watch-new.jsonl
 watch-status.json
 watch.pid
 watchdog.pid
 watchdog.log
 watchdog-state.json
-result.json
-leads.json
 leads.prev.json
-leads.csv
-history/
-dashboard.html
-dist/
 dist.zip
+*.zip
+
+# Môi trường Python và cache hệ điều hành
 __pycache__/
 *.pyc
 .venv/

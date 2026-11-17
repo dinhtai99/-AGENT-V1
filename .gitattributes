@@ -15,3 +15,6 @@
 *.html text eol=lf
 *.md text eol=lf
 *.csv text eol=lf
+
+# Tự động gộp dữ liệu khách hàng leads.json khi git merge / git pull giữa Mac & PC
+leads.json merge=json-leads
