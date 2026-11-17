@@ -499,11 +499,11 @@ def search_facebook_groups(
             profile_btn.click()
             page.wait_for_timeout(3500)
 
-        if "login" in page.url or "checkpoint" in page.url:
+        try:
+            _check_fb_session(page, context)
+        except RuntimeError:
             browser.close()
-            raise RuntimeError(
-                "Facebook chuyển hướng sang trang đăng nhập/checkpoint. Phiên fb-state.json đã hết hạn."
-            )
+            raise
 
         for q_idx, cur_query in enumerate(search_queries):
             if _qualifying_count() >= limit:

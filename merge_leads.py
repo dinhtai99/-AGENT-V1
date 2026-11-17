@@ -231,7 +231,7 @@ def merge_files(incoming_paths: list[Path], target_path: Path | None = None, reb
     if rebuild_dash:
         try:
             print("📊 Đang làm mới Dashboard HTML với dữ liệu đã gộp...")
-            dashboard.build(ROOT, no_save=True)
+            dashboard.generate(ROOT, save_leads=False)
         except Exception as exc:
             print(f"⚠️ Cảnh báo tạo dashboard.html: {exc}")
 

@@ -382,6 +382,11 @@ class WorkerManager:
 
     def start_group_search(self, query: str = "kinh doanh tại nhật", min_members: int = 5000, limit: int = 20) -> tuple[bool, str]:
         with self.lock:
+            if not self.has_session():
+                self.session_expired = True
+                msg = "🚨 CẢNH BÁO: Phiên Facebook đã hết hạn hoặc chưa đăng nhập! Vui lòng bấm 'Đăng nhập FB' trước khi tìm nhóm."
+                self.add_log(msg, "error")
+                return False, msg
             if self.is_scanning or self.remote_login.is_active():
                 return False, "Worker đang quét hoặc tìm kiếm. Vui lòng đợi hoàn tất."
             self.is_scanning = True
@@ -755,10 +760,16 @@ class LeadRequestHandler(BaseHTTPRequestHandler):
                 f"https://{host}",
                 f"http://{self.headers.get('Host', '')}",
                 f"https://{self.headers.get('Host', '')}",
+                "https://dinhtai99.github.io",
             }
-            is_valid = origin in allowed or any(origin.endswith(d) for d in ("ngrok-free.app", "ngrok-free.dev", "ngrok.app", "trycloudflare.com", "localhost", "127.0.0.1"))
+            is_local_client = self.client_address[0] in ("127.0.0.1", "::1", "localhost")
+            is_valid = (
+                origin in allowed
+                or (origin == "null" and is_local_client)
+                or any(origin.endswith(d) for d in ("ngrok-free.app", "ngrok-free.dev", "ngrok.app", "trycloudflare.com", "localhost", "127.0.0.1"))
+            )
             if not is_valid:
-                self.send_json({"ok": False, "error": "Invalid origin"}, 403)
+                self.send_json({"ok": False, "error": f"Invalid origin ({origin})"}, 403)
                 return
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path

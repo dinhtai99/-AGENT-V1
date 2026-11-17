@@ -931,7 +931,13 @@
   var GROUPS = DATA.groups || [];
   var META = DATA.meta || {};
 
-  var isServerMode = window.location.protocol.startsWith("http");
+  var isLocalHost = (
+    window.location.hostname === "127.0.0.1" ||
+    window.location.hostname === "localhost" ||
+    window.location.hostname.includes("ngrok") ||
+    window.location.hostname.includes("trycloudflare")
+  );
+  var isServerMode = window.location.protocol.startsWith("http") && isLocalHost;
   var STATUSES = [
     { v: "new", label: "Mới", cls: "" },
     { v: "contacted", label: "Đã liên hệ", cls: "info" },
@@ -1933,7 +1939,7 @@
 
   function triggerGroupSearchRequest(query, minMem, limit, btnEl) {
     if (!isServerMode) {
-      alert("Để tìm nhóm trực tiếp từ Facebook, hãy mở start-web.bat (Windows) hoặc start-web.command (Mac)!");
+      alert("Trang này là bản xem online/tĩnh nên không điều khiển trực tiếp trình duyệt được.\n\nĐể bấm Tìm nhóm & Quét trực tiếp, hãy mở link Web Control Center (http://127.0.0.1:8080) bằng file start-web.command (Mac) hoặc start-web.bat (Windows)!");
       return;
     }
     var origText = btnEl ? btnEl.textContent : "🔍 Tìm nhóm";
@@ -1948,7 +1954,14 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: query, min_members: minMem, limit: limit })
-    }).then(function (res) { return res.json(); }).then(function (r) {
+    }).then(function (res) {
+      return res.json().catch(function () { return { ok: false, error: "HTTP " + res.status }; }).then(function (r) {
+        if (!res.ok || r.ok === false) {
+          throw new Error(r.error || r.message || ("HTTP " + res.status));
+        }
+        return r;
+      });
+    }).then(function (r) {
       toast(r.message || "Đã bắt đầu tìm nhóm FB!");
       if (btnEl) {
         btnEl.disabled = false;
@@ -1960,7 +1973,7 @@
         btnEl.disabled = false;
         btnEl.textContent = origText;
       }
-      toast("Lỗi tìm nhóm: " + err);
+      toast("⚠️ Không tìm được nhóm: " + (err && err.message ? err.message : err));
     });
   }
 
