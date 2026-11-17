@@ -1,11 +1,11 @@
 {
-  "task_id": "TASK-SCAN-NEW-10-GROUPS",
+  "task_id": "TASK-SCAN-SELECTED-2-GROUPS",
   "status": "success",
   "errors": [],
   "group": {
-    "id": "khoinghiepkinhdoanhtoanquoc",
-    "name": "",
-    "url": "https://www.facebook.com/groups/khoinghiepkinhdoanhtoanquoc/"
+    "id": "799132105023988",
+    "name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+    "url": "https://www.facebook.com/groups/799132105023988/"
   },
   "posts": [
     {
@@ -128129,9 +128129,2115 @@
         "contradicted": [],
         "unknown": []
       }
+    },
+    {
+      "post_id": "1600822708188253",
+      "post_url": "https://www.facebook.com/groups/799132105023988/posts/1600822708188253/",
+      "author_name": "Sương Khói",
+      "author_url": "https://www.facebook.com/profile.php?id=100043093662506",
+      "group_member_url": "https://www.facebook.com/groups/799132105023988/user/100043093662506/",
+      "created_at": "",
+      "content": "Chủ Nhật, 4 Tháng 10, 2026 lúc 11:20\nTuyển Nhân Viên Kho Quần Áo Lâu Dài, Thời Vụ\n5 bốc hàng: 13-15tr\n2 phụ xe: 12-14tr\n5-8 Nam/nữ đóng gói: 10-12tr\nHỗ trợ trả lương theo tuần, nuôi ăn ở, không giữ lương\nNhận: nam/nữ từ 16-40 tuổi, không nhận part time\nLiên hệ trực tiếp 0398964270 hoặc zalo",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": "0398964270",
+        "contact": "Zalo",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": null,
+        "station": null,
+        "wage": "15tr",
+        "roles_needed": [
+          "Đóng gói / Kho / Ship hàng"
+        ],
+        "needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "level": null,
+        "time": "11:20",
+        "price": "15tr"
+      },
+      "group_id": "799132105023988",
+      "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": null,
+        "stations": [],
+        "areas": [],
+        "wage": "15tr",
+        "roles_needed": [
+          "Đóng gói / Kho / Ship hàng"
+        ],
+        "shifts_needed": [
+          "Cuối tuần (T7/CN)"
+        ],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)",
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "contact": {
+          "phone": "0398964270",
+          "all_phones": [
+            "0398964270"
+          ],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Zalo"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "hash_163169889",
+      "post_url": "https://www.facebook.com/groups/799132105023988/user/61594913291544/",
+      "author_name": "Luật Tuyển Dụng",
+      "author_url": "https://www.facebook.com/profile.php?id=61594913291544",
+      "group_member_url": "https://www.facebook.com/groups/799132105023988/user/61594913291544/",
+      "created_at": "",
+      "content": "Xin phép adm ạk\nBÊN M CHUYÊN TUYỂN TOKUTEI , KỸ SƯ ĐẦU NHẬT GỒM NHỮNG ĐƠN HÀNG SAU:\nChiba: Tuyển 3 nam tuyển tokutei đầu nhật: hàn các chi tiết máy xúc/ủi, lương 1500yen/h , tăng ca 60h...",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": null,
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Chiba",
+        "station": null,
+        "wage": "1500yen/h",
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "level": null,
+        "time": null,
+        "price": "1500yen/h"
+      },
+      "group_id": "799132105023988",
+      "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Chiba",
+        "stations": [],
+        "areas": [
+          "Chiba"
+        ],
+        "wage": "1500yen/h",
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Hỗ trợ chuyển/gia hạn Visa (Tokutei/Kỹ sư)"
+        ],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": []
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "1597867828483741",
+      "post_url": "https://www.facebook.com/groups/799132105023988/posts/1597867828483741/",
+      "author_name": "Sương Khói",
+      "author_url": "https://www.facebook.com/profile.php?id=100043093662506",
+      "group_member_url": "https://www.facebook.com/groups/799132105023988/user/100043093662506/",
+      "created_at": "",
+      "content": "Thông báo tuyển dụng nhân viên kho quần áo (Lâu dài và Thời vụ)\nCần 5 người làm bốc hàng, lương 13-15tr/tháng\n2 phụ xe: 12-14tr\n5-8 Nam/nữ đóng gói: 10-12tr\nHỗ trợ trả lương theo tuần, nuôi ăn ở, không giữ lương\nNhận: nam/nữ từ 16-40 tuổi, không nhận part time\nLiên hệ trực tiếp 0398964270 hoặc zalo",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": "0398964270",
+        "contact": "Zalo",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "shop_name": null,
+        "scale": "Mô hình nhỏ (< 20 người) — Đang tuyển 5 người",
+        "location": null,
+        "station": null,
+        "wage": "15tr",
+        "roles_needed": [
+          "Đóng gói / Kho / Ship hàng"
+        ],
+        "needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "level": null,
+        "time": null,
+        "price": "15tr"
+      },
+      "group_id": "799132105023988",
+      "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Mô hình nhỏ (< 20 người) — Đang tuyển 5 người",
+        "headcount_mentioned": 5,
+        "location": null,
+        "stations": [],
+        "areas": [],
+        "wage": "15tr",
+        "roles_needed": [
+          "Đóng gói / Kho / Ship hàng"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "contact": {
+          "phone": "0398964270",
+          "all_phones": [
+            "0398964270"
+          ],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Zalo"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "1595070252096832",
+      "post_url": "https://www.facebook.com/groups/799132105023988/posts/1595070252096832/",
+      "author_name": "Ánh Hậu",
+      "author_url": "",
+      "group_member_url": "",
+      "created_at": "",
+      "content": "Tuyển 1 sếp làm CAD (doboku)\nThầu 清水 lương 3X man (sodan theo trình độ và kinh nghiệm) ...\n1",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": null,
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": null,
+        "station": null,
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "level": null,
+        "time": null,
+        "price": null
+      },
+      "group_id": "799132105023988",
+      "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": null,
+        "stations": [],
+        "areas": [],
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": []
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "1620753106195213",
+      "post_url": "https://www.facebook.com/groups/799132105023988/posts/1620753106195213/",
+      "author_name": "Thợ Xăm Saitama",
+      "author_url": "https://www.facebook.com/profile.php?id=100052283027852",
+      "group_member_url": "https://www.facebook.com/groups/799132105023988/user/100052283027852/",
+      "created_at": "",
+      "content": "Chủ Nhật, 25 Tháng 10, 2026 lúc 18:33\nSang tuần cần tuyển 1 số mẫu phụ phí nhỏ hình kích thước a4 đổ xuống ae Saitama,Tokyo  có nhu cầu xăm cứ ib trực tiếp e\nCó thể là hình minh họa về một hoặc nhiều người và henna. Có thể là hình vẽ ngẫu hứng về một hoặc nhiều người và henna. Có thể là hình vẽ ngẫu hứng. Có thể là hình minh họa về một hoặc nhiều người và henna",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": "Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Tiệm Nail / Mi / Spa",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo, Saitama",
+        "station": null,
+        "wage": "4 đ",
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "level": null,
+        "time": "18:33",
+        "price": "4 đ"
+      },
+      "group_id": "799132105023988",
+      "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Tiệm Nail / Mi / Spa",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Tokyo, Saitama",
+        "stations": [],
+        "areas": [
+          "Tokyo",
+          "Saitama"
+        ],
+        "wage": "4 đ",
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [
+          "Ca sáng",
+          "Cuối tuần (T7/CN)"
+        ],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Tiệm Nail / Mi / Spa"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "1602986974638493",
+      "post_url": "https://www.facebook.com/groups/799132105023988/posts/1602986974638493/",
+      "author_name": "",
+      "author_url": "",
+      "group_member_url": "",
+      "created_at": "",
+      "content": "QUÁN NHÀ BÔNG – ĂN NGON, GIÁ XINH!\nĐói bụng rồi thì ghé Nhà Bông ngay thôi!\nCOMBO HOT – CƠM GÀ + TRÀ CHANH CHỈ 39K\nĂn no – uống mát – giá siêu hời!\nMỳ Quảng Gà — 35K\nHủ Tiếu Trộn/Nước — 35K\nCơm Gà/Xá Xíu — 40K\nTrà Chanh — 12K\nCoca/Pepsi/Sprite/Fanta — 15K\nSHIP 7H–23H HẰNG NGÀY\nSân Xà – Sân Lái | ĐH FPT | HV Tài chính | KTX BC – VNU | Tân Xã – Bình Yên – Thạch Thất – Phenikaa\nShip từ 5K\n117 Thôn 3, Hòa Lạc – Đối diện cây xăng 39\n0362870718\nQUÁN NHÀ BÔNG – ĐÓI LÀ CÓ, GỌI LÀ SHIP!",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": "0362870718",
+        "contact": "0362870718",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Kinh doanh Online / Bán hàng cá nhân tại Nhật",
+        "shop_name": null,
+        "scale": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
+        "location": null,
+        "station": null,
+        "wage": "39K",
+        "roles_needed": [
+          "Chủ tự vận hành / Bán hàng trực tiếp (Chưa tuyển người)"
+        ],
+        "needs": [
+          "Đang tự đăng bài bán hàng & chốt đơn thủ công qua Inbox (cần mở rộng tệp khách hàng, tự động hóa chốt đơn/CSKH và tối ưu chi phí vận chuyển/ship hàng)"
+        ],
+        "level": null,
+        "time": null,
+        "price": "39K"
+      },
+      "group_id": "799132105023988",
+      "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_selling",
+        "classification_reason": "Cá nhân/chủ shop nhỏ trực tiếp đăng bán hàng hoặc dịch vụ",
+        "business_type": "Kinh doanh Online / Bán hàng cá nhân tại Nhật",
+        "all_business_types": [
+          "Kinh doanh Online / Bán hàng cá nhân tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
+        "headcount_mentioned": null,
+        "location": null,
+        "stations": [],
+        "areas": [],
+        "wage": "39K",
+        "roles_needed": [
+          "Chủ tự vận hành / Bán hàng trực tiếp (Chưa tuyển người)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Không áp dụng (Bán hàng cho cộng đồng người Việt tại Nhật)",
+        "shop_customer_segment": "Cộng đồng người Việt tại Nhật Bản",
+        "benefits_offered": [
+          "Có hỗ trợ Freeship / Giao hàng tận nơi"
+        ],
+        "pain_points_and_needs": [
+          "Đang tự đăng bài bán hàng & chốt đơn thủ công qua Inbox (cần mở rộng tệp khách hàng, tự động hóa chốt đơn/CSKH và tối ưu chi phí vận chuyển/ship hàng)"
+        ],
+        "contact": {
+          "phone": "0362870718",
+          "all_phones": [
+            "0362870718"
+          ],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": []
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Kinh doanh Online / Bán hàng cá nhân tại Nhật"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "1643005717303285",
+      "post_url": "https://www.facebook.com/groups/799132105023988/posts/1643005717303285/",
+      "author_name": "",
+      "author_url": "",
+      "group_member_url": "",
+      "created_at": "",
+      "content": "MẶT BẰNG QUÁN ĂN Ở KOBE | CÁCH GA SHINKAICHI 1 PHÚT ĐI BỘ\nAnh chị đang tìm chỗ mở quán ở Kobe? M2Group có mặt bằng tầng 1, ngay khu đông người qua lại, khách đi tàu đến cũng tiện!\nKhu Fukuhara-chō, quận Hyōgo, Kobe\n47,27 m2 · Có khu bếp và khu phục vụ khách\nChỉ 198.000 yên/tháng(19万8千円)\nNhắn M2Group Kobe để nhận thông tin chi phí ban đầu và hẹn xem mặt bằng nhé!\n新開地駅から徒歩1分|飲食店向け貸店舗\n神戸市兵庫区福原町の、人通りの多い立地にある1階店舗です。厨房と客席スペースがあり、専有面積は47.27m2、賃料は月額198,000円です。\n初期費用や内見については、M2Group Kobeまでお気軽にお問い合わせください。\n#M2GroupKobe #MatBangKobe #Shinkaichi #新開地 #神戸貸店舗 #飲食店物件",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": null,
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "shop_name": null,
+        "scale": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
+        "location": "Ga 新開地駅 | Kobe",
+        "station": "新開地駅",
+        "wage": "8.000 yên/tháng",
+        "roles_needed": [
+          "Bếp / Phụ bếp (Kitchen)",
+          "Phục vụ / Chạy bàn (Hall)"
+        ],
+        "needs": [
+          "Thiếu nhân sự ở nhiều khâu cùng lúc (Bếp / Phụ bếp (Kitchen), Phục vụ / Chạy bàn (Hall))"
+        ],
+        "level": null,
+        "time": null,
+        "price": "8.000 yên/tháng"
+      },
+      "group_id": "799132105023988",
+      "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Ga 新開地駅 | Kobe",
+        "stations": [
+          "新開地駅"
+        ],
+        "areas": [
+          "Kobe"
+        ],
+        "wage": "8.000 yên/tháng",
+        "roles_needed": [
+          "Bếp / Phụ bếp (Kitchen)",
+          "Phục vụ / Chạy bàn (Hall)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Thiếu nhân sự ở nhiều khâu cùng lúc (Bếp / Phụ bếp (Kitchen), Phục vụ / Chạy bàn (Hall))"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": []
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "2574960103015149",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2574960103015149/",
+      "author_name": "Tit Pop",
+      "author_url": "https://www.facebook.com/profile.php?id=100013904139901",
+      "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100013904139901/",
+      "created_at": "",
+      "content": "Góc tuyển đồng đội\nBên em đang cần tuyển gấp 2 thợ\n1 thợ đầu tokyo 1 thợ đầu osaka   có thể đứng độc lập được làm gắn bó 6 tháng sẽ được vô % trong quán luôn ạ\nlương thưởng yêu đãi tốt\ncty có thể bảo lãnh visa\nyêu tiên visa gia đình",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": null,
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo, Osaka",
+        "station": null,
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Thiếu hụt nhân sự khẩn cấp (cần người đi làm ngay, chủ quán đang chịu tải vận hành)",
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)"
+        ],
+        "level": null,
+        "time": null,
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Tokyo, Osaka",
+        "stations": [],
+        "areas": [
+          "Tokyo",
+          "Osaka"
+        ],
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Hỗ trợ chuyển/gia hạn Visa (Tokutei/Kỹ sư)",
+          "Có tăng lương / thưởng"
+        ],
+        "pain_points_and_needs": [
+          "Thiếu hụt nhân sự khẩn cấp (cần người đi làm ngay, chủ quán đang chịu tải vận hành)",
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": []
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "2533651337146026",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2533651337146026/",
+      "author_name": "Ngô Thị Mai Phương",
+      "author_url": "https://www.facebook.com/profile.php?id=100002535671959",
+      "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100002535671959/",
+      "created_at": "",
+      "content": "Em xin phép Admin đăng bài tuyển mẫu ạ\nTUYỂN MẪU CẮT TÓC NỮ FREE\nGa Yoshikawa Minami (吉川美南駅)\nTháng 10: 6, 7, 8, 12, 13, 15, 19, 20\n18:00-19:00 / 19:00-20:00\nMình đang làm tại salon và cần mẫu để luyện tập, nâng cao tay nghề. Cắt tóc hoàn toàn miễn phí ạ\nNếu muốn làm thêm các dịch vụ khác của salon thì sẽ có tính phí, mình sẽ báo giá và kiểm tra lịch trước để tránh hiểu nhầm nhé\nBạn nào phù hợp ngày/giờ trên vui lòng inbox mình để đặt lịch nhé\nCảm ơn Admin và mọi người rất nhiều ạ",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": "Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Ga Yoshikawa Minami, 吉川美南駅",
+        "station": "Yoshikawa Minami, 吉川美南駅",
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "level": null,
+        "time": "18:00",
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Ga Yoshikawa Minami, 吉川美南駅",
+        "stations": [
+          "Yoshikawa Minami",
+          "吉川美南駅",
+          "Kita-Koshigaya",
+          "北越谷駅"
+        ],
+        "areas": [],
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng",
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "hash_874428813",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100002535671959/",
+      "author_name": "Ngô Thị Mai Phương",
+      "author_url": "https://www.facebook.com/profile.php?id=100002535671959",
+      "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100002535671959/",
+      "created_at": "",
+      "content": "Chủ Nhật, 2 Tháng 8, 2026 lúc 05:42\nTUYỂN MẪU CẮT TÓC / CẮT + UỐN\nMình đang cần tuyển mẫu tóc nữ để luyện tập tại salon.\nMenu\n• Cắt tóc: khoảng 1 tiếng\n• Cắt + uốn: khoảng 2 tiếng\nThời gian\n18:00 – 20:00\n(tùy theo menu bạn chọn)\nĐịa điểm\nSalon gần ga Kita-Koshigaya (北越谷駅), cách ga khoảng 7 phút đi bộ.\nƯu tiên\n• Tóc dài (Long) hoặc dài vừa (Medium)\nNgày nhận mẫu\n11/8, 12/8, 15/8, 22/8, 24/8, 29/8, 31/8\n14/8, 28/8\nNếu bạn hoặc bạn bè đang muốn thay đổi kiểu tóc thì inbox mình nhé. Cảm ơn mọi người đã ủng hộ!",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": "Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Ga Kita-Koshigaya, 北越谷駅 | Koshigaya",
+        "station": "Kita-Koshigaya, 北越谷駅",
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "level": null,
+        "time": "05:42",
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Ga Kita-Koshigaya, 北越谷駅 | Koshigaya",
+        "stations": [
+          "Kita-Koshigaya",
+          "北越谷駅"
+        ],
+        "areas": [
+          "Koshigaya"
+        ],
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [
+          "Cuối tuần (T7/CN)"
+        ],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "2177358606108636",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2177358606108636/",
+      "author_name": "Trần Văn Nhật",
+      "author_url": "https://www.facebook.com/profile.php?id=100038242008319",
+      "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100038242008319/",
+      "created_at": "",
+      "content": "Chủ Nhật, 24 Tháng 8, 2025 lúc 04:28\nTUYỂN THỢ LÀM TÓC – VỀ ĐỘI CÙNG “TÓC 99 HIMEJI”\nLàm việc tại ga Himeji\nBạn đang là thợ tóc, nhưng:\n• Mỗi ngày làm việc đều thấy mệt mỏi vì không có môi trường tốt?\n• Muốn có mức thu nhập xứng đáng với công sức?\n• Muốn phát triển bản thân lên thợ chính, quản lý, đào tạo viên?\nHÃY ĐỌC KỸ BÀI NÀY!\n⸻\nVỊ TRÍ CẦN TUYỂN:\n1. Thợ chính 2\n2. Thợ phụ 2\n⸻\nCHẾ ĐỘ LƯƠNG:\n• Lương cứng đảm bảo + % dịch vụ\n• Có KPI check-in thưởng thêm\n⸻\nQUYỀN LỢI:\n• Môi trường làm việc trẻ trung – chuyên nghiệp – tôn trọng lẫn nhau\n• Có định hướng đào tạo, nâng cấp tay nghề & hỗ trợ học nâng cao\n• Cơ hội phát triển lên vị trí quản lý hoặc mở salon riêng\n• Được mentor trực tiếp bởi Trần Văn Nhật – người có kinh nghiệm phát triển hệ thống salon & tự tay xây dựng thương hiệu từ con số 0\n⸻\nYÊU CẦU:\n• yêu cầu có visa 28h trở lên hoặc shuy vào quán\n• Có đạo đức nghề – yêu nghề tóc – tinh thần học hỏi cao\n• Làm việc trách nhiệm, có tinh thần đồng đội\n• Ưu tiên người muốn làm lâu dài và mong muốn phát triển\n⸻\nInbox trực tiếp\n090-9289-6262\nLàm việc tại: 670-0923 兵庫県姫路市呉服町26\n⸻\n3\n4",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": "090-9289-6262",
+        "contact": "Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Ga Himeji | Himeji",
+        "station": "Himeji",
+        "wage": null,
+        "roles_needed": [
+          "Quản lý cửa hàng / Trưởng ca (Tencho)"
+        ],
+        "needs": [
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)",
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "level": null,
+        "time": "04:28",
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "all_business_types": [
+          "Quán Cafe / Trà sữa / Tiệm bánh",
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Ga Himeji | Himeji",
+        "stations": [
+          "Himeji"
+        ],
+        "areas": [
+          "Himeji"
+        ],
+        "wage": null,
+        "roles_needed": [
+          "Quản lý cửa hàng / Trưởng ca (Tencho)"
+        ],
+        "shifts_needed": [
+          "Cuối tuần (T7/CN)"
+        ],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Hỗ trợ chuyển/gia hạn Visa (Tokutei/Kỹ sư)",
+          "Có tăng lương / thưởng"
+        ],
+        "pain_points_and_needs": [
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)",
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ],
+        "contact": {
+          "phone": "090-9289-6262",
+          "all_phones": [
+            "090-9289-6262"
+          ],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Quán Cafe / Trà sữa / Tiệm bánh"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "2255432771634552",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2255432771634552/",
+      "author_name": "Ngọc Nam",
+      "author_url": "https://www.facebook.com/profile.php?id=100010588299531",
+      "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100010588299531/",
+      "created_at": "",
+      "content": "Salon em cần tuyển thợ tóc . Chuyên nam hoặc cả nam -nữ đều được ạ . Làm việc khu vực Tokyo - kanagawa. Ae thợ ib nhé\n4\n11",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": "Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo, Kanagawa",
+        "station": null,
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "level": null,
+        "time": null,
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp",
+          "Đại lý Vé máy bay / Du lịch Việt - Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Tokyo, Kanagawa",
+        "stations": [],
+        "areas": [
+          "Tokyo",
+          "Kanagawa"
+        ],
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "2435623636948797",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2435623636948797/",
+      "author_name": "GoldSeal3172",
+      "author_url": "https://www.facebook.com/profile.php?id=2259749488097728",
+      "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/2259749488097728/",
+      "created_at": "",
+      "content": "TÌM ĐỒNG ĐỘI  NHÂN VIÊN SPA / NAIL – MI , SHINJUKU & YOKOHAMA\nChuẩn bị khai trương chi nhánh mới, mình cần tìm thêm nhân viên SPA / NAIL / MI có tay nghề tinh thần trách nhiệm cao về cùng team.\nQuyền lợi hấp dẫn:\n• Lương cao 1s2 ~1s5 + thưởng, hoặc làm theo chia % doanh thu.\n• Làm việc tại khu vực cao cấp, trung tâm sầm uất Shinjuku và Yokohama.\n• Môi trường văn minh, thân thiện, hỗ trợ tối đa.\n• Cơ hội phát triển lâu dài và thu nhập ổn định.\nNhận tuyển nhân viên chính thức\n• Có bằng 美容師 (Biyōshi).\n• Lương từ 25~35 man/tháng (tùy theo năng lực và kinh nghiệm).\n• Ưu tiên ứng viên có thể giao tiếp tiếng Anh.\nCác bạn quan tâm hoặc cần thêm thông tin chi tiết, vui lòng inbox Heaven Aura Beauty & Wellness để trao đổi nhé! Hoac zalo +8489615 9291\nRất mong được chào đón các bạn gia nhập team\n1",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": "+8489615 9291",
+        "contact": "Zalo: +8489615, Inbox FB",
+        "line_id": null,
+        "zalo_id": "+8489615",
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Shinjuku, Yokohama",
+        "station": null,
+        "wage": "35 man/tháng",
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Đang mở mới / mở rộng cơ sở (cần đồng bộ nhân sự, quy trình, marketing, thiết bị)",
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)"
+        ],
+        "level": null,
+        "time": null,
+        "price": "35 man/tháng"
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Shinjuku, Yokohama",
+        "stations": [],
+        "areas": [
+          "Shinjuku",
+          "Yokohama"
+        ],
+        "wage": "35 man/tháng",
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Có tăng lương / thưởng"
+        ],
+        "pain_points_and_needs": [
+          "Đang mở mới / mở rộng cơ sở (cần đồng bộ nhân sự, quy trình, marketing, thiết bị)",
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)"
+        ],
+        "contact": {
+          "phone": "+8489615 9291",
+          "all_phones": [
+            "+8489615 9291"
+          ],
+          "line_id": null,
+          "zalo_id": "+8489615",
+          "contact_methods": [
+            "Zalo: +8489615",
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "2498979343946559",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2498979343946559/",
+      "author_name": "TUYỂN THỢ TÓC TẠI TOKYO",
+      "author_url": "",
+      "group_member_url": "",
+      "created_at": "",
+      "content": "SALON TÓC TUYỂN THỢ – THU NHẬP 30M–50M/THÁNG\nĐịa điểm: Tokyo, Nhật Bản\nThu nhập: 30M – 50M/tháng\nThời gian: Full-time / Part-time\nYêu cầu tay nghề:\n• Biết làm tóc nam & nữ\n• Có tinh thần học hỏi, trách nhiệm và yêu nghề\n• Chưa thật sự thành thạo vẫn có thể ứng tuyển – được đào tạo thêm trong quá trình làm việc\nMôi trường làm việc chuyên nghiệp, thân thiện, có cơ hội nâng cao tay nghề và phát triển lâu dài.\nQuan tâm vui lòng inbox để trao đổi chi tiết về công việc và chế độ.\nNếu bạn yêu nghề tóc và muốn phát triển tại Tokyo hay liên hệ với chúng tôi",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": "Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo",
+        "station": null,
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "level": null,
+        "time": null,
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "all_business_types": [
+          "Quán Cafe / Trà sữa / Tiệm bánh",
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": "Tokyo",
+        "stations": [],
+        "areas": [
+          "Tokyo"
+        ],
+        "wage": null,
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Quán Cafe / Trà sữa / Tiệm bánh"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "122245880330088496",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/122245880330088496/",
+      "author_name": "Trường Tochigi",
+      "author_url": "https://www.facebook.com/profile.php?id=61552654905677",
+      "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/61552654905677/",
+      "created_at": "",
+      "content": "Có ace nào cần gì thì ib cho e với ạ\nTrường Tochigi cùng với Đinh Long Vũ và Văn Nguyễn.\nGÓC SANG NHƯỢNG\nHiện tại mình muốn sang nhượng quán tóc.\nGiường gội\nGương\nGhế\nHoá Chất.\nĐầy đủ 1 salon đủ làm cả NAM và NỮ\nAi cần liên hệ e nhé",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": "Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "shop_name": null,
+        "scale": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
+        "location": null,
+        "station": null,
+        "wage": null,
+        "roles_needed": [
+          "Chủ tự vận hành / Bán hàng trực tiếp (Chưa tuyển người)"
+        ],
+        "needs": [
+          "Cá nhân kinh doanh nhỏ đang tìm kiếm khách hàng qua hội nhóm Facebook (cần công cụ bán hàng, quản lý đơn và tiếp cận khách hàng)"
+        ],
+        "level": null,
+        "time": null,
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_selling",
+        "classification_reason": "Cá nhân/chủ shop nhỏ trực tiếp đăng bán hàng hoặc dịch vụ",
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
+        "headcount_mentioned": null,
+        "location": null,
+        "stations": [],
+        "areas": [],
+        "wage": null,
+        "roles_needed": [
+          "Chủ tự vận hành / Bán hàng trực tiếp (Chưa tuyển người)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Không áp dụng (Bán hàng cho cộng đồng người Việt tại Nhật)",
+        "shop_customer_segment": "Cộng đồng người Việt tại Nhật Bản",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cá nhân kinh doanh nhỏ đang tìm kiếm khách hàng qua hội nhóm Facebook (cần công cụ bán hàng, quản lý đơn và tiếp cận khách hàng)"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
+    },
+    {
+      "post_id": "2508405813003912",
+      "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2508405813003912/",
+      "author_name": "",
+      "author_url": "",
+      "group_member_url": "",
+      "created_at": "",
+      "content": "G.salon Japan – Giải pháp quản lý salon All-in-One tại Nhật\nChào mọi người!\nJiConnect hiện có đội ngũ 16 nhân viên IT giàu kinh nghiệm, đang phát triển và vận hành nhiều hệ thống cho các đối tác tại Nhật.\nHiện tại, chúng tôi đang phát triển G.salon Japan – phần mềm quản lý dành cho hair & nail salon tại Nhật, giúp chủ salon quản lý công việc tập trung trên một hệ thống duy nhất.\nNếu salon đang nhận khách từ Minimo / Hot Pepper / Instagram / LINE / điện thoại / walk-in, chắc nhiều chủ salon cũng từng gặp những vấn đề như:\n• Khách hàng đặt lịch nhiều nơi → khó quản lý\n• Dễ nhầm thợ trùng lịch\n• Nhập booking thủ công khá bất tiện\n• Cuối ngày phải kiểm tra tiền và doanh thu\n• Tính lương / hoa hồng cho thợ khá mất thời gian\n• Salon càng nhiều thợ → càng khó quản lý\nG.salon Japan được phát triển để giải quyết những vấn đề này trên một nền tảng All-in-One.\nQuản lý lịch & booking\nGom lịch hẹn về một calendar.\nHạn chế trùng lịch, nhầm thợ.\nGiảm việc nhập booking thủ công.\nQuản lý khách hàng\nLưu thông tin và lịch sử sử dụng dịch vụ.\nPhân biệt khách mới – khách cũ.\nTheo dõi nguồn khách và hỗ trợ khách quay lại.\nQuản lý nhân viên\nQuản lý ca làm và timesheet.\nTính lương & hoa hồng theo quy định của salon.\nPOS & doanh thu\nPOS trên iPad / PC.\nQuản lý thanh toán, thu chi và doanh thu.\nQuản lý vật tư & kho\nTheo dõi nhập – xuất – tồn.\nQuản lý vật tư sử dụng trong salon.\nĐặt lịch online\nTạo trang booking riêng cho salon.\nCó profile riêng cho từng nhân viên.\nThiết kế theo nghiệp vụ salon tại Nhật\nHệ thống hỗ trợ các nghiệp vụ thực tế như 指名料, Hot Pepper, Minimo, phân biệt khách mới – khách cũ và quản lý nguồn booking.\nHỗ trợ 3 ngôn ngữ:\nTiếng Nhật |\nTiếng Việt |\nTiếng Anh\nMột salon hay cả chuỗi đều có thể sử dụng\nCó thể bắt đầu với một salon và khi mở rộng thành nhiều cửa hàng, vẫn có thể quản lý toàn bộ các salon trên cùng một hệ thống.\nMột hệ thống – quản lý dễ dàng – dễ dàng mở rộng.\nNếu anh/chị đang kinh doanh hair salon hoặc nail salon tại Nhật và muốn tìm hiểu về G.salon Japan, hãy IB Facebook cá nhân của Nga.\nNga sẽ gửi thông tin chi tiết và đội ngũ của Nga có thể hỗ trợ tư vấn 24/7.\nRất vui được kết nối và đồng hành cùng các anh/chị chủ salon!",
+      "react_count": 0,
+      "comment_count": 0,
+      "extracted": {
+        "phone": null,
+        "contact": "Line, Inbox FB",
+        "line_id": null,
+        "zalo_id": null,
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "shop_name": null,
+        "scale": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": null,
+        "station": null,
+        "wage": null,
+        "roles_needed": [
+          "Bán hàng / Livestream / Trực page",
+          "Quản lý cửa hàng / Trưởng ca (Tencho)"
+        ],
+        "needs": [
+          "Đang mở mới / mở rộng cơ sở (cần đồng bộ nhân sự, quy trình, marketing, thiết bị)",
+          "Thiếu nhân sự ở nhiều khâu cùng lúc (Bán hàng / Livestream / Trực page, Quản lý cửa hàng / Trưởng ca (Tencho))"
+        ],
+        "level": null,
+        "time": null,
+        "price": null
+      },
+      "group_id": "cattocnamnutainhat",
+      "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "business_analysis": {
+        "is_target_owner": true,
+        "post_category": "small_business_owner",
+        "owner_activity": "owner_hiring",
+        "classification_reason": "Chủ quán/cơ sở nhỏ trực tiếp đăng tuyển nhân sự",
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "all_business_types": [
+          "Quán Cafe / Trà sữa / Tiệm bánh",
+          "Tiệm Nail / Mi / Spa / Làm đẹp",
+          "Shop bán hàng / Kho Online / Livestream"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "headcount_mentioned": null,
+        "location": null,
+        "stations": [],
+        "areas": [],
+        "wage": null,
+        "roles_needed": [
+          "Bán hàng / Livestream / Trực page",
+          "Quản lý cửa hàng / Trưởng ca (Tencho)"
+        ],
+        "shifts_needed": [],
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Đang mở mới / mở rộng cơ sở (cần đồng bộ nhân sự, quy trình, marketing, thiết bị)",
+          "Thiếu nhân sự ở nhiều khâu cùng lúc (Bán hàng / Livestream / Trực page, Quản lý cửa hàng / Trưởng ca (Tencho))"
+        ],
+        "contact": {
+          "phone": null,
+          "all_phones": [],
+          "line_id": null,
+          "zalo_id": null,
+          "contact_methods": [
+            "Line",
+            "Inbox FB"
+          ]
+        }
+      },
+      "profile_match": {
+        "matched": [
+          "small_business_owner",
+          "business:Quán Cafe / Trà sữa / Tiệm bánh"
+        ],
+        "contradicted": [],
+        "unknown": []
+      }
     }
   ],
-  "leads": [],
+  "leads": [
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=100043093662506",
+      "personal_info": {
+        "author_name": "Sương Khói",
+        "author_url": "https://www.facebook.com/profile.php?id=100043093662506",
+        "group_member_url": "https://www.facebook.com/groups/799132105023988/user/100043093662506/",
+        "phone": "0398964270",
+        "all_phones": [
+          "0398964270"
+        ],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Zalo"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": null,
+        "stations": [],
+        "areas": []
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Đóng gói / Kho / Ship hàng"
+        ],
+        "shifts_needed": [
+          "Cuối tuần (T7/CN)"
+        ],
+        "wage_offered": "15tr",
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)",
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "1600822708188253",
+          "post_url": "https://www.facebook.com/groups/799132105023988/posts/1600822708188253/",
+          "group_id": "799132105023988",
+          "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+          "created_at": "",
+          "content_snippet": "Chủ Nhật, 4 Tháng 10, 2026 lúc 11:20\nTuyển Nhân Viên Kho Quần Áo Lâu Dài, Thời Vụ\n5 bốc hàng: 13-15tr\n2 phụ xe: 12-14tr\n5-8 Nam/nữ đóng gói: 10-12tr\nHỗ trợ trả lương theo tuần, nuôi ăn ở, không giữ lương\nNhận: nam/nữ từ 16-40 tuổi, không nhận part time\nLiên hệ trực tiếp 0398964270 hoặc zalo"
+        },
+        {
+          "post_id": "1597867828483741",
+          "post_url": "https://www.facebook.com/groups/799132105023988/posts/1597867828483741/",
+          "group_id": "799132105023988",
+          "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+          "created_at": "",
+          "content_snippet": "Thông báo tuyển dụng nhân viên kho quần áo (Lâu dài và Thời vụ)\nCần 5 người làm bốc hàng, lương 13-15tr/tháng\n2 phụ xe: 12-14tr\n5-8 Nam/nữ đóng gói: 10-12tr\nHỗ trợ trả lương theo tuần, nuôi ăn ở, không giữ lương\nNhận: nam/nữ từ 16-40 tuổi, không nhận part time\nLiên hệ trực tiếp 0398964270 hoặc zalo"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=61594913291544",
+      "personal_info": {
+        "author_name": "Luật Tuyển Dụng",
+        "author_url": "https://www.facebook.com/profile.php?id=61594913291544",
+        "group_member_url": "https://www.facebook.com/groups/799132105023988/user/61594913291544/",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": []
+      },
+      "step1_business_model": {
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Chiba",
+        "stations": [],
+        "areas": [
+          "Chiba"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": "1500yen/h",
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Hỗ trợ chuyển/gia hạn Visa (Tokutei/Kỹ sư)"
+        ],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "hash_163169889",
+          "post_url": "https://www.facebook.com/groups/799132105023988/user/61594913291544/",
+          "group_id": "799132105023988",
+          "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+          "created_at": "",
+          "content_snippet": "Xin phép adm ạk\nBÊN M CHUYÊN TUYỂN TOKUTEI , KỸ SƯ ĐẦU NHẬT GỒM NHỮNG ĐƠN HÀNG SAU:\nChiba: Tuyển 3 nam tuyển tokutei đầu nhật: hàn các chi tiết máy xúc/ủi, lương 1500yen/h , tăng ca 60h..."
+        }
+      ]
+    },
+    {
+      "lead_key": "name:anh hau",
+      "personal_info": {
+        "author_name": "Ánh Hậu",
+        "author_url": "",
+        "group_member_url": "",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": []
+      },
+      "step1_business_model": {
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": null,
+        "stations": [],
+        "areas": []
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": null,
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "1595070252096832",
+          "post_url": "https://www.facebook.com/groups/799132105023988/posts/1595070252096832/",
+          "group_id": "799132105023988",
+          "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+          "created_at": "",
+          "content_snippet": "Tuyển 1 sếp làm CAD (doboku)\nThầu 清水 lương 3X man (sodan theo trình độ và kinh nghiệm) ...\n1"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=100052283027852",
+      "personal_info": {
+        "author_name": "Thợ Xăm Saitama",
+        "author_url": "https://www.facebook.com/profile.php?id=100052283027852",
+        "group_member_url": "https://www.facebook.com/groups/799132105023988/user/100052283027852/",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Tiệm Nail / Mi / Spa",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo, Saitama",
+        "stations": [],
+        "areas": [
+          "Tokyo",
+          "Saitama"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [
+          "Ca sáng",
+          "Cuối tuần (T7/CN)"
+        ],
+        "wage_offered": "4 đ",
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "1620753106195213",
+          "post_url": "https://www.facebook.com/groups/799132105023988/posts/1620753106195213/",
+          "group_id": "799132105023988",
+          "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+          "created_at": "",
+          "content_snippet": "Chủ Nhật, 25 Tháng 10, 2026 lúc 18:33\nSang tuần cần tuyển 1 số mẫu phụ phí nhỏ hình kích thước a4 đổ xuống ae Saitama,Tokyo  có nhu cầu xăm cứ ib trực tiếp e\nCó thể là hình minh họa về một hoặc nhiều người và henna. Có thể là hình vẽ ngẫu hứng về một hoặc nhiều người và henna. Có thể là hình vẽ ngẫu"
+        }
+      ]
+    },
+    {
+      "lead_key": "phone:0362870718",
+      "personal_info": {
+        "author_name": "Chưa rõ tên FB",
+        "author_url": "",
+        "group_member_url": "",
+        "phone": "0362870718",
+        "all_phones": [
+          "0362870718"
+        ],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": []
+      },
+      "step1_business_model": {
+        "business_type": "Kinh doanh Online / Bán hàng cá nhân tại Nhật",
+        "owner_activity": "owner_selling",
+        "all_business_types": [
+          "Kinh doanh Online / Bán hàng cá nhân tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
+        "location": null,
+        "stations": [],
+        "areas": []
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Chủ tự vận hành / Bán hàng trực tiếp (Chưa tuyển người)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": "39K",
+        "japanese_requirement": "Không áp dụng (Bán hàng cho cộng đồng người Việt tại Nhật)",
+        "shop_customer_segment": "Cộng đồng người Việt tại Nhật Bản",
+        "benefits_offered": [
+          "Có hỗ trợ Freeship / Giao hàng tận nơi"
+        ],
+        "pain_points_and_needs": [
+          "Đang tự đăng bài bán hàng & chốt đơn thủ công qua Inbox (cần mở rộng tệp khách hàng, tự động hóa chốt đơn/CSKH và tối ưu chi phí vận chuyển/ship hàng)"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "1602986974638493",
+          "post_url": "https://www.facebook.com/groups/799132105023988/posts/1602986974638493/",
+          "group_id": "799132105023988",
+          "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+          "created_at": "",
+          "content_snippet": "QUÁN NHÀ BÔNG – ĂN NGON, GIÁ XINH!\nĐói bụng rồi thì ghé Nhà Bông ngay thôi!\nCOMBO HOT – CƠM GÀ + TRÀ CHANH CHỈ 39K\nĂn no – uống mát – giá siêu hời!\nMỳ Quảng Gà — 35K\nHủ Tiếu Trộn/Nước — 35K\nCơm Gà/Xá Xíu — 40K\nTrà Chanh — 12K\nCoca/Pepsi/Sprite/Fanta — 15K\nSHIP 7H–23H HẰNG NGÀY\nSân Xà – Sân Lái | ĐH "
+        }
+      ]
+    },
+    {
+      "lead_key": "headline:mat bang quan an o kobe | cach ga shinkaichi ",
+      "personal_info": {
+        "author_name": "Chưa rõ tên FB",
+        "author_url": "",
+        "group_member_url": "",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": []
+      },
+      "step1_business_model": {
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
+        "location": "Ga 新開地駅 | Kobe",
+        "stations": [
+          "新開地駅"
+        ],
+        "areas": [
+          "Kobe"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Bếp / Phụ bếp (Kitchen)",
+          "Phục vụ / Chạy bàn (Hall)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": "8.000 yên/tháng",
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Thiếu nhân sự ở nhiều khâu cùng lúc (Bếp / Phụ bếp (Kitchen), Phục vụ / Chạy bàn (Hall))"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "1643005717303285",
+          "post_url": "https://www.facebook.com/groups/799132105023988/posts/1643005717303285/",
+          "group_id": "799132105023988",
+          "group_name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+          "created_at": "",
+          "content_snippet": "MẶT BẰNG QUÁN ĂN Ở KOBE | CÁCH GA SHINKAICHI 1 PHÚT ĐI BỘ\nAnh chị đang tìm chỗ mở quán ở Kobe? M2Group có mặt bằng tầng 1, ngay khu đông người qua lại, khách đi tàu đến cũng tiện!\nKhu Fukuhara-chō, quận Hyōgo, Kobe\n47,27 m2 · Có khu bếp và khu phục vụ khách\nChỉ 198.000 yên/tháng(19万8千円)\nNhắn M2Group"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=100013904139901",
+      "personal_info": {
+        "author_name": "Tit Pop",
+        "author_url": "https://www.facebook.com/profile.php?id=100013904139901",
+        "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100013904139901/",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": []
+      },
+      "step1_business_model": {
+        "business_type": "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Cơ sở kinh doanh nhỏ / Dịch vụ tại Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo, Osaka",
+        "stations": [],
+        "areas": [
+          "Tokyo",
+          "Osaka"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": null,
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Hỗ trợ chuyển/gia hạn Visa (Tokutei/Kỹ sư)",
+          "Có tăng lương / thưởng"
+        ],
+        "pain_points_and_needs": [
+          "Thiếu hụt nhân sự khẩn cấp (cần người đi làm ngay, chủ quán đang chịu tải vận hành)",
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "2574960103015149",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2574960103015149/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "Góc tuyển đồng đội\nBên em đang cần tuyển gấp 2 thợ\n1 thợ đầu tokyo 1 thợ đầu osaka   có thể đứng độc lập được làm gắn bó 6 tháng sẽ được vô % trong quán luôn ạ\nlương thưởng yêu đãi tốt\ncty có thể bảo lãnh visa\nyêu tiên visa gia đình"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=100002535671959",
+      "personal_info": {
+        "author_name": "Ngô Thị Mai Phương",
+        "author_url": "https://www.facebook.com/profile.php?id=100002535671959",
+        "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100002535671959/",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Ga Yoshikawa Minami, 吉川美南駅",
+        "stations": [
+          "Yoshikawa Minami",
+          "吉川美南駅",
+          "Kita-Koshigaya",
+          "北越谷駅"
+        ],
+        "areas": [
+          "Koshigaya"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [
+          "Cuối tuần (T7/CN)"
+        ],
+        "wage_offered": null,
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng",
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "2533651337146026",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2533651337146026/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "Em xin phép Admin đăng bài tuyển mẫu ạ\nTUYỂN MẪU CẮT TÓC NỮ FREE\nGa Yoshikawa Minami (吉川美南駅)\nTháng 10: 6, 7, 8, 12, 13, 15, 19, 20\n18:00-19:00 / 19:00-20:00\nMình đang làm tại salon và cần mẫu để luyện tập, nâng cao tay nghề. Cắt tóc hoàn toàn miễn phí ạ\nNếu muốn làm thêm các dịch vụ khác của salon t"
+        },
+        {
+          "post_id": "hash_874428813",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100002535671959/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "Chủ Nhật, 2 Tháng 8, 2026 lúc 05:42\nTUYỂN MẪU CẮT TÓC / CẮT + UỐN\nMình đang cần tuyển mẫu tóc nữ để luyện tập tại salon.\nMenu\n• Cắt tóc: khoảng 1 tiếng\n• Cắt + uốn: khoảng 2 tiếng\nThời gian\n18:00 – 20:00\n(tùy theo menu bạn chọn)\nĐịa điểm\nSalon gần ga Kita-Koshigaya (北越谷駅), cách ga khoảng 7 phút đi b"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=100038242008319",
+      "personal_info": {
+        "author_name": "Trần Văn Nhật",
+        "author_url": "https://www.facebook.com/profile.php?id=100038242008319",
+        "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100038242008319/",
+        "phone": "090-9289-6262",
+        "all_phones": [
+          "090-9289-6262"
+        ],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Quán Cafe / Trà sữa / Tiệm bánh",
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Ga Himeji | Himeji",
+        "stations": [
+          "Himeji"
+        ],
+        "areas": [
+          "Himeji"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Quản lý cửa hàng / Trưởng ca (Tencho)"
+        ],
+        "shifts_needed": [
+          "Cuối tuần (T7/CN)"
+        ],
+        "wage_offered": null,
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Hỗ trợ chuyển/gia hạn Visa (Tokutei/Kỹ sư)",
+          "Có tăng lương / thưởng"
+        ],
+        "pain_points_and_needs": [
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)",
+          "Quá tải vào khung giờ cao điểm (buổi tối / cuối tuần)"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "2177358606108636",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2177358606108636/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "Chủ Nhật, 24 Tháng 8, 2025 lúc 04:28\nTUYỂN THỢ LÀM TÓC – VỀ ĐỘI CÙNG “TÓC 99 HIMEJI”\nLàm việc tại ga Himeji\nBạn đang là thợ tóc, nhưng:\n• Mỗi ngày làm việc đều thấy mệt mỏi vì không có môi trường tốt?\n• Muốn có mức thu nhập xứng đáng với công sức?\n• Muốn phát triển bản thân lên thợ chính, quản lý, đ"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=100010588299531",
+      "personal_info": {
+        "author_name": "Ngọc Nam",
+        "author_url": "https://www.facebook.com/profile.php?id=100010588299531",
+        "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/100010588299531/",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp",
+          "Đại lý Vé máy bay / Du lịch Việt - Nhật"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo, Kanagawa",
+        "stations": [],
+        "areas": [
+          "Tokyo",
+          "Kanagawa"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": null,
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "2255432771634552",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2255432771634552/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "Salon em cần tuyển thợ tóc . Chuyên nam hoặc cả nam -nữ đều được ạ . Làm việc khu vực Tokyo - kanagawa. Ae thợ ib nhé\n4\n11"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=2259749488097728",
+      "personal_info": {
+        "author_name": "GoldSeal3172",
+        "author_url": "https://www.facebook.com/profile.php?id=2259749488097728",
+        "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/2259749488097728/",
+        "phone": "+8489615 9291",
+        "all_phones": [
+          "+8489615 9291"
+        ],
+        "line_id": null,
+        "zalo_id": "+8489615",
+        "contact_methods": [
+          "Zalo: +8489615",
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Shinjuku, Yokohama",
+        "stations": [],
+        "areas": [
+          "Shinjuku",
+          "Yokohama"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": "35 man/tháng",
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [
+          "Có tăng lương / thưởng"
+        ],
+        "pain_points_and_needs": [
+          "Đang mở mới / mở rộng cơ sở (cần đồng bộ nhân sự, quy trình, marketing, thiết bị)",
+          "Khát nhân sự gắn bó lâu dài (đau đầu vì baito nghỉ/nhảy việc, sẵn sàng hỗ trợ Visa để giữ người)"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "2435623636948797",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2435623636948797/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "TÌM ĐỒNG ĐỘI  NHÂN VIÊN SPA / NAIL – MI , SHINJUKU & YOKOHAMA\nChuẩn bị khai trương chi nhánh mới, mình cần tìm thêm nhân viên SPA / NAIL / MI có tay nghề tinh thần trách nhiệm cao về cùng team.\nQuyền lợi hấp dẫn:\n• Lương cao 1s2 ~1s5 + thưởng, hoặc làm theo chia % doanh thu.\n• Làm việc tại khu vực c"
+        }
+      ]
+    },
+    {
+      "lead_key": "name:tuyen tho toc tai tokyo",
+      "personal_info": {
+        "author_name": "TUYỂN THỢ TÓC TẠI TOKYO",
+        "author_url": "",
+        "group_member_url": "",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Quán Cafe / Trà sữa / Tiệm bánh",
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": "Tokyo",
+        "stations": [],
+        "areas": [
+          "Tokyo"
+        ]
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Nhân viên làm thêm (Baito)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": null,
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cần bổ sung nhân sự vận hành thường xuyên cho cửa hàng"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "2498979343946559",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2498979343946559/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "SALON TÓC TUYỂN THỢ – THU NHẬP 30M–50M/THÁNG\nĐịa điểm: Tokyo, Nhật Bản\nThu nhập: 30M – 50M/tháng\nThời gian: Full-time / Part-time\nYêu cầu tay nghề:\n• Biết làm tóc nam & nữ\n• Có tinh thần học hỏi, trách nhiệm và yêu nghề\n• Chưa thật sự thành thạo vẫn có thể ứng tuyển – được đào tạo thêm trong quá trì"
+        }
+      ]
+    },
+    {
+      "lead_key": "fb:https://www.facebook.com/profile.php?id=61552654905677",
+      "personal_info": {
+        "author_name": "Trường Tochigi",
+        "author_url": "https://www.facebook.com/profile.php?id=61552654905677",
+        "group_member_url": "https://www.facebook.com/groups/cattocnamnutainhat/user/61552654905677/",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Tiệm Nail / Mi / Spa / Làm đẹp",
+        "owner_activity": "owner_selling",
+        "all_business_types": [
+          "Tiệm Nail / Mi / Spa / Làm đẹp"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
+        "location": null,
+        "stations": [],
+        "areas": []
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Chủ tự vận hành / Bán hàng trực tiếp (Chưa tuyển người)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": null,
+        "japanese_requirement": "Không áp dụng (Bán hàng cho cộng đồng người Việt tại Nhật)",
+        "shop_customer_segment": "Cộng đồng người Việt tại Nhật Bản",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Cá nhân kinh doanh nhỏ đang tìm kiếm khách hàng qua hội nhóm Facebook (cần công cụ bán hàng, quản lý đơn và tiếp cận khách hàng)"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "122245880330088496",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/122245880330088496/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "Có ace nào cần gì thì ib cho e với ạ\nTrường Tochigi cùng với Đinh Long Vũ và Văn Nguyễn.\nGÓC SANG NHƯỢNG\nHiện tại mình muốn sang nhượng quán tóc.\nGiường gội\nGương\nGhế\nHoá Chất.\nĐầy đủ 1 salon đủ làm cả NAM và NỮ\nAi cần liên hệ e nhé"
+        }
+      ]
+    },
+    {
+      "lead_key": "headline:g.salon japan – giai phap quan ly salon all-i",
+      "personal_info": {
+        "author_name": "Chưa rõ tên FB",
+        "author_url": "",
+        "group_member_url": "",
+        "phone": null,
+        "all_phones": [],
+        "line_id": null,
+        "zalo_id": null,
+        "contact_methods": [
+          "Line",
+          "Inbox FB"
+        ]
+      },
+      "step1_business_model": {
+        "business_type": "Quán Cafe / Trà sữa / Tiệm bánh",
+        "owner_activity": "owner_hiring",
+        "all_business_types": [
+          "Quán Cafe / Trà sữa / Tiệm bánh",
+          "Tiệm Nail / Mi / Spa / Làm đẹp",
+          "Shop bán hàng / Kho Online / Livestream"
+        ],
+        "shop_name": null,
+        "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
+        "location": null,
+        "stations": [],
+        "areas": []
+      },
+      "step2_deep_needs": {
+        "roles_needed": [
+          "Bán hàng / Livestream / Trực page",
+          "Quản lý cửa hàng / Trưởng ca (Tencho)"
+        ],
+        "shifts_needed": [],
+        "wage_offered": null,
+        "japanese_requirement": "Chưa nêu rõ",
+        "shop_customer_segment": "Khách Việt hoặc tổng hợp",
+        "benefits_offered": [],
+        "pain_points_and_needs": [
+          "Đang mở mới / mở rộng cơ sở (cần đồng bộ nhân sự, quy trình, marketing, thiết bị)",
+          "Thiếu nhân sự ở nhiều khâu cùng lúc (Bán hàng / Livestream / Trực page, Quản lý cửa hàng / Trưởng ca (Tencho))"
+        ]
+      },
+      "source_posts": [
+        {
+          "post_id": "2508405813003912",
+          "post_url": "https://www.facebook.com/groups/cattocnamnutainhat/posts/2508405813003912/",
+          "group_id": "cattocnamnutainhat",
+          "group_name": "Cắt Tóc Nam Nữ Tại Nhật",
+          "created_at": "",
+          "content_snippet": "G.salon Japan – Giải pháp quản lý salon All-in-One tại Nhật\nChào mọi người!\nJiConnect hiện có đội ngũ 16 nhân viên IT giàu kinh nghiệm, đang phát triển và vận hành nhiều hệ thống cho các đối tác tại Nhật.\nHiện tại, chúng tôi đang phát triển G.salon Japan – phần mềm quản lý dành cho hair & nail salon"
+        }
+      ]
+    }
+  ],
   "groups": [
     {
       "id": "nhatbanchotoinhe",
@@ -128790,7 +130896,35 @@
       },
       "found": 15,
       "error": ""
+    },
+    {
+      "id": "799132105023988",
+      "name": "Cộng Đồng Người Việt Nam Lớn Nhất Tại Nhật Bản (Japan)",
+      "url": "https://www.facebook.com/groups/799132105023988/",
+      "raw_posts_read": 17,
+      "classification_breakdown": {
+        "small_business_owner": 7,
+        "job_seeker": 0,
+        "agency_or_large": 1,
+        "unknown": 9
+      },
+      "found": 7,
+      "error": ""
+    },
+    {
+      "id": "cattocnamnutainhat",
+      "name": "Cắt Tóc Nam Nữ Tại Nhật",
+      "url": "https://www.facebook.com/groups/cattocnamnutainhat/",
+      "raw_posts_read": 13,
+      "classification_breakdown": {
+        "small_business_owner": 9,
+        "job_seeker": 0,
+        "agency_or_large": 0,
+        "unknown": 4
+      },
+      "found": 9,
+      "error": ""
     }
   ],
-  "summary": "Read 0 raw post(s) -> Matched 0 post(s) / 0 small-business owner(s) in 10/10 Baito group(s)."
+  "summary": "Read 30 raw post(s) -> Matched 16 post(s) / 14 small-business owner(s) in 2/2 Baito group(s)."
 }

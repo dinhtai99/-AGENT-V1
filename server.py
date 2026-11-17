@@ -97,6 +97,7 @@ class WorkerManager:
         self.is_scanning = False
         self.scan_cancel_requested = False
         self.session_expired = False
+        self.session_expired_mtime: float = 0.0
         self.remote_login = RemoteLoginSession(root / "fb-state.json")
         self.watch_mode = False
         self.watch_generation = 0
@@ -124,10 +125,18 @@ class WorkerManager:
         except Exception:
             return None
 
+    def _mark_session_expired(self) -> None:
+        self.session_expired = True
+        p = self.root / "fb-state.json"
+        try:
+            self.session_expired_mtime = p.stat().st_mtime if p.exists() else 0.0
+        except Exception:
+            self.session_expired_mtime = 0.0
+
     def add_log(self, text: str, level: str = "info") -> None:
         if any(k in text for k in ("BỊ ĐĂNG XUẤT", "LOGOUT", "checkpoint", "phiên đăng nhập đã hết hạn")):
             level = "error"
-            self.session_expired = True
+            self._mark_session_expired()
 
         with self.lock:
             self.log_counter += 1
@@ -177,6 +186,15 @@ class WorkerManager:
             res = self._read_json("result.json")
             groups_count = len((res or {}).get("groups", []))
 
+            # Automatically clear expired warning if fb-state.json has been refreshed by a new login
+            if self.session_expired and self.has_session():
+                p = self.root / "fb-state.json"
+                try:
+                    if p.exists() and p.stat().st_mtime > self.session_expired_mtime:
+                        self.session_expired = False
+                except Exception:
+                    pass
+
             valid_session = self.has_session() and not self.session_expired
 
             return {
@@ -203,7 +221,7 @@ class WorkerManager:
             if self.is_scanning or self.remote_login.is_active():
                 return False, "Worker đang quét hoặc đăng nhập. Vui lòng đợi hoàn tất."
             if not demo and not self.has_session():
-                self.session_expired = True
+                self._mark_session_expired()
                 self.add_log("🚨 CẢNH BÁO: Phiên Facebook đã hết hạn hoặc bị đăng xuất! Vui lòng bấm 'Đăng nhập FB' trước khi quét.", "error")
                 return False, "🚨 Phiên Facebook đã hết hạn hoặc bị đăng xuất! Vui lòng bấm 'Đăng nhập FB' trước khi quét."
             self.is_scanning = True
@@ -276,6 +294,8 @@ class WorkerManager:
                 exit_code = proc.returncode
 
                 if exit_code == 0:
+                    with self.lock:
+                        self.session_expired = False
                     self.add_log("Quét hoàn tất thành công. Đang cập nhật Dashboard...", "success")
                 else:
                     self.add_log(f"Quét kết thúc với mã lỗi exit_code={exit_code}", "error")
@@ -383,7 +403,7 @@ class WorkerManager:
     def start_group_search(self, query: str = "kinh doanh tại nhật", min_members: int = 5000, limit: int = 20) -> tuple[bool, str]:
         with self.lock:
             if not self.has_session():
-                self.session_expired = True
+                self._mark_session_expired()
                 msg = "🚨 CẢNH BÁO: Phiên Facebook đã hết hạn hoặc chưa đăng nhập! Vui lòng bấm 'Đăng nhập FB' trước khi tìm nhóm."
                 self.add_log(msg, "error")
                 return False, msg
@@ -432,6 +452,8 @@ class WorkerManager:
 
                 exit_code = proc.wait()
                 if exit_code == 0:
+                    with self.lock:
+                        self.session_expired = False
                     self.add_log(f"Tìm nhóm hoàn tất! Đã lưu danh sách nhóm vào discovered_groups.json", "success")
                 else:
                     self.add_log(f"Tìm nhóm kết thúc với mã lỗi exit_code={exit_code}", "warn")
