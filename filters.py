@@ -1639,17 +1639,128 @@ def analyze_lead_behavior(source_posts: list[dict], lead: dict | None = None) ->
     }
 
 
+def analyze_maps_reviews(
+    reviews: list[dict],
+    rating: float | None = None,
+    review_count: int = 0,
+) -> dict:
+    """Analyze extracted Google Maps reviews for customer mix, owner replies, praise & pain points."""
+    revs = reviews or []
+    jp_count = 0
+    vn_count = 0
+    other_count = 0
+    owner_replies = 0
+    pain_points: list[str] = []
+    praises: list[str] = []
+
+    pain_rules = [
+        ("Khách phàn nàn khó đặt lịch / chờ lâu", ("khó đặt", "chờ lâu", "đợi lâu", "hết chỗ", "予約", "待た", "満席")),
+        ("Khách phản ánh thiếu bảng giá / menu rõ ràng", ("bảng giá", "không rõ giá", "đắt", "menu", "メニュー", "値段", "料金")),
+        ("Khách phản ánh khó tìm đường / thông tin giờ mở cửa", ("khó tìm", "đóng cửa", "lạc đường", "場所", "分かりにく", "閉店")),
+        ("Có phản hồi chưa hài lòng về thái độ / phục vụ", ("thái độ", "tệ", "không nhiệt tình", "接客", "態度")),
+    ]
+    praise_rules = [
+        ("Được khen tay nghề / chất lượng tốt", ("tay nghề", "đẹp", "ngon", "chất lượng", "chuẩn", "丁寧", "上手", "美味しい", "うまい", "綺麗")),
+        ("Được khen nhân viên thân thiện / nhiệt tình", ("nhiệt tình", "thân thiện", "vui vẻ", "chu đáo", "親切", "優しい", "雰囲気")),
+    ]
+
+    for r in revs:
+        txt = (r.get("text") or "").strip()
+        if r.get("owner_replied") or r.get("owner_reply"):
+            owner_replies += 1
+        if not txt:
+            continue
+        is_vn_txt = bool(re.search(r"[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]", txt, re.I)) or any(
+            w in (" " + txt.lower() + " ") for w in (" đẹp ", " ngon ", " nhiệt tình ", " giá ", " đợi ", " chờ ", " làm ", " quán ", " tiệm ")
+        )
+        if re.search(r"[\u3040-\u309f\u30a0-\u30ff]", txt):
+            jp_count += 1
+        elif is_vn_txt:
+            vn_count += 1
+        else:
+            other_count += 1
+
+        low = txt.lower()
+        r_stars = float(r.get("stars") if r.get("stars") is not None else (r.get("rating") or 5))
+        for label, kws in pain_rules:
+            if any(k in low for k in kws) and (r_stars <= 3.5 or "khó" in low or "thiếu" in low or "tệ" in low or "lâu" in low):
+                if label not in pain_points:
+                    pain_points.append(label)
+        for label, kws in praise_rules:
+            if any(k in low for k in kws) and r_stars >= 4.0:
+                if label not in praises:
+                    praises.append(label)
+
+    total_txt = jp_count + vn_count + other_count
+    if total_txt == 0:
+        lang_mix = "Chưa có bình luận văn bản"
+    elif jp_count > vn_count and jp_count >= max(1, total_txt // 2):
+        lang_mix = f"Đa số khách Nhật ({jp_count}/{total_txt} review)"
+    elif vn_count > jp_count and vn_count >= max(1, total_txt // 2):
+        lang_mix = f"Đa số khách Việt ({vn_count}/{total_txt} review)"
+    else:
+        lang_mix = f"Khách đa dạng (Nhật: {jp_count}, Việt: {vn_count})"
+
+    if owner_replies > 0:
+        engagement = f"Chủ quán có phản hồi review ({owner_replies}/{len(revs)} bài)"
+    elif revs:
+        engagement = "Chủ quán chưa phản hồi các bình luận"
+    else:
+        engagement = "Chưa có dữ liệu phản hồi"
+
+    parts = []
+    if rating is not None:
+        parts.append(f"{rating}⭐ ({review_count} đánh giá)")
+    if total_txt > 0:
+        parts.append(lang_mix)
+    if praises:
+        parts.append(praises[0])
+    if pain_points:
+        parts.append("⚠️ " + pain_points[0])
+
+    return {
+        "sample_count": len(revs),
+        "jp_reviews": jp_count,
+        "vn_reviews": vn_count,
+        "owner_replies_count": owner_replies,
+        "customer_language_mix": lang_mix,
+        "owner_engagement": engagement,
+        "pain_points": pain_points,
+        "praises": praises,
+        "summary": " · ".join(parts) if parts else "Chưa có bình luận chi tiết",
+    }
+
+
 def score_lead_web_priority(
     lead: dict,
     behavior: dict | None = None,
     maps_info: dict | None = None,
 ) -> dict:
-    """Compute a 1-10 priority score indicating how much this shop needs a Website / Landing Page."""
+    """Compute a 1-10 priority score and Pass/Fail qualification based on Maps & Web presence."""
     p_info = lead.get("personal_info") or {}
     b_model = lead.get("step1_business_model") or {}
     d_needs = lead.get("step2_deep_needs") or {}
     behavior = behavior or analyze_lead_behavior(lead.get("source_posts") or [], lead)
     maps = maps_info if isinstance(maps_info, dict) else (lead.get("maps_info") or {})
+
+    maps_status = (maps.get("status") or "UNCHECKED").upper() if maps else "UNCHECKED"
+    web_status = (maps.get("website_status") or "UNCHECKED").upper() if maps else "UNCHECKED"
+
+    # Strict qualification rule: If Google Maps check ran and could NOT find shop/address -> FAIL (Pass)
+    if maps_status == "NOT_FOUND":
+        return {
+            "score": 1,
+            "tier": "F",
+            "tier_label": "❌ Không đạt (Pass)",
+            "qualification": "FAIL",
+            "is_preliminary": False,
+            "reasons": [
+                "❌ KHÔNG ĐẠT (Pass): Không quét được địa chỉ / quán trên Google Maps — tự động lọc khỏi danh sách ưu tiên."
+            ],
+            "web_opener": "",
+            "maps_status": maps_status,
+            "website_status": web_status,
+        }
 
     reasons: list[str] = []
     score = 0.0
@@ -1688,57 +1799,52 @@ def score_lead_web_priority(
         score += 1.0
         reasons.append("Đang hoạt động tích cực / tuyển nhân sự (+1đ)")
 
-    # 3. Google Maps & Website Gap (max 5 pts)
-    maps_status = (maps.get("status") or "UNCHECKED").upper() if maps else "UNCHECKED"
-    web_status = (maps.get("website_status") or "UNCHECKED").upper() if maps else "UNCHECKED"
-    is_preliminary = maps_status == "UNCHECKED"
+    # 3. Google Maps, Reviews & Website Gap (max 5 pts)
+    is_preliminary = maps_status != "FOUND"
+    qualification = "PASS" if maps_status == "FOUND" else "PENDING"
+    rev_analysis = maps.get("review_analysis") or {}
 
-    if not is_preliminary:
-        if maps_status == "FOUND":
-            reviews = int(maps.get("review_count") or 0)
-            rating = maps.get("rating")
-            if reviews >= 10:
-                score += 2.0
-                reasons.append(f"Quán sống khỏe trên GG Maps ({rating or '—'}⭐ · {reviews} đánh giá) (+2đ)")
-            else:
-                score += 1.0
-                reasons.append(f"Đã xác minh mặt bằng thật trên GG Maps (+1đ)")
-
-            if web_status == "NO_WEB":
-                score += 3.0
-                reasons.append("🎯 Google Maps CHƯA gắn Website/Landing Page (+3đ)")
-            elif web_status == "SOCIAL_ONLY":
-                bonus = 3.0 if high_fit_sector else 2.0
-                score += bonus
-                reasons.append(f"📱 Maps chỉ gắn link MXH/Nền tảng khác, chưa có Web riêng (+{int(bonus)}đ)")
-            elif web_status == "HAS_WEB_WEAK":
-                score += 2.0
-                reasons.append("⚠️ Website hiện tại lỗi / thiếu HTTPS hoặc chưa chuẩn Mobile (+2đ)")
-            elif web_status == "HAS_WEB":
-                score += 0.5
-                reasons.append("🌐 Đã có Website riêng trên Maps (chỉ chào Landing Page phụ) (+0.5đ)")
-        elif maps_status == "NOT_FOUND":
+    if maps_status == "FOUND":
+        reviews = int(maps.get("review_count") or 0)
+        rating = maps.get("rating")
+        rating_val = float(rating) if rating is not None else 0.0
+        if reviews >= 10 or (reviews >= 3 and rating_val >= 4.2):
             score += 2.0
-            reasons.append("📍 Chưa thấy quán trên GG Maps (Home salon/Mới mở — cần combo Maps + Web) (+2đ)")
+            reasons.append(f"✅ ĐẠT — Quán uy tín trên GG Maps ({rating or '—'}⭐ · {reviews} đánh giá) (+2đ)")
         else:
-            # CHECK_ERROR or SKIPPED
-            is_preliminary = True
-            reasons.append("⏳ Chưa tra được Google Maps (bạn có thể thử lại)")
+            score += 1.0
+            reasons.append(f"✅ ĐẠT — Đã xác minh có mặt bằng trên GG Maps ({rating or '—'}⭐ · {reviews} đánh giá) (+1đ)")
+
+        if rev_analysis.get("owner_replies_count", 0) > 0:
+            reasons.append(f"💬 {rev_analysis.get('owner_engagement')} — rất quan tâm hình ảnh thương hiệu")
+        if rev_analysis.get("pain_points"):
+            reasons.append(f"⚠️ Review khách nhắc: {rev_analysis['pain_points'][0]}")
+
+        if web_status == "NO_WEB":
+            score += 3.0
+            reasons.append("🎯 Google Maps CHƯA gắn Website/Landing Page (+3đ)")
+        elif web_status == "SOCIAL_ONLY":
+            bonus = 3.0 if high_fit_sector else 2.0
+            score += bonus
+            reasons.append(f"📱 Maps chỉ gắn link MXH/Nền tảng khác, chưa có Web riêng (+{int(bonus)}đ)")
+        elif web_status == "HAS_WEB_WEAK":
+            score += 2.0
+            reasons.append("⚠️ Website hiện tại lỗi / thiếu HTTPS hoặc chưa chuẩn Mobile (+2đ)")
+        elif web_status == "HAS_WEB":
+            score += 0.5
+            reasons.append("🌐 Đã có Website riêng trên Maps (chỉ chào Landing Page phụ) (+0.5đ)")
     else:
-        # Preliminary estimate before Google Maps check (capped at 7 so verified 8-10 stand out)
+        # Pending Google Maps check (preliminary capped at 7)
         if behavior.get("shop_names") or b_model.get("shop_name"):
             score += 1.0
             reasons.append("Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)")
         if behavior.get("stations") or b_model.get("location"):
             score += 1.0
             reasons.append("Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)")
-        if behavior.get("external_websites"):
-            score += 0.0
-            reasons.append("Đã thấy dẫn link web ngoài trong bài FB")
-        else:
+        if not behavior.get("external_websites"):
             score += 0.5
         score = min(score, 7.0)
-        reasons.append("⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)")
+        reasons.append("⏳ Chờ kiểm tra Google Maps (Chưa xác minh Đạt/Không đạt)")
 
     final_score = max(1, min(10, int(round(score))))
     if final_score >= 9:
@@ -1758,25 +1864,22 @@ def score_lead_web_priority(
 
     shop_phrase = f"tiệm/quán {shop_ref}" if shop_ref else "cửa hàng mình"
     area_phrase = f" ở khu vực {area_ref}" if area_ref else ""
+    rating_note = ""
+    if maps.get("rating"):
+        rev_cnt = int(maps.get("review_count") or 0)
+        rating_note = f" ({maps['rating']}⭐" + (f" / {rev_cnt} đánh giá" if rev_cnt else "") + ")"
 
     if maps_status == "FOUND" and web_status == "NO_WEB":
         web_opener = (
-            f"Chào anh/chị{greeting_name}, em thấy {shop_phrase}{area_phrase} trên Google Maps đang có đánh giá rất tốt"
-            f"{' (' + str(maps.get('rating')) + '⭐)' if maps.get('rating') else ''}, "
+            f"Chào anh/chị{greeting_name}, em thấy {shop_phrase}{area_phrase} trên Google Maps đang có đánh giá rất tốt{rating_note}, "
             "nhưng mục Website trên Maps hiện đang để trống. Nhiều khách tìm quán trên Google muốn xem nhanh bảng giá / menu hoặc đặt lịch ngay mà chưa thấy link. "
             "Bên em chuyên làm Landing Page đặt lịch & bảng giá tối ưu cho tiệm người Việt tại Nhật (chỉ 1–2 ngày xong). Anh/chị có muốn xem thử vài mẫu bên em đã làm không ạ?"
         )
     elif maps_status == "FOUND" and web_status == "SOCIAL_ONLY":
         web_opener = (
-            f"Chào anh/chị{greeting_name}, em thấy {shop_phrase}{area_phrase} trên Google Maps hiện đang dẫn về link mạng xã hội/nền tảng ngoài. "
+            f"Chào anh/chị{greeting_name}, em thấy {shop_phrase}{area_phrase} trên Google Maps{rating_note} hiện đang dẫn về link mạng xã hội/nền tảng ngoài. "
             "Nếu gắn thêm 1 trang Landing Page riêng (có bảng giá, ảnh nổi bật và nút đặt lịch/Line 1 chạm), khách tìm từ Google Maps sẽ chốt lịch nhanh hơn hẳn và đỡ mất phí trung gian. "
             "Em gửi anh/chị xem thử mẫu giao diện phù hợp ngành mình nhé?"
-        )
-    elif maps_status == "NOT_FOUND":
-        web_opener = (
-            f"Chào anh/chị{greeting_name}, em thấy bài đăng của {shop_phrase}{area_phrase} trong hội nhóm tại Nhật. "
-            "Hiện bên em đang hỗ trợ trọn gói đưa quán lên Google Maps chuẩn SEO + Landing Page bảng giá/đặt lịch giúp khách quanh ga tự tìm đến đều đặn hàng tuần. "
-            "Anh/chị có tiện trao đổi 5 phút để em tư vấn thử không ạ?"
         )
     else:
         web_opener = (
@@ -1790,6 +1893,7 @@ def score_lead_web_priority(
         "score": final_score,
         "tier": tier,
         "tier_label": tier_label,
+        "qualification": qualification,
         "is_preliminary": is_preliminary,
         "reasons": reasons,
         "web_opener": web_opener,
@@ -1822,7 +1926,10 @@ def save_leads_csv(path: Path, leads: list[dict]) -> None:
         "Trạng thái chăm sóc",
         "Ghi chú chăm sóc",
         "Điểm Web (1-10)",
+        "Đạt / Không đạt (Maps)",
         "Trạng thái Web (Google Maps)",
+        "Sao & Số đánh giá (Maps)",
+        "Phân tích Review Maps",
         "Website trên Maps",
         "Link Google Maps",
         "Thói quen đăng bài",
@@ -1839,6 +1946,9 @@ def save_leads_csv(path: Path, leads: list[dict]) -> None:
             beh = lead.get("behavior_analysis") or analyze_lead_behavior(posts, lead)
             maps = lead.get("maps_info") or {}
             wp = lead.get("web_priority") or score_lead_web_priority(lead, beh, maps)
+            qual_label = "ĐẠT" if wp.get("qualification") == "PASS" else ("KHÔNG ĐẠT (Pass)" if wp.get("qualification") == "FAIL" else "Chưa check")
+            rating_str = f"{maps.get('rating')}⭐ ({maps.get('review_count', 0)} đánh giá)" if maps.get("rating") is not None else ""
+            rev_sum = (maps.get("review_analysis") or {}).get("summary") or ""
             writer.writerow([
                 p.get("author_name") or "",
                 p.get("author_url") or "",
@@ -1860,8 +1970,11 @@ def save_leads_csv(path: Path, leads: list[dict]) -> None:
                 (lead.get("crm") or {}).get("description") or "",
                 (lead.get("crm") or {}).get("status") or "new",
                 (lead.get("crm") or {}).get("note") or "",
-                f"{wp.get('score', 0)}/10 ({'Sơ bộ' if wp.get('is_preliminary') else 'Chính thức'})",
+                f"{wp.get('score', 0)}/10 ({'Không đạt' if wp.get('qualification') == 'FAIL' else ('Sơ bộ' if wp.get('is_preliminary') else 'Chính thức')})",
+                qual_label,
                 maps.get("website_status") or "UNCHECKED",
+                rating_str,
+                rev_sum,
                 maps.get("website") or "",
                 maps.get("maps_url") or "",
                 f"{beh.get('pace_label', '')} | {beh.get('primary_style', '')}",

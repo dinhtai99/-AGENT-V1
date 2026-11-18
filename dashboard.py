@@ -399,6 +399,7 @@ def present_lead(lead: dict, post_map: dict[str, dict], group_names: dict[str, s
         "score": score,
         "score_10": wp["score"],
         "score_tier": wp["tier"],
+        "qualification": wp.get("qualification", "PENDING"),
         "score_preliminary": wp["is_preliminary"],
         "score_reasons": wp["reasons"],
         "behavior": beh,
@@ -489,7 +490,7 @@ def build(root: Path) -> tuple[dict, list[dict]]:
         item["crm"] = old_l.get("crm") or {}
         item["updated_at"] = saved_updated
         item["scanned_at"] = saved_updated
-    presented.sort(key=lambda x: (-x.get("score_10", 0), -x["score"], x["name"].lower()))
+    presented.sort(key=lambda x: (x.get("qualification") == "FAIL", -x.get("score_10", 0), -x["score"], x["name"].lower()))
     raw_rows.sort(key=lambda r: (not r["is_lead"], r["group_name"]))
 
     disc_file = root / "discovered_groups.json"

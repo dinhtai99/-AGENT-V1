@@ -93,6 +93,30 @@ class TestLeadProfilerAndScoring(unittest.TestCase):
         }
         res_has = score_lead_web_priority(lead, beh, maps_strong)
         self.assertLess(res_has["score"], res_s["score"])
+        self.assertEqual(res_has["qualification"], "PASS")
+
+        # Not found on Maps -> marked as FAIL (Không đạt / Pass) with score 1 and tier F
+        maps_missing = {"status": "NOT_FOUND", "query_used": "Tiệm Nail Hoa Hồng"}
+        res_fail = score_lead_web_priority(lead, beh, maps_missing)
+        self.assertEqual(res_fail["qualification"], "FAIL")
+        self.assertEqual(res_fail["score"], 1)
+        self.assertEqual(res_fail["tier"], "F")
+
+    def test_analyze_maps_reviews(self):
+        from filters import analyze_maps_reviews
+        reviews = [
+            {"reviewer": "Tanaka", "rating": 5.0, "text": "とても丁寧で綺麗でした！スタッフも優しい", "owner_reply": "ご来店ありがとうございます"},
+            {"reviewer": "Minh Anh", "rating": 3.0, "text": "Làm đẹp nhưng phải đợi hơi lâu vì khó đặt lịch", "owner_reply": ""},
+            {"reviewer": "Yuki", "rating": 5.0, "text": "素晴らしい仕上がり", "owner_reply": "またお待ちしています"},
+        ]
+        ra = analyze_maps_reviews(reviews, rating=4.3, review_count=3)
+        self.assertEqual(ra["sample_count"], 3)
+        self.assertEqual(ra["jp_reviews"], 2)
+        self.assertEqual(ra["vn_reviews"], 1)
+        self.assertEqual(ra["owner_replies_count"], 2)
+        self.assertIn("Đa số khách Nhật", ra["summary"])
+        self.assertTrue(any("Phục vụ" in p or "tay nghề" in p for p in ra["praises"]))
+        self.assertTrue(any("chờ lâu" in p for p in ra["pain_points"]))
 
     def test_build_maps_search_queries(self):
         lead = {

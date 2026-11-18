@@ -213,11 +213,19 @@
   .score-a { background: #ecfdf5; color: #047857; border-color: #6ee7b7; }
   .score-b { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
   .score-c { background: var(--surface-2); color: var(--muted); border-color: var(--border); }
+  .score-f { background: var(--danger-soft); color: var(--danger); border-color: rgba(220,38,38,0.3); }
   [data-theme="dark"] .score-s { background: rgba(225,29,72,0.18); color: #fda4af; border-color: rgba(251,113,133,0.4); }
   [data-theme="dark"] .score-a { background: rgba(16,185,129,0.18); color: #6ee7b7; border-color: rgba(52,211,153,0.4); }
   [data-theme="dark"] .score-b { background: rgba(245,158,11,0.18); color: #fcd34d; border-color: rgba(251,191,36,0.4); }
+  [data-theme="dark"] .score-f { background: rgba(239,68,68,0.16); color: #fca5a5; border-color: rgba(248,113,113,0.35); }
   .profile-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
   .profile-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 12px; border-radius: 10px; background: linear-gradient(135deg, rgba(230,126,34,0.08), rgba(16,185,129,0.06)); border: 1.5px solid var(--border-strong); }
+  .toggle-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-size: 12.5px; font-weight: 600; cursor: pointer; user-select: none; white-space: nowrap; }
+  .toggle-pill input { margin: 0; accent-color: var(--accent); cursor: pointer; }
+  .review-list { display: grid; gap: 8px; margin-top: 10px; }
+  .review-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; }
+  .review-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .review-reply { margin-top: 6px; padding: 6px 8px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 4px; font-size: 12px; }
 
   /* ---------- groups & guide ---------- */
   .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 13px; }
@@ -698,13 +706,13 @@
       <label><span class="sr-only">Google Maps &amp; Website</span>
         <select class="select" id="f-maps">
           <option value="">Mọi trạng thái Maps/Web</option>
-          <option value="NO_WEB">🎯 Chưa có Web trên Maps</option>
-          <option value="SOCIAL_ONLY">📱 Chỉ gắn MXH / Hotpepper</option>
-          <option value="NOT_FOUND">📍 Chưa lên Google Maps</option>
-          <option value="HAS_WEB_WEAK">⚠️ Web yếu / lỗi / không Mobile</option>
-          <option value="HAS_WEB">🌐 Đã có Website riêng</option>
-          <option value="CHECKED">✅ Đã check Maps (tất cả)</option>
+          <option value="PASS">✅ ĐẠT (Đã tìm thấy trên GG Maps)</option>
+          <option value="NO_WEB">🎯 ĐẠT · Chưa có Web trên Maps</option>
+          <option value="SOCIAL_ONLY">📱 ĐẠT · Chỉ gắn MXH / Hotpepper</option>
+          <option value="HAS_WEB_WEAK">⚠️ ĐẠT · Web yếu / lỗi / không Mobile</option>
+          <option value="HAS_WEB">🌐 ĐẠT · Đã có Website riêng</option>
           <option value="UNCHECKED">⏳ Chưa check Maps</option>
+          <option value="FAIL">❌ Không đạt (Pass - Chưa có GG Maps)</option>
         </select>
       </label>
       <label><span class="sr-only">Thời gian quét</span>
@@ -724,8 +732,13 @@
           <option value="sector">Theo ngành nghề</option>
         </select>
       </label>
+      <label class="toggle-pill" title="Tự động ẩn các khách hàng không tìm thấy quán trên Google Maps (Không đạt / Pass). Dữ liệu vẫn được giữ nguyên trong file để lọc lại khi cần.">
+        <input type="checkbox" id="f-hide-fail" checked>
+        <span>Ẩn Không đạt (Pass)</span>
+      </label>
       <button class="btn btn-sm btn-warning" id="btn-batch-profile-top10" type="button" title="Chỉ tra Google Maps & chấm điểm Web 1–10 cho 10 khách đầu tiên đã có Tên quán/SĐT (0 đụng Facebook, an toàn tuyệt đối cho nick FB)">📍 Check Maps Top 10</button>
       <button class="btn btn-sm btn-primary" id="btn-batch-profile-all" type="button" title="Chạy nền Check Google Maps cho TOÀN BỘ các khách hàng còn lại đã có Tên quán/SĐT (0 đụng Facebook)">🌐 Check Maps Hết còn lại</button>
+      <button class="btn btn-sm" id="btn-refresh-found-reviews" type="button" title="Quét bổ sung sao, tổng số lượt đánh giá và nội dung review cho các quán ĐẠT (FOUND) đã tìm thấy trước đó (0 đụng Facebook)">⭐ Soi Đánh giá quán ĐẠT</button>
       <button class="btn btn-sm" id="btn-recompute-scores" type="button" title="Tính lại ngay hành vi đa bài và điểm 1–10 cho toàn bộ khách">♻️ Chấm điểm lại</button>
       <div class="seg" role="group" aria-label="Kiểu hiển thị">
         <button type="button" data-view="cards" aria-pressed="true">Thẻ</button>
@@ -1102,17 +1115,30 @@
     maps = maps || {};
     var st = (maps.status || "UNCHECKED").toUpperCase();
     var ws = (maps.website_status || "UNCHECKED").toUpperCase();
-    if (st === "NOT_FOUND") return { cls: "warn", text: "📍 Chưa có trên GG Maps" };
+    if (st === "NOT_FOUND") return { cls: "danger", text: "❌ Không đạt (Pass)" };
     if (st === "SKIPPED_NO_CLUES") return { cls: "", text: "ℹ️ Thiếu tên quán/SĐT để check Maps" };
     if (st === "CHECK_ERROR") return { cls: "danger", text: "⚠️ Lỗi tra Maps" };
     if (st !== "FOUND") return { cls: "", text: "⏳ Chưa check GG Maps" };
-    if (ws === "NO_WEB") return { cls: "accent", text: "🎯 Maps: CHƯA CÓ WEB" };
-    if (ws === "SOCIAL_ONLY") return { cls: "ok", text: "📱 Maps: Chỉ gắn MXH/App" };
-    if (ws === "HAS_WEB_WEAK") return { cls: "warn", text: "⚠️ Maps: Web yếu/lỗi" };
-    if (ws === "HAS_WEB") return { cls: "info", text: "🌐 Maps: Đã có Web" };
+    if (ws === "NO_WEB") return { cls: "accent", text: "🎯 ĐẠT · CHƯA CÓ WEB" };
+    if (ws === "SOCIAL_ONLY") return { cls: "ok", text: "📱 ĐẠT · Chỉ gắn MXH/App" };
+    if (ws === "HAS_WEB_WEAK") return { cls: "warn", text: "⚠️ ĐẠT · Web yếu/lỗi" };
+    if (ws === "HAS_WEB") return { cls: "info", text: "🌐 ĐẠT · Đã có Web" };
     return { cls: "", text: "⏳ Chưa check GG Maps" };
   }
+  function mapsReviewBadgeHtml(maps) {
+    if (!maps || (maps.status || "").toUpperCase() !== "FOUND") return "";
+    var rating = maps.rating;
+    var rc = Number(maps.review_count || 0);
+    if (!rating && !rc) return "";
+    var txt = (rating ? rating + "⭐" : "Maps") + (rc ? " (" + rc + " đánh giá)" : "");
+    var ra = maps.review_analysis || {};
+    if (ra.customer_language_mix) txt += " · " + ra.customer_language_mix;
+    return '<span class="tag ok" title="' + esc(ra.summary || txt) + '">' + esc(txt) + "</span>";
+  }
   function scoreBadgeHtml(l) {
+    if (l.qualification === "FAIL" || (l.maps && l.maps.status === "NOT_FOUND")) {
+      return '<span class="score-pill score-f" title="' + esc((l.score_reasons || []).join(" · ")) + '">❌ Không đạt</span>';
+    }
     var s10 = Number(l.score_10 || 0) || 1;
     var tier = (l.score_tier || (s10 >= 9 ? "S" : s10 >= 7 ? "A" : s10 >= 5 ? "B" : "C")).toLowerCase();
     var prelim = l.score_preliminary ? " (Sơ bộ)" : "";
@@ -1163,7 +1189,7 @@
   indexLeads();
 
   // ---------- state ----------
-  var state = { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "", sort: "score_10", view: "cards" };
+  var state = { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "", sort: "score_10", view: "cards", hideFail: true };
   try { var v = localStorage.getItem("agentv1.view"); if (v === "table" || v === "cards") state.view = v; } catch (e) {}
 
   // ---------- header / KPIs ----------
@@ -1175,13 +1201,16 @@
   }
 
   function renderKpis() {
+    var failCount = LEADS.filter(function (l) { return l.qualification === "FAIL" || (l.maps && l.maps.status === "NOT_FOUND"); }).length;
+    var passCount = LEADS.filter(function (l) { return l.qualification === "PASS" || (l.maps && l.maps.status === "FOUND"); }).length;
+    var activeCount = Math.max(0, LEADS.length - failCount);
     var withPhone = LEADS.filter(function (l) { return l.has_phone; }).length;
     var withFb = LEADS.filter(function (l) { return l.has_fb; }).length;
     var high = LEADS.filter(function (l) { return l.priority === "high"; }).length;
     var okGroups = GROUPS.filter(function (g) { return !g.error; }).length;
     var contacted = LEADS.filter(function (l) { var s = crmOf(l.id).status; return s && s !== "new" && s !== "skip"; }).length;
     var items = [
-      { label: "Khách hàng tiềm năng", value: LEADS.length, sub: "chủ KD nhỏ < 20 người", cls: "accent" },
+      { label: "Khách hàng tiềm năng", value: state.hideFail ? activeCount : LEADS.length, sub: passCount + " Đạt (có Maps) · " + failCount + " Không đạt (đã lọc)", cls: "accent" },
       { label: "Có SĐT / Zalo", value: withPhone, sub: "gọi / nhắn được ngay" },
       { label: "Có Facebook cá nhân", value: withFb, sub: "nhắn tin trực tiếp" },
       { label: "Đã chăm sóc", value: contacted, sub: high + " khách ưu tiên cao" },
@@ -1285,14 +1314,18 @@
         if (state.scoreBand === "5" && (s10 < 5 || s10 > 6)) return false;
         if (state.scoreBand === "low" && s10 >= 5) return false;
       }
+      var m = l.maps || {};
+      var ms = (m.status || "UNCHECKED").toUpperCase();
+      var ws = (m.website_status || "UNCHECKED").toUpperCase();
+      var isFail = (l.qualification === "FAIL" || ms === "NOT_FOUND");
+      if (state.hideFail && state.mapsStatus !== "FAIL" && isFail) return false;
       if (state.mapsStatus) {
-        var m = l.maps || {};
-        var ms = (m.status || "UNCHECKED").toUpperCase();
-        var ws = (m.website_status || "UNCHECKED").toUpperCase();
-        if (state.mapsStatus === "CHECKED" && ms !== "FOUND" && ms !== "NOT_FOUND") return false;
+        if (state.mapsStatus === "PASS" && ms !== "FOUND") return false;
+        else if (state.mapsStatus === "FAIL" && !isFail) return false;
+        else if (state.mapsStatus === "CHECKED" && ms !== "FOUND" && ms !== "NOT_FOUND") return false;
         else if (state.mapsStatus === "UNCHECKED" && (ms === "FOUND" || ms === "NOT_FOUND")) return false;
         else if (state.mapsStatus === "NOT_FOUND" && ms !== "NOT_FOUND") return false;
-        else if (["NO_WEB", "SOCIAL_ONLY", "HAS_WEB_WEAK", "HAS_WEB"].indexOf(state.mapsStatus) >= 0 && ws !== state.mapsStatus) return false;
+        else if (["NO_WEB", "SOCIAL_ONLY", "HAS_WEB_WEAK", "HAS_WEB"].indexOf(state.mapsStatus) >= 0 && (ms !== "FOUND" || ws !== state.mapsStatus)) return false;
       }
       if (state.date) {
         var now = Date.now();
@@ -1359,6 +1392,8 @@
     if (ws && ws.text && ws.text.indexOf("Chưa check") === -1) {
       tags.push('<span class="tag ' + ws.cls + '" style="font-weight:700">' + esc(ws.text) + "</span>");
     }
+    var revTag = mapsReviewBadgeHtml(l.maps);
+    if (revTag) tags.push(revTag);
     if (l.price) tags.push('<span class="tag">' + esc(l.price) + "</span>");
     tags.push('<span class="tag ' + (l.activity === "hiring" ? "warn" : "info") + '">' + esc(l.activity_label) + "</span>");
     if ((l.posts || []).length > 1) tags.push('<span class="tag accent">' + l.posts.length + " bài đăng</span>");
@@ -1395,10 +1430,11 @@
         if (fb) contacts.push('<a class="btn btn-sm" href="' + esc(fb) + '" target="_blank" rel="noopener noreferrer">' + icon("i-fb") + "FB</a>");
         if (!contacts.length) contacts.push('<span class="muted">Inbox bài đăng</span>');
         var ws = webStatusLabel(l.maps);
+        var revTag = mapsReviewBadgeHtml(l.maps);
         return "<tr>" +
           '<td>' + scoreBadgeHtml(l) + "</td>" +
           '<td><button class="name-btn" type="button" data-open="' + esc(l.id) + '">' + esc(l.name) + '</button><div class="muted">' + esc(l.activity_label) + "</div></td>" +
-          '<td><span class="tag ' + ws.cls + '" style="font-size:11px">' + esc(ws.text) + "</span></td>" +
+          '<td><span class="tag ' + ws.cls + '" style="font-size:11px">' + esc(ws.text) + "</span>" + (revTag ? '<div style="margin-top:4px">' + revTag + "</div>" : "") + "</td>" +
           '<td><span class="nowrap"><span class="dot" style="display:inline-block;margin-right:6px;background:' + (SECTOR_COLORS[l.sector_key] || SECTOR_COLORS.other) + '"></span>' + esc(l.sector) + "</span>" +
             (l.price ? '<div class="muted">' + esc(l.price) + "</div>" : "") + "</td>" +
           "<td>" + (esc(l.area) || '<span class="muted">—</span>') + "</td>" +
@@ -1413,8 +1449,10 @@
 
   function renderLeads() {
     var list = filtered();
-    document.getElementById("c-leads").textContent = LEADS.length;
-    document.getElementById("result-count").textContent = "Đang hiện " + list.length + " / " + LEADS.length + " khách";
+    var failCount = LEADS.filter(function (l) { return l.qualification === "FAIL" || (l.maps && l.maps.status === "NOT_FOUND"); }).length;
+    var activeCount = Math.max(0, LEADS.length - failCount);
+    document.getElementById("c-leads").textContent = state.hideFail ? activeCount : LEADS.length;
+    document.getElementById("result-count").textContent = "Đang hiện " + list.length + " / " + (state.hideFail && state.mapsStatus !== "FAIL" ? activeCount + " khách (đã ẩn " + failCount + " Không đạt)" : LEADS.length + " khách");
     var view = document.getElementById("leads-view");
     if (!LEADS.length) {
       view.innerHTML = '<div class="empty"><h3>Chưa có khách hàng nào</h3><p>Bấm nút <b>Quét ngay</b> ở trên để bắt đầu tìm kiếm chủ kinh doanh nhỏ.</p></div>';
@@ -1466,19 +1504,45 @@
       list(l.score_reasons || [], "Chưa có dữ liệu chấm điểm") +
       "</section>";
 
-    body += '<section class="dlg-section profile-box"><h4>📍 Google Maps &amp; Tình trạng Website <span class="tag ' + ws.cls + '" style="margin-left:auto">' + esc(ws.text) + '</span></h4>';
+    body += '<section class="dlg-section profile-box"><h4>📍 Google Maps &amp; Đánh giá khách hàng <span class="tag ' + ws.cls + '" style="margin-left:auto">' + esc(ws.text) + '</span></h4>';
     if (m.status === "FOUND") {
+      var ra = m.review_analysis || {};
+      var reviews = m.reviews_sample || [];
       body += '<dl class="info-grid">' +
         "<dt>Tên trên Maps</dt><dd><b>" + esc(m.place_name) + "</b>" + (m.category ? " (" + esc(m.category) + ")" : "") + "</dd>" +
         "<dt>Địa chỉ chuẩn</dt><dd>" + esc(m.address || "—") + "</dd>" +
-        "<dt>Đánh giá</dt><dd>" + (m.rating ? m.rating + "⭐" : "—") + " · " + (m.review_count || 0) + " lượt đánh giá</dd>" +
+        "<dt>Sao &amp; Lượt đánh giá</dt><dd><b>" + (m.rating ? m.rating + "⭐" : "—") + "</b> · " + (m.review_count || 0) + " lượt đánh giá</dd>" +
+        (ra.summary ? "<dt>Phân tích Review</dt><dd><b>" + esc(ra.summary) + "</b></dd>" : "") +
+        (ra.owner_engagement ? "<dt>Chủ quán phản hồi</dt><dd>" + esc(ra.owner_engagement) + "</dd>" : "") +
+        ((ra.praises && ra.praises.length) ? "<dt>Khách hay khen</dt><dd>" + esc(ra.praises.join(" · ")) + "</dd>" : "") +
+        ((ra.pain_points && ra.pain_points.length) ? "<dt>Điểm trừ / góp ý</dt><dd style='color:var(--warn)'>" + esc(ra.pain_points.join(" · ")) + "</dd>" : "") +
         "<dt>SĐT trên Maps</dt><dd>" + esc(m.phone || "—") + "</dd>" +
         "<dt>Website gắn trên Maps</dt><dd>" + (siteUrl ? '<a href="' + esc(siteUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(siteUrl) + " ↗</a>" : '<b style="color:var(--accent)">Chưa gắn Website nào</b>') + "</dd>" +
         "<dt>Độ khớp tìm kiếm</dt><dd>" + esc(m.match_confidence || "—") + " (Từ khóa: " + esc(m.query_used || "—") + ")</dd>" +
         "</dl>" +
-        (mapsUrl ? '<div style="margin-top:8px"><a class="btn btn-sm btn-primary" href="' + esc(mapsUrl) + '" target="_blank" rel="noopener noreferrer">🗺️ Mở quán trên Google Maps ↗</a></div>' : "");
+        (mapsUrl ? '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-sm btn-primary" href="' + esc(mapsUrl) + '" target="_blank" rel="noopener noreferrer">🗺️ Mở quán trên Google Maps ↗</a></div>' : "");
+      if (reviews.length) {
+        body += '<div style="margin-top:12px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">💬 MẪU ĐÁNH GIÁ CỦA KHÁCH HÀNG TRÊN GOOGLE MAPS (' + reviews.length + '):</div><div class="review-list">' +
+          reviews.map(function (rv) {
+            var stVal = rv.stars != null ? rv.stars : rv.rating;
+            var stars = stVal ? ("⭐".repeat(Math.max(1, Math.min(5, Math.round(stVal)))) + " (" + stVal + ")") : "";
+            var replyHtml = rv.owner_reply
+              ? '<div class="review-reply"><b>Phản hồi của chủ quán:</b> ' + esc(rv.owner_reply) + "</div>"
+              : (rv.owner_replied ? '<div class="review-reply"><b>✓ Chủ quán có phản hồi đánh giá này</b></div>' : "");
+            return '<div class="review-item"><div class="review-head"><b>' + esc(rv.author || rv.reviewer || "Khách hàng") + "</b>" +
+              (stars ? '<span>' + stars + "</span>" : "") +
+              (rv.date ? "<span>· " + esc(rv.date) + "</span>" : "") +
+              (rv.lang ? '<span class="tag" style="font-size:10px">' + esc(rv.lang) + "</span>" : "") +
+              "</div>" +
+              (rv.text ? '<div>' + esc(rv.text) + "</div>" : '<div class="muted">(Chỉ chấm sao, không viết bình luận)</div>') +
+              replyHtml +
+              "</div>";
+          }).join("") + "</div></div>";
+      } else {
+        body += '<p class="muted" style="margin:8px 0 0;font-size:12.5px">Chưa tải nội dung bình luận chi tiết — bấm nút <b>"📍 Chỉ check Maps"</b> ở trên để đọc thêm 5–8 đánh giá khách hàng mới nhất.</p>';
+      }
     } else if (m.status === "NOT_FOUND") {
-      body += '<p style="margin:0;font-size:13px">Chưa tìm thấy quán tương ứng trên Google Maps (từ khóa: <code>' + esc(m.query_used || "") + "</code>). Thường là tiệm làm tại nhà (Home salon) hoặc quán mới mở chưa tạo Maps — rất phù hợp chào gói Combo Maps + Landing Page.</p>";
+      body += '<p style="margin:0;font-size:13px"><b style="color:var(--danger)">❌ Không đạt (Pass):</b> Không tìm thấy quán/địa chỉ tương ứng trên Google Maps (từ khóa: <code>' + esc(m.query_used || "") + "</code>). Hệ thống vẫn giữ hồ sơ trong kho dữ liệu nhưng mặc định ẩn khỏi danh sách Đạt để bạn tập trung vào các quán đã xác minh.</p>";
     } else if (m.error) {
       body += '<p class="muted" style="margin:0;font-size:13px">' + esc(m.error) + "</p>";
     } else {
@@ -2483,10 +2547,12 @@
       document.querySelectorAll("[data-view]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === t)); });
       renderLeads();
     } else if (t.id === "btn-reset") {
-      state = Object.assign(state, { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "" });
+      state = Object.assign(state, { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "", hideFail: true });
       document.getElementById("q").value = "";
       ["f-area", "f-group", "f-contact", "f-status", "f-score", "f-maps", "f-date"].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ""; });
-      renderChips(); renderLeads();
+      var hf = document.getElementById("f-hide-fail");
+      if (hf) hf.checked = true;
+      renderChips(); renderKpis(); renderLeads();
     }
   });
 
@@ -2508,6 +2574,15 @@
     var el = document.getElementById(p[0]);
     if (el) el.addEventListener("change", function (e) { state[p[1]] = e.target.value; renderLeads(); });
   });
+  var chkHideFail = document.getElementById("f-hide-fail");
+  if (chkHideFail) {
+    chkHideFail.checked = !!state.hideFail;
+    chkHideFail.addEventListener("change", function (e) {
+      state.hideFail = !!e.target.checked;
+      renderKpis();
+      renderLeads();
+    });
+  }
   function runMapsOnlyBatch(limitCount) {
     if (!isServerMode) {
       alert("Hãy mở Web Control Center (start-web.command / start-web.bat) để chạy kiểm tra Google Maps!");
@@ -2551,6 +2626,45 @@
   var btnBatchAll = document.getElementById("btn-batch-profile-all");
   if (btnBatchAll) {
     btnBatchAll.addEventListener("click", function () { runMapsOnlyBatch(0); });
+  }
+  var btnRefreshFoundReviews = document.getElementById("btn-refresh-found-reviews");
+  if (btnRefreshFoundReviews) {
+    btnRefreshFoundReviews.addEventListener("click", function () {
+      if (!isServerMode) {
+        alert("Hãy mở Web Control Center (start-web.command / start-web.bat) để soi đánh giá Google Maps!");
+        return;
+      }
+      var list = LEADS.filter(function (l) {
+        var m = l.maps || {};
+        if ((m.status || "").toUpperCase() !== "FOUND") return false;
+        var hasSamples = Array.isArray(m.reviews_sample) && m.reviews_sample.length > 0;
+        var hasCount = Number(m.review_count || 0) > 0;
+        return !hasSamples || !hasCount;
+      });
+      if (!list.length) {
+        toast("Tất cả các quán ĐẠT (FOUND) đã có đầy đủ sao, số lượt và nội dung đánh giá!");
+        return;
+      }
+      var estMins = Math.max(1, Math.round((list.length * 10) / 60));
+      if (!confirm("Quét bổ sung sao, tổng số lượt và 5–8 đánh giá khách hàng cho " + list.length + " quán ĐẠT (FOUND) trước đó?\n\n✅ Chế độ 0 đụng Facebook — an toàn tuyệt đối.\n⏱️ Ước tính ~" + estMins + " phút.")) {
+        return;
+      }
+      document.getElementById("console-drawer").hidden = false;
+      fetch("/api/leads/profile-batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lead_keys: list.map(function (l) { return l.lead_key || l.id; }),
+          deep_fb: false,
+          check_maps: true
+        })
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        toast(res.message || ("Đang soi đánh giá cho " + list.length + " quán ĐẠT!"));
+        pollServerStatus();
+      }).catch(function (err) {
+        toast("Lỗi gửi lệnh soi đánh giá: " + err);
+      });
+    });
   }
   var btnRecomputeScores = document.getElementById("btn-recompute-scores");
   if (btnRecomputeScores) {

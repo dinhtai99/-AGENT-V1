@@ -40,6 +40,7 @@ sys.path.insert(0, str(ROOT))
 from filters import (  # noqa: E402
     analyze_business_and_needs,
     analyze_lead_behavior,
+    analyze_maps_reviews,
     clean_fb_noise,
     classify_website_url,
     extract_fields,
@@ -235,6 +236,71 @@ def _search_maps_via_api(query: str, api_key: str) -> dict | None:
     }
 
 
+def _extract_maps_reviews(page, max_reviews: int = 8) -> list[dict]:
+    """Click the Google Maps Reviews tab on the currently opened place page and extract top reviews."""
+    try:
+        rev_tab = page.locator(
+            "button[role='tab']:has-text('Bài đánh giá'), button[role='tab']:has-text('Reviews'), button[role='tab']:has-text('クチコミ')"
+        ).first
+        if rev_tab.count() > 0 and rev_tab.is_visible():
+            rev_tab.click(timeout=3000)
+            page.wait_for_timeout(random.randint(1500, 2300))
+        else:
+            return []
+    except Exception:
+        return []
+
+    # Expand 'More' buttons inside reviews if visible
+    try:
+        more_btns = page.locator("button.w8nwRe, button:has-text('Xem thêm'), button:has-text('More')")
+        for idx in range(min(more_btns.count(), 5)):
+            try:
+                b = more_btns.nth(idx)
+                if b.is_visible():
+                    b.click(timeout=500)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    try:
+        reviews = page.evaluate("""(maxRev) => {
+            const cards = Array.from(document.querySelectorAll("div.jftiEf, div[data-review-id]")).slice(0, maxRev * 2);
+            const seen = new Set();
+            const out = [];
+            for (const c of cards) {
+                const rid = c.getAttribute("data-review-id") || "";
+                if (rid && seen.has(rid)) continue;
+                if (rid) seen.add(rid);
+                const authorEl = c.querySelector(".d4r55, .TSUbDb");
+                const author = authorEl ? (authorEl.innerText || "").trim() : "";
+                const starEl = c.querySelector("span.kvMYJc, span[role='img'][aria-label*='sao'], span[role='img'][aria-label*='star']");
+                const starAria = starEl ? (starEl.getAttribute("aria-label") || "") : "";
+                const mStar = starAria.match(/([0-9]+(?:[.,][0-9]+)?)/);
+                const stars = mStar ? parseFloat(mStar[1].replace(",", ".")) : null;
+                const dateEl = c.querySelector(".rsqaWe, .xRkPPb");
+                const date = dateEl ? (dateEl.innerText || "").trim() : "";
+                const textEl = c.querySelector("span.wiI7pd, .MyEned");
+                const text = textEl ? (textEl.innerText || "").trim() : "";
+                const ownerEl = c.querySelector("div.CDe7pd");
+                const ownerReplied = !!ownerEl;
+                if (!author && !text && stars === null) continue;
+                out.push({
+                    author: author || "Khách Google Maps",
+                    stars,
+                    date,
+                    text: text.slice(0, 350),
+                    owner_replied: ownerReplied,
+                });
+                if (out.length >= maxRev) break;
+            }
+            return out;
+        }""", max_reviews)
+        return reviews or []
+    except Exception:
+        return []
+
+
 def _search_maps_via_playwright(queries: list[tuple[str, str]], log_fn=print) -> dict:
     """Search Google Maps using headless Chromium for zero-cost verification."""
     with _playwright() as p:
@@ -296,8 +362,17 @@ def _search_maps_via_playwright(queries: list[tuple[str, str]], log_fn=print) ->
                     const website = webLink ? (webLink.getAttribute("href") || "").trim() : "";
                     const ratingEl = document.querySelector("div.F7nice span[aria-hidden='true']");
                     const ratingText = ratingEl ? ratingEl.innerText.replace(",", ".").trim() : "";
-                    const revEl = document.querySelector("div.F7nice span[aria-label*='bài đánh giá'], div.F7nice span[aria-label*='reviews']");
-                    const revText = revEl ? (revEl.getAttribute("aria-label") || revEl.innerText || "") : "";
+                    let revText = "";
+                    const revEl = document.querySelector("div.F7nice span[aria-label*='đánh giá'], div.F7nice span[aria-label*='review'], div.F7nice span[aria-label*='クチコミ'], div.F7nice span[aria-label*='件']");
+                    if (revEl) {
+                        revText = revEl.getAttribute("aria-label") || revEl.innerText || "";
+                    } else {
+                        const f7 = document.querySelector("div.F7nice");
+                        if (f7) {
+                            const mRev = (f7.innerText || "").match(/\\(([\\d.,\\s]+)\\)/);
+                            if (mRev) revText = mRev[1];
+                        }
+                    }
                     const catBtn = document.querySelector("button.DkEaL");
                     const category = catBtn ? (catBtn.innerText || "").trim() : "";
                     return {
@@ -316,9 +391,16 @@ def _search_maps_via_playwright(queries: list[tuple[str, str]], log_fn=print) ->
                     pname = " ".join(info["place_name"].split())
                     addr = " ".join((info.get("address") or "").split())
                     cat = " ".join((info.get("category") or "").split())
-                    # Reject broad region/city cards (e.g. 'Aichi') or non-Japan hits (e.g. 'New York')
+                    # Reject train stations, floor labels, postal codes, raw street pins, tourist landmarks, broad region/city cards, or non-Japan hits
                     broad_regions = {"aichi", "tokyo", "osaka", "nagoya", "kawasaki", "saitama", "chiba", "yokohama", "kyoto", "fukuoka", "japan", "nhật bản", "kanagawa"}
-                    is_broad = pname.lower() in broad_regions or (not cat and not addr)
+                    cat_low = cat.lower()
+                    is_station_or_floor = bool(
+                        re.search(r"\b(?:station|eki|crossing)\b|駅$|^\d+f$|^b\d+f$|^\d{3}-\d{4}$|^〒", pname, re.I)
+                    ) or any(k in cat_low for k in ("ga tàu", "train station", "subway", "mã bưu điện", "postal code", "điểm thu hút khách du lịch", "tourist attraction"))
+                    is_raw_addr_pin = (not cat) and (
+                        "chōme" in pname.lower() or "丁目" in pname or bool(re.match(r"^\d+[-−]\d+", pname))
+                    )
+                    is_broad = len(pname) < 3 or pname.lower() in broad_regions or (not cat and not addr) or is_station_or_floor or is_raw_addr_pin
                     is_in_japan = (not addr) or bool(re.search(r"(?:nhật bản|japan|〒|[都府県市区町村])", addr, re.I))
                     if is_broad or not is_in_japan:
                         continue
@@ -329,24 +411,33 @@ def _search_maps_via_playwright(queries: list[tuple[str, str]], log_fn=print) ->
                     except Exception:
                         pass
                     review_count = 0
-                    m_rev = re.search(r"([\d.,]+)", info.get("revText") or "")
+                    m_rev = re.search(r"([\d.,]+)", (info.get("revText") or "").replace(" ", ""))
                     if m_rev:
                         try:
                             review_count = int(re.sub(r"[.,]", "", m_rev.group(1)))
                         except Exception:
                             pass
+
+                    # Extract customer review texts from Google Maps Reviews tab
+                    reviews_sample = _extract_maps_reviews(page, max_reviews=8)
+                    if review_count == 0 and reviews_sample:
+                        review_count = len(reviews_sample)
+                    rev_analysis = analyze_maps_reviews(reviews_sample, rating=rating, review_count=review_count)
+
                     website = info.get("website") or ""
                     return {
                         "status": "FOUND",
-                        "place_name": info["place_name"],
-                        "address": info.get("address") or "",
+                        "place_name": pname,
+                        "address": addr,
                         "phone": info.get("phone") or "",
                         "website": website,
                         "website_status": classify_website_url(website),
                         "rating": rating,
                         "review_count": review_count,
-                        "category": info.get("category") or "",
+                        "category": cat,
                         "maps_url": info.get("maps_url") or url,
+                        "reviews_sample": reviews_sample[:5],
+                        "review_analysis": rev_analysis,
                         "query_used": query,
                         "match_confidence": confidence,
                         "checked_at": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -378,6 +469,11 @@ def build_maps_search_queries(lead: dict, behavior: dict) -> list[tuple[str, str
         q = " ".join(f"{shop} {loc}".split())
         if q and len(shop) >= 3:
             queries.append((q, "Tên quán + Khu vực"))
+            shop_ascii = norm_vn(shop)
+            loc_ascii = norm_vn(loc)
+            q_ascii = " ".join(f"{shop_ascii} {loc_ascii}".split())
+            if q_ascii and q_ascii.lower() != q.lower():
+                queries.append((q_ascii, "Tên quán không dấu + Khu vực"))
 
     for ph in phones[:2]:
         digits = re.sub(r"[^\d+]", "", ph)
@@ -427,6 +523,13 @@ def check_google_maps_for_lead(lead: dict, behavior: dict, root: Path, log_fn=pr
 
     if result is None:
         result = _search_maps_via_playwright(queries, log_fn=log_fn)
+
+    if result.get("status") == "FOUND" and "review_analysis" not in result:
+        result["review_analysis"] = analyze_maps_reviews(
+            result.get("reviews_sample") or [],
+            rating=result.get("rating"),
+            review_count=result.get("review_count", 0),
+        )
 
     if result.get("status") == "FOUND" and result.get("website_status") == "HAS_WEB" and result.get("website"):
         log_fn(f"🌐 Đang kiểm tra chất lượng website: {result['website']}...")
