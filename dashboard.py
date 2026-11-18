@@ -353,6 +353,13 @@ def present_lead(lead: dict, post_map: dict[str, dict], group_names: dict[str, s
     wp = score_lead_web_priority(lead, beh, maps_info)
     final_opener = wp["web_opener"] if maps_info.get("status") in ("FOUND", "NOT_FOUND") else opener
     priority = "high" if wp["score"] >= 7 else "mid" if wp["score"] >= 5 else "low"
+    ready_for_maps = bool(
+        b.get("shop_name")
+        or beh.get("shop_names")
+        or phones
+        or beh.get("phones")
+        or any(re.search(r"(?:〒|\d+-\d+-\d+|[都道府県])", a) for a in (beh.get("address_clues") or []))
+    )
 
     return {
         "id": "L" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:10],
@@ -396,6 +403,7 @@ def present_lead(lead: dict, post_map: dict[str, dict], group_names: dict[str, s
         "score_reasons": wp["reasons"],
         "behavior": beh,
         "maps": maps_info,
+        "ready_for_maps": ready_for_maps,
         "deep_profiled_at": lead.get("deep_profiled_at") or "",
         "priority": priority,
         "approach": {"offer": OFFERS[sector_key], "opener": final_opener, "web_opener": wp["web_opener"]},

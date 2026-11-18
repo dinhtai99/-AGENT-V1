@@ -779,7 +779,10 @@ class WorkerManager:
 
         def batch_thread():
             try:
-                self.add_log(f"🚀 Bắt đầu phân tích 360° & check Maps theo lô cho {len(keys)} khách hàng (nghỉ 15–25s giữa mỗi khách để an toàn)...", "info")
+                if deep_fb:
+                    self.add_log(f"🚀 Bắt đầu phân tích 360° (FB + Maps) cho {len(keys)} khách hàng (nghỉ 15–25s giữa mỗi khách)...", "info")
+                else:
+                    self.add_log(f"📍 Bắt đầu Check Google Maps & Chấm điểm 1–10 cho {len(keys)} khách (Chế độ 0 đụng Facebook — An toàn 100% cho nick FB)...", "info")
                 sub_env = os.environ.copy()
                 sub_env["PYTHONUTF8"] = "1"
                 sub_env["PYTHONIOENCODING"] = "utf-8"
@@ -789,12 +792,13 @@ class WorkerManager:
                         if self.scan_cancel_requested:
                             self.add_log("🛑 Đã dừng phân tích theo lô theo yêu cầu.", "warn")
                             break
-                    self.add_log(f"▶️ [{idx}/{len(keys)}] Đang đào sâu & chấm điểm khách: {k}", "info")
+                    self.add_log(f"▶️ [{idx}/{len(keys)}] Đang kiểm tra Maps & chấm điểm khách: {k}", "info")
                     cmd = [self.python_bin, "-u", str(self.root / "lead_profiler.py"), "--lead-key", k]
                     if not deep_fb:
                         cmd.append("--no-fb")
                     if not check_maps:
                         cmd.append("--no-maps")
+                    hit_captcha = False
                     with self.crm_lock:
                         proc = subprocess.Popen(
                             cmd,
@@ -815,25 +819,30 @@ class WorkerManager:
                                 s = line.rstrip()
                                 if s and not s.startswith("{") and not s.startswith("}") and not s.startswith('  "'):
                                     self.add_log(s, "info")
+                                if "captcha" in s.lower() or "unusual traffic" in s.lower():
+                                    hit_captcha = True
                             proc.stdout.close()
                         rc = proc.wait()
                     with self.lock:
                         if self.scan_cancel_requested:
                             self.add_log("🛑 Đã dừng phân tích theo lô theo yêu cầu.", "warn")
                             break
-                    if rc != 0 and self.session_expired:
+                    if hit_captcha:
+                        self.add_log("⚠️ Google Maps báo giới hạn tần suất (CAPTCHA). Tạm dừng lô để bảo vệ IP, thử lại sau ít phút!", "warn")
+                        break
+                    if rc != 0 and self.session_expired and deep_fb:
                         self.add_log("🚨 Dừng lô phân tích do phiên Facebook bị đăng xuất!", "error")
                         break
                     if idx < len(keys):
                         import random
-                        pause_s = random.uniform(15.0, 25.0)
+                        pause_s = random.uniform(15.0, 25.0) if deep_fb else random.uniform(7.0, 13.0)
                         end_t = time.time() + pause_s
                         while time.time() < end_t:
                             with self.lock:
                                 if self.scan_cancel_requested:
                                     break
                             time.sleep(0.5)
-                self.add_log("🎉 Hoàn tất đợt phân tích & chấm điểm theo lô!", "success")
+                self.add_log("🎉 Hoàn tất đợt kiểm tra Google Maps & chấm điểm!", "success")
             except Exception as exc:
                 self.add_log(f"❌ Lỗi phân tích theo lô: {exc}", "error")
             finally:

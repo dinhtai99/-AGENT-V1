@@ -724,7 +724,7 @@
           <option value="sector">Theo ngành nghề</option>
         </select>
       </label>
-      <button class="btn btn-sm btn-warning" id="btn-batch-profile-top10" type="button" title="Tự động đào sâu FB + Check Google Maps + Chấm điểm cho 10 khách hàng đầu tiên chưa check Maps đang hiển thị">🚀 Đào sâu &amp; Check Maps Top 10</button>
+      <button class="btn btn-sm btn-warning" id="btn-batch-profile-top10" type="button" title="Chỉ tra Google Maps & chấm điểm Web 1–10 cho 10 khách đầu tiên đã có Tên quán/SĐT (0 đụng Facebook, an toàn tuyệt đối cho nick FB)">📍 Check Maps Top 10 (Không đụng FB)</button>
       <button class="btn btn-sm" id="btn-recompute-scores" type="button" title="Tính lại ngay hành vi đa bài và điểm 1–10 cho toàn bộ khách">♻️ Chấm điểm lại</button>
       <div class="seg" role="group" aria-label="Kiểu hiển thị">
         <button type="button" data-view="cards" aria-pressed="true">Thẻ</button>
@@ -1454,11 +1454,11 @@
 
     var body = "";
     body += '<div class="profile-actions">' +
-      '<div style="flex:1;min-width:220px"><b style="font-size:13px">🚀 Phân tích chuyên sâu &amp; Soi Google Maps</b>' +
-        '<div class="muted" style="font-size:12px">Đọc thêm bài cũ của khách trong nhóm + Check xem quán có gắn Web trên Maps chưa.</div></div>' +
-      '<button class="btn btn-sm btn-warning" type="button" data-profile-lead="360" data-lead-key="' + esc(l.lead_key || l.id) + '" style="font-weight:750">🚀 Phân tích 360° (FB + Maps)</button>' +
+      '<div style="flex:1;min-width:220px"><b style="font-size:13px">📍 Kiểm tra Google Maps &amp; Chấm điểm Web 1–10</b>' +
+        '<div class="muted" style="font-size:12px">Ưu tiên check trực tiếp Google Maps (0 đụng Facebook, an toàn 100%). Chỉ đào FB nếu thiếu tên quán.</div></div>' +
+      '<button class="btn btn-sm btn-warning" type="button" data-profile-lead="maps" data-lead-key="' + esc(l.lead_key || l.id) + '" style="font-weight:750">📍 Check GG Maps (An toàn FB)</button>' +
+      '<button class="btn btn-sm" type="button" data-profile-lead="360" data-lead-key="' + esc(l.lead_key || l.id) + '">🚀 Cả FB + Maps</button>' +
       '<button class="btn btn-sm" type="button" data-profile-lead="fb" data-lead-key="' + esc(l.lead_key || l.id) + '">🔍 Chỉ đào FB</button>' +
-      '<button class="btn btn-sm" type="button" data-profile-lead="maps" data-lead-key="' + esc(l.lead_key || l.id) + '">📍 Chỉ check Maps</button>' +
       "</div>";
 
     body += '<section class="dlg-section profile-box"><h4>🏆 Chấm điểm ưu tiên Web / Landing Page: ' + scoreBadgeHtml(l) + '</h4>' +
@@ -2511,18 +2511,19 @@
   if (btnBatchTop10) {
     btnBatchTop10.addEventListener("click", function () {
       if (!isServerMode) {
-        alert("Hãy mở Web Control Center (start-web.command / start-web.bat) để chạy phân tích tự động!");
+        alert("Hãy mở Web Control Center (start-web.command / start-web.bat) để chạy kiểm tra Google Maps!");
         return;
       }
       var list = filtered().filter(function (l) {
         var st = (l.maps && l.maps.status) || "UNCHECKED";
-        return st !== "FOUND" && st !== "NOT_FOUND";
+        var notChecked = st !== "FOUND" && st !== "NOT_FOUND";
+        return notChecked && !!l.ready_for_maps;
       }).slice(0, 10);
       if (!list.length) {
-        toast("Tất cả khách hàng đang lọc đều đã check Maps rồi!");
+        toast("Không còn khách nào đang lọc có sẵn Tên quán/SĐT mà chưa check Maps!");
         return;
       }
-      if (!confirm("Chạy đào sâu FB + Check Google Maps + Chấm điểm 1–10 cho " + list.length + " khách hàng đầu tiên chưa check?\n\nHệ thống sẽ nghỉ 15–25s giữa mỗi khách để an toàn cho tài khoản Facebook & Google.")) {
+      if (!confirm("Chạy Check Google Maps & Chấm điểm Web 1–10 cho " + list.length + " khách hàng đầu tiên đã có Tên quán/SĐT?\n\n✅ Chế độ 0 đụng Facebook — hoàn toàn an toàn cho tài khoản FB của bạn (nghỉ 7–13s giữa mỗi quán để tránh CAPTCHA Google).")) {
         return;
       }
       document.getElementById("console-drawer").hidden = false;
@@ -2531,14 +2532,14 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           lead_keys: list.map(function (l) { return l.lead_key || l.id; }),
-          deep_fb: true,
+          deep_fb: false,
           check_maps: true
         })
       }).then(function (r) { return r.json(); }).then(function (res) {
-        toast(res.message || "Đã bắt đầu phân tích lô 10 khách!");
+        toast(res.message || "Đã bắt đầu Check Google Maps Top 10!");
         pollServerStatus();
       }).catch(function (err) {
-        toast("Lỗi gửi lệnh phân tích lô: " + err);
+        toast("Lỗi gửi lệnh check Maps: " + err);
       });
     });
   }
