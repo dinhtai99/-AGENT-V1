@@ -42,10 +42,12 @@ from filters import (  # noqa: E402
     build_leads_list,
     clean_fb_noise,
     extract_fields,
+    load_disqualified_keys,
     load_json,
     norm_vn,
     parse_customer_profile,
     post_matches_filters,
+    prune_disqualified_leads,
     save_json,
     save_leads_csv,
     score_lead_web_priority,
@@ -475,14 +477,30 @@ def build(root: Path) -> tuple[dict, list[dict]]:
     leads = build_leads_list(targets)
     saved = _read(root / "leads.json") or {}
     saved_leads = saved.get("leads", []) if isinstance(saved, dict) else saved
-    saved_updated = saved.get("updated_at") or time.strftime("%Y-%m-%d %H:%M:%S")
-    saved_by_key = {lead.get("lead_key"): lead for lead in saved_leads if isinstance(lead, dict) and lead.get("lead_key")}
+    saved_updated = saved.get("updated_at") or time.strftime("%Y-%m-%dT%H:%M:%S")
+    disq_keys = {str(k) for k in (saved.get("disqualified_keys") or []) if str(k)} if isinstance(saved, dict) else set()
+    saved_by_key: dict[str, dict] = {}
+    for lead in saved_leads:
+        if not isinstance(lead, dict) or not lead.get("lead_key"):
+            continue
+        lk = str(lead.get("lead_key"))
+        if str((lead.get("maps_info") or {}).get("status") or "").upper() == "NOT_FOUND":
+            disq_keys.add(lk)
+            continue
+        saved_by_key[lk] = lead
+
+    filtered_leads: list[dict] = []
     for lead in leads:
-        old_l = saved_by_key.get(lead.get("lead_key"))
+        lk = str(lead.get("lead_key") or "")
+        if lk and lk in disq_keys:
+            continue
+        old_l = saved_by_key.get(lk)
         if old_l:
             for extra_k in ("crm", "maps_info", "behavior_analysis", "web_priority", "deep_profiled_at"):
                 if old_l.get(extra_k):
                     lead[extra_k] = old_l[extra_k]
+        filtered_leads.append(lead)
+    leads = filtered_leads
     post_map = {p["post_id"]: p for p in posts.values()}
     presented = [present_lead(lead, post_map, group_names) for lead in leads]
     for item in presented:
@@ -490,7 +508,7 @@ def build(root: Path) -> tuple[dict, list[dict]]:
         item["crm"] = old_l.get("crm") or {}
         item["updated_at"] = saved_updated
         item["scanned_at"] = saved_updated
-    presented.sort(key=lambda x: (x.get("qualification") == "FAIL", -x.get("score_10", 0), -x["score"], x["name"].lower()))
+    presented.sort(key=lambda x: (-x.get("score_10", 0), -x["score"], x["name"].lower()))
     raw_rows.sort(key=lambda r: (not r["is_lead"], r["group_name"]))
 
     disc_file = root / "discovered_groups.json"
@@ -549,6 +567,7 @@ def build(root: Path) -> tuple[dict, list[dict]]:
             "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(result_mtime)),
             "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "total_raw_posts": len(raw_rows),
+            "disqualified_count": len(disq_keys),
             "customer_profile": task.get("customer_profile") or "",
             "profile_criteria": parse_customer_profile(task.get("customer_profile") or ""),
             "summary": (result or {}).get("summary", ""),
@@ -593,12 +612,15 @@ def generate(root: Path | None = None, save_leads: bool = True) -> Path:
                     if old.get(extra_k) and not lead.get(extra_k):
                         lead[extra_k] = old[extra_k]
             by_key[lead["lead_key"]] = lead
-        archived_leads = list(by_key.values())
+        archived_leads, disq_list, _ = prune_disqualified_leads(
+            list(by_key.values()), load_disqualified_keys(leads_json)
+        )
         if leads_json.exists():
             shutil.copyfile(leads_json, root / "leads.prev.json")
         save_json(leads_json, {
             "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "total_leads": len(archived_leads),
+            "disqualified_keys": disq_list,
             "leads": archived_leads,
         })
         save_leads_csv(root / "leads.csv", archived_leads)

@@ -44,8 +44,10 @@ from filters import (  # noqa: E402
     clean_fb_noise,
     classify_website_url,
     extract_fields,
+    load_disqualified_keys,
     load_json,
     norm_vn,
+    prune_disqualified_leads,
     save_json,
     save_leads_csv,
     score_lead_web_priority,
@@ -669,15 +671,47 @@ def profile_single_lead(
             f"Web: {maps_info.get('website_status')} {maps_info.get('website') or ''}"
         )
 
-    # Step 3: Score 1-10
+    # Step 3: Delete lead permanently if not found on Google Maps, else score 1-10
+    disq_keys = load_disqualified_keys(leads_path)
+    if check_maps and maps_info.get("status") == "NOT_FOUND":
+        lk_del = str(lead.get("lead_key") or "")
+        if lk_del:
+            disq_keys.add(lk_del)
+        leads_list.pop(target_idx)
+        leads_list, disq_list, _ = prune_disqualified_leads(leads_list, disq_keys)
+        log_fn(f"🗑️ Không tìm thấy quán trên Google Maps -> Đã xoá '{lk_del}' khỏi danh sách!")
+        save_json(leads_path, {
+            "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "total_leads": len(leads_list),
+            "disqualified_keys": disq_list,
+            "leads": leads_list,
+        })
+        try:
+            save_leads_csv(root / "leads.csv", leads_list)
+        except Exception:
+            pass
+        import dashboard
+        dashboard.generate(root, save_leads=False)
+        return {
+            "ok": True,
+            "deleted": True,
+            "lead_key": lk_del,
+            "lead_id": _lead_ui_id(lead),
+            "new_posts_added": new_posts_added,
+            "maps_info": maps_info,
+            "message": "❌ Không tìm thấy quán trên Google Maps — Đã xoá khỏi danh sách!",
+        }
+
     web_priority = score_lead_web_priority(lead, behavior, maps_info)
     lead["web_priority"] = web_priority
     log_fn(f"🏆 Điểm Web/Landing Page: {web_priority['score']}/10 ({web_priority['tier_label']})")
 
     leads_list[target_idx] = lead
+    leads_list, disq_list, _ = prune_disqualified_leads(leads_list, disq_keys)
     save_json(leads_path, {
         "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "total_leads": len(leads_list),
+        "disqualified_keys": disq_list,
         "leads": leads_list,
     })
     try:
@@ -705,7 +739,9 @@ def recompute_all_leads_scores(root: Path | None = None) -> int:
     if not leads_path.exists():
         return 0
     doc = load_json(leads_path)
+    disq_keys = load_disqualified_keys(leads_path)
     leads_list = doc.get("leads", []) if isinstance(doc, dict) else doc
+    leads_list, disq_list, removed_cnt = prune_disqualified_leads(leads_list, disq_keys)
     res_path = root / "result.json"
     full_map: dict[str, dict] = {}
     if res_path.exists():
@@ -726,11 +762,14 @@ def recompute_all_leads_scores(root: Path | None = None) -> int:
     save_json(leads_path, {
         "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "total_leads": len(leads_list),
+        "disqualified_keys": disq_list,
         "leads": leads_list,
     })
     save_leads_csv(root / "leads.csv", leads_list)
     import dashboard
     dashboard.generate(root, save_leads=False)
+    if removed_cnt:
+        print(f"🗑️ Đã xoá vĩnh viễn {removed_cnt} khách hàng KHÔNG ĐẠT (NOT_FOUND trên Google Maps).")
     return len(leads_list)
 
 

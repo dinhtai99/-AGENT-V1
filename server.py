@@ -45,7 +45,7 @@ for _stream in (sys.stdout, sys.stderr):
             pass
 
 import dashboard  # noqa: E402
-from filters import load_json, parse_customer_profile, save_json, save_leads_csv  # noqa: E402
+from filters import load_disqualified_keys, load_json, parse_customer_profile, save_json, save_leads_csv  # noqa: E402
 from remote_login import RemoteLoginSession  # noqa: E402
 from web_access import COOKIE_NAME, QUERY_NAME, WebAccess  # noqa: E402
 
@@ -660,11 +660,13 @@ class WorkerManager:
                 break
 
         if matched:
+            disq_list = sorted(load_disqualified_keys(leads_path))
             save_json(
                 leads_path,
                 {
                     "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "total_leads": len(leads_list),
+                    "disqualified_keys": disq_list,
                     "leads": leads_list,
                 },
             )

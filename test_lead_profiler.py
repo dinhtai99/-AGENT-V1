@@ -118,6 +118,19 @@ class TestLeadProfilerAndScoring(unittest.TestCase):
         self.assertTrue(any("Phục vụ" in p or "tay nghề" in p for p in ra["praises"]))
         self.assertTrue(any("chờ lâu" in p for p in ra["pain_points"]))
 
+    def test_prune_disqualified_leads_drops_not_found_and_persists_keys(self):
+        from filters import prune_disqualified_leads
+        leads = [
+            {"lead_key": "fb:ok", "maps_info": {"status": "FOUND", "place_name": "Nail A"}},
+            {"lead_key": "fb:fail1", "maps_info": {"status": "NOT_FOUND"}},
+            {"lead_key": "fb:pending", "maps_info": {"status": "UNCHECKED"}},
+            {"lead_key": "fb:prev_fail", "maps_info": {"status": "UNCHECKED"}},
+        ]
+        kept, disq, removed = prune_disqualified_leads(leads, {"fb:prev_fail"})
+        self.assertEqual(removed, 2)
+        self.assertEqual([l["lead_key"] for l in kept], ["fb:ok", "fb:pending"])
+        self.assertEqual(disq, ["fb:fail1", "fb:prev_fail"])
+
     def test_build_maps_search_queries(self):
         lead = {
             "personal_info": {"phone": "080-1111-2222", "all_phones": ["080-1111-2222"]},

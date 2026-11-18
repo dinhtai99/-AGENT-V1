@@ -712,7 +712,6 @@
           <option value="HAS_WEB_WEAK">⚠️ ĐẠT · Web yếu / lỗi / không Mobile</option>
           <option value="HAS_WEB">🌐 ĐẠT · Đã có Website riêng</option>
           <option value="UNCHECKED">⏳ Chưa check Maps</option>
-          <option value="FAIL">❌ Không đạt (Pass - Chưa có GG Maps)</option>
         </select>
       </label>
       <label><span class="sr-only">Thời gian quét</span>
@@ -731,10 +730,6 @@
           <option value="posts">Đăng nhiều bài nhất</option>
           <option value="sector">Theo ngành nghề</option>
         </select>
-      </label>
-      <label class="toggle-pill" title="Tự động ẩn các khách hàng không tìm thấy quán trên Google Maps (Không đạt / Pass). Dữ liệu vẫn được giữ nguyên trong file để lọc lại khi cần.">
-        <input type="checkbox" id="f-hide-fail" checked>
-        <span>Ẩn Không đạt (Pass)</span>
       </label>
       <button class="btn btn-sm btn-warning" id="btn-batch-profile-top10" type="button" title="Chỉ tra Google Maps & chấm điểm Web 1–10 cho 10 khách đầu tiên đã có Tên quán/SĐT (0 đụng Facebook, an toàn tuyệt đối cho nick FB)">📍 Check Maps Top 10</button>
       <button class="btn btn-sm btn-primary" id="btn-batch-profile-all" type="button" title="Chạy nền Check Google Maps cho TOÀN BỘ các khách hàng còn lại đã có Tên quán/SĐT (0 đụng Facebook)">🌐 Check Maps Hết còn lại</button>
@@ -1189,7 +1184,7 @@
   indexLeads();
 
   // ---------- state ----------
-  var state = { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "", sort: "score_10", view: "cards", hideFail: true };
+  var state = { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "", sort: "score_10", view: "cards" };
   try { var v = localStorage.getItem("agentv1.view"); if (v === "table" || v === "cards") state.view = v; } catch (e) {}
 
   // ---------- header / KPIs ----------
@@ -1201,20 +1196,17 @@
   }
 
   function renderKpis() {
-    var failCount = LEADS.filter(function (l) { return l.qualification === "FAIL" || (l.maps && l.maps.status === "NOT_FOUND"); }).length;
     var passCount = LEADS.filter(function (l) { return l.qualification === "PASS" || (l.maps && l.maps.status === "FOUND"); }).length;
-    var activeCount = Math.max(0, LEADS.length - failCount);
-    var pendingCount = Math.max(0, activeCount - passCount);
-    var kpiSub = state.hideFail
-      ? (passCount + " Đạt + " + pendingCount + " Chưa check (ẩn " + failCount + " Không đạt)")
-      : (passCount + " Đạt + " + pendingCount + " Chưa check + " + failCount + " Không đạt");
+    var pendingCount = Math.max(0, LEADS.length - passCount);
+    var disqCount = Number(META.disqualified_count || 0);
+    var kpiSub = passCount + " Đạt (có Maps) + " + pendingCount + " Chưa check" + (disqCount ? " · đã xoá " + disqCount + " không đạt" : "");
     var withPhone = LEADS.filter(function (l) { return l.has_phone; }).length;
     var withFb = LEADS.filter(function (l) { return l.has_fb; }).length;
     var high = LEADS.filter(function (l) { return l.priority === "high"; }).length;
     var okGroups = GROUPS.filter(function (g) { return !g.error; }).length;
     var contacted = LEADS.filter(function (l) { var s = crmOf(l.id).status; return s && s !== "new" && s !== "skip"; }).length;
     var items = [
-      { label: "Khách hàng tiềm năng", value: state.hideFail ? activeCount : LEADS.length, sub: kpiSub, cls: "accent" },
+      { label: "Khách hàng tiềm năng", value: LEADS.length, sub: kpiSub, cls: "accent" },
       { label: "Có SĐT / Zalo", value: withPhone, sub: "gọi / nhắn được ngay" },
       { label: "Có Facebook cá nhân", value: withFb, sub: "nhắn tin trực tiếp" },
       { label: "Đã chăm sóc", value: contacted, sub: high + " khách ưu tiên cao" },
@@ -1321,14 +1313,10 @@
       var m = l.maps || {};
       var ms = (m.status || "UNCHECKED").toUpperCase();
       var ws = (m.website_status || "UNCHECKED").toUpperCase();
-      var isFail = (l.qualification === "FAIL" || ms === "NOT_FOUND");
-      if (state.hideFail && state.mapsStatus !== "FAIL" && isFail) return false;
       if (state.mapsStatus) {
         if (state.mapsStatus === "PASS" && ms !== "FOUND") return false;
-        else if (state.mapsStatus === "FAIL" && !isFail) return false;
-        else if (state.mapsStatus === "CHECKED" && ms !== "FOUND" && ms !== "NOT_FOUND") return false;
-        else if (state.mapsStatus === "UNCHECKED" && (ms === "FOUND" || ms === "NOT_FOUND")) return false;
-        else if (state.mapsStatus === "NOT_FOUND" && ms !== "NOT_FOUND") return false;
+        else if (state.mapsStatus === "CHECKED" && ms !== "FOUND") return false;
+        else if (state.mapsStatus === "UNCHECKED" && ms === "FOUND") return false;
         else if (["NO_WEB", "SOCIAL_ONLY", "HAS_WEB_WEAK", "HAS_WEB"].indexOf(state.mapsStatus) >= 0 && (ms !== "FOUND" || ws !== state.mapsStatus)) return false;
       }
       if (state.date) {
@@ -1453,10 +1441,8 @@
 
   function renderLeads() {
     var list = filtered();
-    var failCount = LEADS.filter(function (l) { return l.qualification === "FAIL" || (l.maps && l.maps.status === "NOT_FOUND"); }).length;
-    var activeCount = Math.max(0, LEADS.length - failCount);
-    document.getElementById("c-leads").textContent = state.hideFail ? activeCount : LEADS.length;
-    document.getElementById("result-count").textContent = "Đang hiện " + list.length + " / " + (state.hideFail && state.mapsStatus !== "FAIL" ? activeCount + " khách (đã ẩn " + failCount + " Không đạt)" : LEADS.length + " khách");
+    document.getElementById("c-leads").textContent = LEADS.length;
+    document.getElementById("result-count").textContent = "Đang hiện " + list.length + " / " + LEADS.length + " khách";
     var view = document.getElementById("leads-view");
     if (!LEADS.length) {
       view.innerHTML = '<div class="empty"><h3>Chưa có khách hàng nào</h3><p>Bấm nút <b>Quét ngay</b> ở trên để bắt đầu tìm kiếm chủ kinh doanh nhỏ.</p></div>';
@@ -2519,13 +2505,22 @@
           return r;
         });
       }).then(function (r) {
-        toast("Hoàn tất! Điểm mới: " + ((r.web_priority && r.web_priority.score) || "—") + "/10");
+        if (r.deleted) {
+          toast(r.message || "❌ Không tìm thấy quán trên Google Maps — Đã xoá khỏi danh sách!");
+        } else {
+          toast("Hoàn tất! Điểm mới: " + ((r.web_priority && r.web_priority.score) || "—") + "/10");
+        }
         return fetch("/api/data").then(function (dRes) { return dRes.json(); }).then(function (d) {
           LEADS = d.leads || LEADS;
           RAW = d.raw_posts || RAW;
+          META = d.meta || META;
           indexLeads();
           renderKpis(); renderFilters(); renderChips(); renderLeads();
-          if (currentId) openLead(currentId);
+          if (r.deleted) {
+            if (dlg.open) dlg.close();
+          } else if (currentId) {
+            openLead(currentId);
+          }
         });
       }).catch(function (err) {
         toast("⚠️ Lỗi phân tích: " + (err && err.message ? err.message : err));
@@ -2551,11 +2546,9 @@
       document.querySelectorAll("[data-view]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === t)); });
       renderLeads();
     } else if (t.id === "btn-reset") {
-      state = Object.assign(state, { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "", hideFail: true });
+      state = Object.assign(state, { q: "", sector: "", area: "", group: "", contact: "", status: "", scoreBand: "", mapsStatus: "", date: "" });
       document.getElementById("q").value = "";
       ["f-area", "f-group", "f-contact", "f-status", "f-score", "f-maps", "f-date"].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ""; });
-      var hf = document.getElementById("f-hide-fail");
-      if (hf) hf.checked = true;
       renderChips(); renderKpis(); renderLeads();
     }
   });
@@ -2578,15 +2571,6 @@
     var el = document.getElementById(p[0]);
     if (el) el.addEventListener("change", function (e) { state[p[1]] = e.target.value; renderLeads(); });
   });
-  var chkHideFail = document.getElementById("f-hide-fail");
-  if (chkHideFail) {
-    chkHideFail.checked = !!state.hideFail;
-    chkHideFail.addEventListener("change", function (e) {
-      state.hideFail = !!e.target.checked;
-      renderKpis();
-      renderLeads();
-    });
-  }
   function runMapsOnlyBatch(limitCount) {
     if (!isServerMode) {
       alert("Hãy mở Web Control Center (start-web.command / start-web.bat) để chạy kiểm tra Google Maps!");

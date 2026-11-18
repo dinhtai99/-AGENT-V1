@@ -34,7 +34,7 @@ for _s in (getattr(sys, "stdout", None), getattr(sys, "stderr", None)):
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from filters import norm_vn, save_json, save_leads_csv  # noqa: E402
+from filters import norm_vn, prune_disqualified_leads, save_json, save_leads_csv  # noqa: E402
 import dashboard  # noqa: E402
 
 
@@ -178,10 +178,13 @@ def merge_files(incoming_paths: list[Path], target_path: Path | None = None, reb
     if target_path is None:
         target_path = ROOT / "leads.json"
 
+    disq_keys: set[str] = set()
     master_leads: list[dict] = []
     if target_path.exists():
         try:
             doc = json.loads(target_path.read_text(encoding="utf-8"))
+            if isinstance(doc, dict):
+                disq_keys.update(str(k) for k in (doc.get("disqualified_keys") or []) if str(k))
             master_leads = _extract_leads_list(doc)
         except Exception as exc:
             print(f"⚠️ Cảnh báo đọc file {target_path}: {exc}")
@@ -200,6 +203,8 @@ def merge_files(incoming_paths: list[Path], target_path: Path | None = None, reb
             continue
         try:
             doc = json.loads(inc_path.read_text(encoding="utf-8"))
+            if isinstance(doc, dict):
+                disq_keys.update(str(k) for k in (doc.get("disqualified_keys") or []) if str(k))
             incoming_leads = _extract_leads_list(doc)
             print(f"📂 Đang gộp dữ liệu từ '{inc_path.name}' ({len(incoming_leads)} khách hàng)...")
             for inc in incoming_leads:
@@ -213,10 +218,11 @@ def merge_files(incoming_paths: list[Path], target_path: Path | None = None, reb
         except Exception as exc:
             print(f"❌ Lỗi xử lý file {inc_path}: {exc}")
 
-    combined = list(leads_map.values())
+    combined, disq_list, _ = prune_disqualified_leads(list(leads_map.values()), disq_keys)
     save_json(target_path, {
         "updated_at": datetime.now().isoformat(),
         "total_leads": len(combined),
+        "disqualified_keys": disq_list,
         "leads": combined,
     })
 

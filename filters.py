@@ -1979,3 +1979,38 @@ def save_leads_csv(path: Path, leads: list[dict]) -> None:
                 maps.get("maps_url") or "",
                 f"{beh.get('pace_label', '')} | {beh.get('primary_style', '')}",
             ])
+
+
+def load_disqualified_keys(leads_json_path: Path) -> set[str]:
+    """Return lead_keys permanently deleted after failing Maps qualification."""
+    if not leads_json_path.exists():
+        return set()
+    try:
+        doc = load_json(leads_json_path)
+    except Exception:
+        return set()
+    if isinstance(doc, dict):
+        return {str(k) for k in (doc.get("disqualified_keys") or []) if str(k)}
+    return set()
+
+
+def prune_disqualified_leads(
+    leads_list: list[dict],
+    extra_disqualified: set[str] | list[str] | None = None,
+) -> tuple[list[dict], list[str], int]:
+    """Strip any lead whose lead_key is disqualified or Maps status is NOT_FOUND."""
+    disq: set[str] = {str(k) for k in (extra_disqualified or []) if str(k)}
+    kept: list[dict] = []
+    removed = 0
+    for lead in leads_list or []:
+        if not isinstance(lead, dict):
+            continue
+        lk = str(lead.get("lead_key") or "")
+        ms = str((lead.get("maps_info") or {}).get("status") or "").upper()
+        if ms == "NOT_FOUND" or (lk and lk in disq):
+            if lk:
+                disq.add(lk)
+            removed += 1
+            continue
+        kept.append(lead)
+    return kept, sorted(disq), removed

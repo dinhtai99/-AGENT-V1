@@ -32,7 +32,7 @@ for _stream in (sys.stdout, sys.stderr):
         except Exception:
             pass
 
-from filters import load_json, save_json, save_leads_csv  # noqa: E402
+from filters import load_json, prune_disqualified_leads, save_json, save_leads_csv  # noqa: E402
 
 
 def _git_env() -> dict[str, str]:
@@ -281,11 +281,16 @@ def sync_from_github(root: Path | None = None, fetch: bool = True) -> tuple[bool
             if lk in html_crm_map:
                 lead["crm"] = _merge_crm(lead.get("crm"), html_crm_map[lk])
 
+    local_disq = set(local_leads_doc.get("disqualified_keys") or []) if isinstance(local_leads_doc, dict) else set()
+    remote_disq = set(remote_leads_doc.get("disqualified_keys") or []) if isinstance(remote_leads_doc, dict) else set()
+    merged_leads, disq_list, _ = prune_disqualified_leads(merged_leads, local_disq | remote_disq)
+
     save_json(
         leads_path,
         {
             "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "total_leads": len(merged_leads),
+            "disqualified_keys": disq_list,
             "leads": merged_leads,
         },
     )

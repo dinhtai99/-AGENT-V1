@@ -67,10 +67,12 @@ from filters import (  # noqa: E402
     contains_vn,
     extract_fields,
     in_date_range,
+    load_disqualified_keys,
     load_json,
     matches_any_keyword,
     norm_vn,
     post_matches_filters,
+    prune_disqualified_leads,
     save_json,
     save_leads_csv,
 )
@@ -1343,6 +1345,7 @@ def _update_leads_files(root: Path, new_posts: list[dict]) -> list[dict]:
     leads_json_path = root / "leads.json"
     leads_csv_path = root / "leads.csv"
     existing: list[dict] = []
+    disq_keys = load_disqualified_keys(leads_json_path)
     if leads_json_path.exists():
         try:
             loaded = load_json(leads_json_path)
@@ -1353,13 +1356,15 @@ def _update_leads_files(root: Path, new_posts: list[dict]) -> list[dict]:
         except Exception:
             existing = []
     merged = build_leads_list(new_posts, existing_leads=existing)
-    if merged:
+    merged, disq_list, _ = prune_disqualified_leads(merged, disq_keys)
+    if merged or disq_list:
         try:
             save_json(
                 leads_json_path,
                 {
                     "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "total_leads": len(merged),
+                    "disqualified_keys": disq_list,
                     "leads": merged,
                 },
             )
