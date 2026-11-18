@@ -38,6 +38,7 @@ for _stream in (sys.stdout, sys.stderr):
             pass
 from filters import (  # noqa: E402
     analyze_business_and_needs,
+    analyze_lead_behavior,
     build_leads_list,
     clean_fb_noise,
     extract_fields,
@@ -47,6 +48,7 @@ from filters import (  # noqa: E402
     post_matches_filters,
     save_json,
     save_leads_csv,
+    score_lead_web_priority,
 )
 
 TEMPLATE_NAME = "dashboard_template.html"
@@ -217,7 +219,7 @@ def collect_posts(root: Path) -> tuple[dict[str, dict], dict[str, dict], dict | 
                 post_url=sp.get("post_url"),
                 group_id=sp.get("group_id"),
                 created_at=sp.get("created_at"),
-                content=sp.get("content_snippet"),
+                content=sp.get("content") or sp.get("content_snippet"),
                 author_name=info.get("author_name") if _is_real_name(info.get("author_name")) else "",
                 author_url=info.get("author_url"),
                 group_member_url=info.get("group_member_url"),
@@ -346,6 +348,12 @@ def present_lead(lead: dict, post_map: dict[str, dict], group_names: dict[str, s
     )
 
     key = lead.get("lead_key") or name
+    beh = analyze_lead_behavior(posts, lead)
+    maps_info = lead.get("maps_info") or {}
+    wp = score_lead_web_priority(lead, beh, maps_info)
+    final_opener = wp["web_opener"] if maps_info.get("status") in ("FOUND", "NOT_FOUND") else opener
+    priority = "high" if wp["score"] >= 7 else "mid" if wp["score"] >= 5 else "low"
+
     return {
         "id": "L" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:10],
         "lead_key": key,
@@ -361,6 +369,7 @@ def present_lead(lead: dict, post_map: dict[str, dict], group_names: dict[str, s
         "has_phone": has_phone,
         "has_fb": has_fb,
         "business_type": b.get("business_type") or "",
+        "shop_name": b.get("shop_name") or (beh.get("shop_names") or [""])[0] or "",
         "sector": sector_label,
         "sector_key": sector_key,
         "activity": activity,
@@ -381,8 +390,15 @@ def present_lead(lead: dict, post_map: dict[str, dict], group_names: dict[str, s
         "posts": posts,
         "posted_at": (posts[0]["created_at"] if posts else "Đợt quét 1 năm"),
         "score": score,
+        "score_10": wp["score"],
+        "score_tier": wp["tier"],
+        "score_preliminary": wp["is_preliminary"],
+        "score_reasons": wp["reasons"],
+        "behavior": beh,
+        "maps": maps_info,
+        "deep_profiled_at": lead.get("deep_profiled_at") or "",
         "priority": priority,
-        "approach": {"offer": OFFERS[sector_key], "opener": opener},
+        "approach": {"offer": OFFERS[sector_key], "opener": final_opener, "web_opener": wp["web_opener"]},
     }
 
 
@@ -451,17 +467,21 @@ def build(root: Path) -> tuple[dict, list[dict]]:
     saved = _read(root / "leads.json") or {}
     saved_leads = saved.get("leads", []) if isinstance(saved, dict) else saved
     saved_updated = saved.get("updated_at") or time.strftime("%Y-%m-%d %H:%M:%S")
-    saved_crm = {lead.get("lead_key"): lead.get("crm") for lead in saved_leads if isinstance(lead, dict) and lead.get("crm")}
+    saved_by_key = {lead.get("lead_key"): lead for lead in saved_leads if isinstance(lead, dict) and lead.get("lead_key")}
     for lead in leads:
-        if lead.get("lead_key") in saved_crm:
-            lead["crm"] = saved_crm[lead["lead_key"]]
+        old_l = saved_by_key.get(lead.get("lead_key"))
+        if old_l:
+            for extra_k in ("crm", "maps_info", "behavior_analysis", "web_priority", "deep_profiled_at"):
+                if old_l.get(extra_k):
+                    lead[extra_k] = old_l[extra_k]
     post_map = {p["post_id"]: p for p in posts.values()}
     presented = [present_lead(lead, post_map, group_names) for lead in leads]
     for item in presented:
-        item["crm"] = saved_crm.get(item["lead_key"], {})
+        old_l = saved_by_key.get(item["lead_key"]) or {}
+        item["crm"] = old_l.get("crm") or {}
         item["updated_at"] = saved_updated
         item["scanned_at"] = saved_updated
-    presented.sort(key=lambda x: (-x["score"], x["name"].lower()))
+    presented.sort(key=lambda x: (-x.get("score_10", 0), -x["score"], x["name"].lower()))
     raw_rows.sort(key=lambda r: (not r["is_lead"], r["group_name"]))
 
     disc_file = root / "discovered_groups.json"
@@ -560,6 +580,9 @@ def generate(root: Path | None = None, save_leads: bool = True) -> Path:
                         known_posts.add(key)
                 if old.get("crm") and not lead.get("crm"):
                     lead["crm"] = old["crm"]
+                for extra_k in ("maps_info", "behavior_analysis", "web_priority", "deep_profiled_at"):
+                    if old.get(extra_k) and not lead.get(extra_k):
+                        lead[extra_k] = old[extra_k]
             by_key[lead["lead_key"]] = lead
         archived_leads = list(by_key.values())
         if leads_json.exists():

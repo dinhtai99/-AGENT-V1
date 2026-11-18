@@ -21,8 +21,9 @@ import csv
 import json
 import re
 import unicodedata
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 
 def load_json(path: Path) -> dict | list:
@@ -1345,6 +1346,366 @@ def build_leads_list(posts: list[dict], existing_leads: list[dict] | None = None
     return list(by_key.values())
 
 
+SOCIAL_WEB_DOMAINS = (
+    "facebook.com",
+    "fb.com",
+    "m.facebook.com",
+    "instagram.com",
+    "tiktok.com",
+    "line.me",
+    "lin.ee",
+    "hotpepper.jp",
+    "tabelog.com",
+    "gnavi.co.jp",
+    "retty.me",
+    "epark.jp",
+    "minimo.jp",
+    "minimodel.jp",
+    "linktr.ee",
+    "lit.link",
+    "youtube.com",
+    "youtu.be",
+    "threads.net",
+    "x.com",
+    "twitter.com",
+    "ameblo.jp",
+    "note.com",
+)
+
+
+def classify_website_url(url: str | None) -> str:
+    """Classify a Google Maps website link into NO_WEB, SOCIAL_ONLY, or HAS_WEB."""
+    raw = (url or "").strip()
+    if not raw:
+        return "NO_WEB"
+    try:
+        parsed = urlparse(raw if "://" in raw else f"https://{raw}")
+        host = (parsed.netloc or "").lower().lstrip("www.")
+    except Exception:
+        host = raw.lower()
+    if not host:
+        return "NO_WEB"
+    if any(host == d or host.endswith(f".{d}") for d in SOCIAL_WEB_DOMAINS):
+        return "SOCIAL_ONLY"
+    return "HAS_WEB"
+
+
+def extract_address_and_social_clues(text: str) -> dict:
+    """Extract Japanese address snippets, postal codes, and external links from post text."""
+    s = text or ""
+    postal_codes = re.findall(r"〒?\s*\d{3}-\d{4}", s)
+    # Match lines containing Japanese prefectures/wards or Vietnamese address cues
+    address_lines: list[str] = []
+    for ln in s.splitlines():
+        clean_ln = ln.strip()
+        if not clean_ln or len(clean_ln) > 140:
+            continue
+        if re.search(
+            r"(?:〒\s*\d{3}-\d{4}|(?:東京|大阪|名古屋|愛知|埼玉|千葉|神奈川|福岡|兵庫|京都)[都府県]|\d+-\d+-\d+|địa chỉ|số nhà|tòa\s|lầu\s|tầng\s|cổng\s|lối ra\s)",
+            clean_ln,
+            re.I,
+        ):
+            if clean_ln not in address_lines:
+                address_lines.append(clean_ln)
+                if len(address_lines) >= 4:
+                    break
+
+    urls = re.findall(r"https?://[^\s<>\"')]+", s)
+    social_links: list[str] = []
+    external_webs: list[str] = []
+    for u in urls:
+        u_clean = u.rstrip(".,;:!)")
+        if "facebook.com/groups/" in u_clean:
+            continue
+        kind = classify_website_url(u_clean)
+        if kind == "SOCIAL_ONLY":
+            if u_clean not in social_links:
+                social_links.append(u_clean)
+        elif kind == "HAS_WEB":
+            if u_clean not in external_webs:
+                external_webs.append(u_clean)
+
+    return {
+        "postal_codes": list(dict.fromkeys(p.strip() for p in postal_codes)),
+        "address_clues": address_lines,
+        "social_links": social_links[:5],
+        "external_websites": external_webs[:3],
+    }
+
+
+def analyze_lead_behavior(source_posts: list[dict], lead: dict | None = None) -> dict:
+    """Analyze posting patterns, golden hours, shop/address clues across all posts of one customer."""
+    posts = source_posts or []
+    lead = lead or {}
+    b_model = lead.get("step1_business_model") or {}
+    p_info = lead.get("personal_info") or {}
+
+    hour_buckets = {
+        "Sáng (6h-11h)": 0,
+        "Trưa/Chiều (11h-17h)": 0,
+        "Tối (17h-21h)": 0,
+        "Đêm khuya (21h-5h)": 0,
+    }
+    style_counts = {
+        "Tuyển nhân sự / Baito": 0,
+        "Bán hàng / Khuyến mãi": 0,
+        "Thanh lý / Sang nhượng": 0,
+        "Hỏi đáp / Tìm nguồn": 0,
+    }
+
+    shop_names: list[str] = []
+    if b_model.get("shop_name"):
+        shop_names.append(str(b_model["shop_name"]))
+    stations: list[str] = list(b_model.get("stations") or [])
+    areas: list[str] = list(b_model.get("areas") or [])
+    phones: list[str] = list(p_info.get("all_phones") or ([p_info["phone"]] if p_info.get("phone") else []))
+    address_clues: list[str] = []
+    social_links: list[str] = []
+    external_webs: list[str] = []
+    dates: list[str] = []
+
+    for sp in posts:
+        text = sp.get("content") or sp.get("content_snippet") or ""
+        norm_t = norm_vn(text)
+        created = (sp.get("created_at") or "").strip()
+        if created:
+            dates.append(created[:10])
+            m_hr = re.search(r"[T\s](\d{1,2}):\d{2}", created)
+            if m_hr:
+                hr = int(m_hr.group(1))
+                if 6 <= hr < 11:
+                    hour_buckets["Sáng (6h-11h)"] += 1
+                elif 11 <= hr < 17:
+                    hour_buckets["Trưa/Chiều (11h-17h)"] += 1
+                elif 17 <= hr < 21:
+                    hour_buckets["Tối (17h-21h)"] += 1
+                else:
+                    hour_buckets["Đêm khuya (21h-5h)"] += 1
+
+        if any(k in norm_t for k in ("tuyen", "can tim nhan vien", "tho nail", "phu bep", "chay ban", "baito", "luong")):
+            style_counts["Tuyển nhân sự / Baito"] += 1
+        if any(k in norm_t for k in ("khuyen mai", "giam gia", "uu dai", "khai truong", "order", "dat lich", "menu", "chuyen ship", "ban")):
+            style_counts["Bán hàng / Khuyến mãi"] += 1
+        if any(k in norm_t for k in ("thanh ly", "sang nhuong", "sang quan", "chuyen nhuong")):
+            style_counts["Thanh lý / Sang nhượng"] += 1
+        if any(k in norm_t for k in ("hoi kinh nghiem", "xin review", "co ai biet", "tim nguon", "nha cung cap")):
+            style_counts["Hỏi đáp / Tìm nguồn"] += 1
+
+        analysis = analyze_business_and_needs(text, author_name=p_info.get("author_name") or "")
+        contact_info = analysis.get("contact") or {}
+        for ph in contact_info.get("all_phones") or ([contact_info["phone"]] if contact_info.get("phone") else []):
+            if ph and ph not in phones:
+                phones.append(ph)
+        if analysis.get("shop_name") and analysis["shop_name"] not in shop_names:
+            shop_names.append(analysis["shop_name"])
+        for st in analysis.get("stations") or []:
+            if st not in stations:
+                stations.append(st)
+        for ar in analysis.get("areas") or []:
+            if ar not in areas:
+                areas.append(ar)
+
+        clues = extract_address_and_social_clues(text)
+        for addr in clues["address_clues"]:
+            if addr not in address_clues:
+                address_clues.append(addr)
+        for sl in clues["social_links"]:
+            if sl not in social_links:
+                social_links.append(sl)
+        for ew in clues["external_websites"]:
+            if ew not in external_webs:
+                external_webs.append(ew)
+
+    dominant_hours = [k for k, v in sorted(hour_buckets.items(), key=lambda kv: kv[1], reverse=True) if v > 0]
+    dominant_styles = [f"{k} ({v} bài)" for k, v in sorted(style_counts.items(), key=lambda kv: kv[1], reverse=True) if v > 0]
+
+    total = len(posts)
+    if total >= 5:
+        pace_label = f"Đăng rất tích cực ({total} bài)"
+    elif total >= 2:
+        pace_label = f"Hoạt động thường xuyên ({total} bài)"
+    else:
+        pace_label = "Mới ghi nhận 1 bài"
+
+    valid_dates = sorted(d for d in dates if len(d) >= 10)
+    date_span = f"{valid_dates[0]} → {valid_dates[-1]}" if len(valid_dates) >= 2 else (valid_dates[0] if valid_dates else "")
+
+    return {
+        "total_posts": total,
+        "pace_label": pace_label,
+        "date_span": date_span,
+        "golden_hour": dominant_hours[0] if dominant_hours else "Chưa đủ dữ liệu giờ đăng",
+        "styles": dominant_styles,
+        "primary_style": dominant_styles[0] if dominant_styles else "Chưa phân loại rõ",
+        "shop_names": shop_names[:3],
+        "phones": phones[:4],
+        "stations": stations[:5],
+        "areas": areas[:5],
+        "address_clues": address_clues[:4],
+        "social_links": social_links[:5],
+        "external_websites": external_webs[:3],
+    }
+
+
+def score_lead_web_priority(
+    lead: dict,
+    behavior: dict | None = None,
+    maps_info: dict | None = None,
+) -> dict:
+    """Compute a 1-10 priority score indicating how much this shop needs a Website / Landing Page."""
+    p_info = lead.get("personal_info") or {}
+    b_model = lead.get("step1_business_model") or {}
+    d_needs = lead.get("step2_deep_needs") or {}
+    behavior = behavior or analyze_lead_behavior(lead.get("source_posts") or [], lead)
+    maps = maps_info if isinstance(maps_info, dict) else (lead.get("maps_info") or {})
+
+    reasons: list[str] = []
+    score = 0.0
+
+    # 1. Contactability (max 3 pts)
+    has_direct_contact = bool(
+        p_info.get("phone")
+        or p_info.get("all_phones")
+        or p_info.get("line_id")
+        or p_info.get("zalo_id")
+        or behavior.get("phones")
+    )
+    if has_direct_contact:
+        score += 2.0
+        reasons.append("Có SĐT / Line / Zalo liên hệ ngay (+2đ)")
+    if p_info.get("author_url"):
+        score += 1.0
+        reasons.append("Có Facebook cá nhân nhắn tin trực tiếp (+1đ)")
+
+    # 2. Industry Fit & Activity (max 2 pts)
+    btype = norm_vn(b_model.get("business_type") or "")
+    high_fit_sector = any(
+        k in btype
+        for k in ("nail", "spa", "toc", "nha hang", "quan an", "izakaya", "cafe", "thuc pham", "shop", "kinh doanh online", "do cu", "vien thong", "ve may bay", "bat dong san")
+    )
+    if high_fit_sector:
+        score += 1.0
+        reasons.append(f"Ngành '{b_model.get('business_type') or 'KD nhỏ'}' chuyển đổi Web/Landing Page cao (+1đ)")
+
+    is_active_or_expanding = (
+        behavior.get("total_posts", 0) >= 2
+        or bool(d_needs.get("roles_needed"))
+        or bool(behavior.get("shop_names") or b_model.get("shop_name"))
+    )
+    if is_active_or_expanding:
+        score += 1.0
+        reasons.append("Đang hoạt động tích cực / tuyển nhân sự (+1đ)")
+
+    # 3. Google Maps & Website Gap (max 5 pts)
+    maps_status = (maps.get("status") or "UNCHECKED").upper() if maps else "UNCHECKED"
+    web_status = (maps.get("website_status") or "UNCHECKED").upper() if maps else "UNCHECKED"
+    is_preliminary = maps_status == "UNCHECKED"
+
+    if not is_preliminary:
+        if maps_status == "FOUND":
+            reviews = int(maps.get("review_count") or 0)
+            rating = maps.get("rating")
+            if reviews >= 10:
+                score += 2.0
+                reasons.append(f"Quán sống khỏe trên GG Maps ({rating or '—'}⭐ · {reviews} đánh giá) (+2đ)")
+            else:
+                score += 1.0
+                reasons.append(f"Đã xác minh mặt bằng thật trên GG Maps (+1đ)")
+
+            if web_status == "NO_WEB":
+                score += 3.0
+                reasons.append("🎯 Google Maps CHƯA gắn Website/Landing Page (+3đ)")
+            elif web_status == "SOCIAL_ONLY":
+                bonus = 3.0 if high_fit_sector else 2.0
+                score += bonus
+                reasons.append(f"📱 Maps chỉ gắn link MXH/Nền tảng khác, chưa có Web riêng (+{int(bonus)}đ)")
+            elif web_status == "HAS_WEB_WEAK":
+                score += 2.0
+                reasons.append("⚠️ Website hiện tại lỗi / thiếu HTTPS hoặc chưa chuẩn Mobile (+2đ)")
+            elif web_status == "HAS_WEB":
+                score += 0.5
+                reasons.append("🌐 Đã có Website riêng trên Maps (chỉ chào Landing Page phụ) (+0.5đ)")
+        elif maps_status == "NOT_FOUND":
+            score += 2.0
+            reasons.append("📍 Chưa thấy quán trên GG Maps (Home salon/Mới mở — cần combo Maps + Web) (+2đ)")
+        else:
+            # CHECK_ERROR or SKIPPED
+            is_preliminary = True
+            reasons.append("⏳ Chưa tra được Google Maps (bạn có thể thử lại)")
+    else:
+        # Preliminary estimate before Google Maps check (capped at 7 so verified 8-10 stand out)
+        if behavior.get("shop_names") or b_model.get("shop_name"):
+            score += 1.0
+            reasons.append("Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)")
+        if behavior.get("stations") or b_model.get("location"):
+            score += 1.0
+            reasons.append("Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)")
+        if behavior.get("external_websites"):
+            score += 0.0
+            reasons.append("Đã thấy dẫn link web ngoài trong bài FB")
+        else:
+            score += 0.5
+        score = min(score, 7.0)
+        reasons.append("⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)")
+
+    final_score = max(1, min(10, int(round(score))))
+    if final_score >= 9:
+        tier, tier_label = "S", "🔥 Chốt ngay (9–10đ)"
+    elif final_score >= 7:
+        tier, tier_label = "A", "⭐ Tiềm năng cao (7–8đ)"
+    elif final_score >= 5:
+        tier, tier_label = "B", "📌 Trung bình (5–6đ)"
+    else:
+        tier, tier_label = "C", "⚪ Thấp (1–4đ)"
+
+    # Build personalized Web / Landing Page pitch
+    author_name = p_info.get("author_name") or ""
+    greeting_name = f" {author_name}" if author_name and "chưa rõ" not in author_name.lower() else ""
+    shop_ref = (maps.get("place_name") if maps_status == "FOUND" else "") or (behavior.get("shop_names") or [None])[0] or (b_model.get("shop_name") or "")
+    area_ref = (behavior.get("stations") or [None])[0] or (behavior.get("areas") or [None])[0] or (b_model.get("location") or "")
+
+    shop_phrase = f"tiệm/quán {shop_ref}" if shop_ref else "cửa hàng mình"
+    area_phrase = f" ở khu vực {area_ref}" if area_ref else ""
+
+    if maps_status == "FOUND" and web_status == "NO_WEB":
+        web_opener = (
+            f"Chào anh/chị{greeting_name}, em thấy {shop_phrase}{area_phrase} trên Google Maps đang có đánh giá rất tốt"
+            f"{' (' + str(maps.get('rating')) + '⭐)' if maps.get('rating') else ''}, "
+            "nhưng mục Website trên Maps hiện đang để trống. Nhiều khách tìm quán trên Google muốn xem nhanh bảng giá / menu hoặc đặt lịch ngay mà chưa thấy link. "
+            "Bên em chuyên làm Landing Page đặt lịch & bảng giá tối ưu cho tiệm người Việt tại Nhật (chỉ 1–2 ngày xong). Anh/chị có muốn xem thử vài mẫu bên em đã làm không ạ?"
+        )
+    elif maps_status == "FOUND" and web_status == "SOCIAL_ONLY":
+        web_opener = (
+            f"Chào anh/chị{greeting_name}, em thấy {shop_phrase}{area_phrase} trên Google Maps hiện đang dẫn về link mạng xã hội/nền tảng ngoài. "
+            "Nếu gắn thêm 1 trang Landing Page riêng (có bảng giá, ảnh nổi bật và nút đặt lịch/Line 1 chạm), khách tìm từ Google Maps sẽ chốt lịch nhanh hơn hẳn và đỡ mất phí trung gian. "
+            "Em gửi anh/chị xem thử mẫu giao diện phù hợp ngành mình nhé?"
+        )
+    elif maps_status == "NOT_FOUND":
+        web_opener = (
+            f"Chào anh/chị{greeting_name}, em thấy bài đăng của {shop_phrase}{area_phrase} trong hội nhóm tại Nhật. "
+            "Hiện bên em đang hỗ trợ trọn gói đưa quán lên Google Maps chuẩn SEO + Landing Page bảng giá/đặt lịch giúp khách quanh ga tự tìm đến đều đặn hàng tuần. "
+            "Anh/chị có tiện trao đổi 5 phút để em tư vấn thử không ạ?"
+        )
+    else:
+        web_opener = (
+            f"Chào anh/chị{greeting_name}, em thấy {shop_phrase}{area_phrase} hoạt động rất đều trong các hội nhóm tại Nhật"
+            f"{' (nhất là khung ' + behavior['golden_hour'].lower() + ')' if behavior.get('golden_hour') and 'Chưa đủ' not in behavior['golden_hour'] else ''}. "
+            "Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. "
+            "Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?"
+        )
+
+    return {
+        "score": final_score,
+        "tier": tier,
+        "tier_label": tier_label,
+        "is_preliminary": is_preliminary,
+        "reasons": reasons,
+        "web_opener": web_opener,
+        "maps_status": maps_status,
+        "website_status": web_status,
+    }
+
+
 def save_leads_csv(path: Path, leads: list[dict]) -> None:
     """Export the aggregated leads list to an Excel-friendly UTF-8-SIG CSV file."""
     headers = [
@@ -1368,6 +1729,11 @@ def save_leads_csv(path: Path, leads: list[dict]) -> None:
         "Mô tả khách hàng (tùy chỉnh)",
         "Trạng thái chăm sóc",
         "Ghi chú chăm sóc",
+        "Điểm Web (1-10)",
+        "Trạng thái Web (Google Maps)",
+        "Website trên Maps",
+        "Link Google Maps",
+        "Thói quen đăng bài",
     ]
     with path.open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.writer(f)
@@ -1378,6 +1744,9 @@ def save_leads_csv(path: Path, leads: list[dict]) -> None:
             n = lead.get("step2_deep_needs") or {}
             posts = lead.get("source_posts") or []
             first_post = posts[0] if posts else {}
+            beh = lead.get("behavior_analysis") or analyze_lead_behavior(posts, lead)
+            maps = lead.get("maps_info") or {}
+            wp = lead.get("web_priority") or score_lead_web_priority(lead, beh, maps)
             writer.writerow([
                 p.get("author_name") or "",
                 p.get("author_url") or "",
@@ -1399,4 +1768,9 @@ def save_leads_csv(path: Path, leads: list[dict]) -> None:
                 (lead.get("crm") or {}).get("description") or "",
                 (lead.get("crm") or {}).get("status") or "new",
                 (lead.get("crm") or {}).get("note") or "",
+                f"{wp.get('score', 0)}/10 ({'Sơ bộ' if wp.get('is_preliminary') else 'Chính thức'})",
+                maps.get("website_status") or "UNCHECKED",
+                maps.get("website") or "",
+                maps.get("maps_url") or "",
+                f"{beh.get('pace_label', '')} | {beh.get('primary_style', '')}",
             ])

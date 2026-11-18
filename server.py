@@ -674,6 +674,172 @@ class WorkerManager:
             return True
         return False
 
+    def profile_lead(self, lead_key: str, deep_fb: bool = True, check_maps: bool = True) -> tuple[bool, dict]:
+        """Run deep FB profiling + Google Maps check + 1-10 scoring for one customer."""
+        with self.lock:
+            if self.is_scanning or self.remote_login.is_active():
+                return False, {"ok": False, "error": "Worker đang bận quét/tìm kiếm. Vui lòng đợi hoàn tất."}
+            if deep_fb and not self.has_session():
+                self._mark_session_expired()
+                msg = "🚨 Phiên Facebook đã hết hạn hoặc chưa đăng nhập! Vui lòng bấm 'Đăng nhập FB' trước."
+                self.add_log(msg, "error")
+                return False, {"ok": False, "error": msg}
+            self.is_scanning = True
+            self.scan_cancel_requested = False
+
+        try:
+            cmd = [
+                self.python_bin,
+                "-u",
+                str(self.root / "lead_profiler.py"),
+                "--lead-key",
+                str(lead_key),
+            ]
+            if not deep_fb:
+                cmd.append("--no-fb")
+            if not check_maps:
+                cmd.append("--no-maps")
+
+            sub_env = os.environ.copy()
+            sub_env["PYTHONUTF8"] = "1"
+            sub_env["PYTHONIOENCODING"] = "utf-8"
+
+            self.add_log(f"🕵️ Bắt đầu phân tích 360° & check Google Maps cho khách '{lead_key}'...", "info")
+            with self.crm_lock:
+                proc = subprocess.Popen(
+                    cmd,
+                    cwd=str(self.root),
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    bufsize=1,
+                    env=sub_env,
+                )
+                with self.lock:
+                    self.current_process = proc
+
+                out_lines: list[str] = []
+                if proc.stdout:
+                    for line in iter(proc.stdout.readline, ""):
+                        s = line.rstrip()
+                        if s:
+                            out_lines.append(s)
+                            if not s.startswith("{") and not s.startswith("}") and not s.startswith('  "'):
+                                self.add_log(s, "info")
+                    proc.stdout.close()
+                exit_code = proc.wait()
+
+            if exit_code == 0:
+                with self.lock:
+                    if deep_fb:
+                        self.session_expired = False
+                # Parse trailing JSON object printed by lead_profiler.py
+                raw_out = "\n".join(out_lines)
+                idx = raw_out.rfind("\n{")
+                json_text = raw_out[idx + 1:] if idx != -1 else (raw_out if raw_out.startswith("{") else "{}")
+                try:
+                    parsed = json.loads(json_text)
+                except Exception:
+                    parsed = {"ok": True}
+                self.add_log(f"✅ Đã phân tích & chấm điểm xong cho khách '{lead_key}'!", "success")
+                return True, parsed
+
+            err_msg = "\n".join(out_lines[-4:]) or f"Lỗi chạy profiler (exit_code={exit_code})"
+            self.add_log(f"❌ Phân tích khách '{lead_key}' lỗi: {err_msg}", "error")
+            return False, {"ok": False, "error": err_msg}
+        except Exception as exc:
+            self.add_log(f"❌ Lỗi phân tích khách '{lead_key}': {exc}", "error")
+            return False, {"ok": False, "error": str(exc)}
+        finally:
+            with self.lock:
+                self.current_process = None
+                self.is_scanning = False
+                self.scan_cancel_requested = False
+
+    def start_batch_profile(self, lead_keys: list[str], deep_fb: bool = True, check_maps: bool = True) -> tuple[bool, str]:
+        """Background batch profiling for selected leads (capped at 15/batch for safety)."""
+        keys = [str(k).strip() for k in lead_keys if str(k).strip()][:15]
+        if not keys:
+            return False, "Chưa chọn khách hàng nào để phân tích."
+        with self.lock:
+            if self.is_scanning or self.remote_login.is_active():
+                return False, "Worker đang bận. Vui lòng đợi hoàn tất."
+            if deep_fb and not self.has_session():
+                self._mark_session_expired()
+                return False, "🚨 Phiên Facebook đã hết hạn! Hãy bấm 'Đăng nhập FB' trước."
+            self.is_scanning = True
+            self.scan_cancel_requested = False
+
+        def batch_thread():
+            try:
+                self.add_log(f"🚀 Bắt đầu phân tích 360° & check Maps theo lô cho {len(keys)} khách hàng (nghỉ 15–25s giữa mỗi khách để an toàn)...", "info")
+                sub_env = os.environ.copy()
+                sub_env["PYTHONUTF8"] = "1"
+                sub_env["PYTHONIOENCODING"] = "utf-8"
+
+                for idx, k in enumerate(keys, 1):
+                    with self.lock:
+                        if self.scan_cancel_requested:
+                            self.add_log("🛑 Đã dừng phân tích theo lô theo yêu cầu.", "warn")
+                            break
+                    self.add_log(f"▶️ [{idx}/{len(keys)}] Đang đào sâu & chấm điểm khách: {k}", "info")
+                    cmd = [self.python_bin, "-u", str(self.root / "lead_profiler.py"), "--lead-key", k]
+                    if not deep_fb:
+                        cmd.append("--no-fb")
+                    if not check_maps:
+                        cmd.append("--no-maps")
+                    with self.crm_lock:
+                        proc = subprocess.Popen(
+                            cmd,
+                            cwd=str(self.root),
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT,
+                            text=True,
+                            encoding="utf-8",
+                            errors="replace",
+                            bufsize=1,
+                            env=sub_env,
+                        )
+                        with self.lock:
+                            self.current_process = proc
+                        if proc.stdout:
+                            for line in iter(proc.stdout.readline, ""):
+                                s = line.rstrip()
+                                if s and not s.startswith("{") and not s.startswith("}") and not s.startswith('  "'):
+                                    self.add_log(s, "info")
+                            proc.stdout.close()
+                        rc = proc.wait()
+                    if rc != 0 and self.session_expired:
+                        self.add_log("🚨 Dừng lô phân tích do phiên Facebook bị đăng xuất!", "error")
+                        break
+                    if idx < len(keys):
+                        import random
+                        pause_s = random.uniform(15.0, 25.0)
+                        time.sleep(pause_s)
+                self.add_log("🎉 Hoàn tất đợt phân tích & chấm điểm theo lô!", "success")
+            except Exception as exc:
+                self.add_log(f"❌ Lỗi phân tích theo lô: {exc}", "error")
+            finally:
+                with self.lock:
+                    self.current_process = None
+                    self.is_scanning = False
+                    self.scan_cancel_requested = False
+
+        threading.Thread(target=batch_thread, daemon=True).start()
+        return True, f"Đã khởi động phân tích 360° cho {len(keys)} khách hàng trong nền."
+
+    def recompute_all_scores(self) -> tuple[bool, int]:
+        """Instant offline recalculation of behavior analysis and 1-10 priority scores."""
+        with self.crm_lock:
+            import lead_profiler
+            import importlib
+            importlib.reload(lead_profiler)
+            cnt = lead_profiler.recompute_all_leads_scores(self.root)
+        self.add_log(f"♻️ Đã tính lại điểm hành vi & thang điểm 1–10 cho {cnt} khách hàng!", "success")
+        return True, cnt
+
 
 # Global manager instance
 MANAGER = WorkerManager(ROOT)
@@ -884,6 +1050,27 @@ class LeadRequestHandler(BaseHTTPRequestHandler):
             description = data.get("description")
             ok = MANAGER.update_crm(lead_key, status=status, note=note, description=description)
             self.send_json({"ok": ok, "lead_key": lead_key}, status_code=200 if ok else 400)
+
+        elif path == "/api/lead/profile":
+            lead_key = str(data.get("lead_key") or data.get("id") or "").strip()
+            if not lead_key:
+                self.send_json({"ok": False, "error": "Thiếu lead_key"}, status_code=400)
+                return
+            deep_fb = bool(data.get("deep_fb", True))
+            check_maps = bool(data.get("check_maps", True))
+            ok, result = MANAGER.profile_lead(lead_key, deep_fb=deep_fb, check_maps=check_maps)
+            self.send_json(result, status_code=200 if ok else 409)
+
+        elif path == "/api/leads/profile-batch":
+            lead_keys = data.get("lead_keys") or []
+            deep_fb = bool(data.get("deep_fb", True))
+            check_maps = bool(data.get("check_maps", True))
+            ok, msg = MANAGER.start_batch_profile(lead_keys, deep_fb=deep_fb, check_maps=check_maps)
+            self.send_json({"ok": ok, "message": msg}, status_code=200 if ok else 409)
+
+        elif path == "/api/leads/recompute-scores":
+            ok, cnt = MANAGER.recompute_all_scores()
+            self.send_json({"ok": ok, "count": cnt, "message": f"Đã cập nhật điểm 1–10 cho {cnt} khách hàng!"})
 
         elif path == "/api/task":
             task_path = ROOT / "task-baito-nhom-da-tham-gia.json"
