@@ -1204,13 +1204,17 @@
     var failCount = LEADS.filter(function (l) { return l.qualification === "FAIL" || (l.maps && l.maps.status === "NOT_FOUND"); }).length;
     var passCount = LEADS.filter(function (l) { return l.qualification === "PASS" || (l.maps && l.maps.status === "FOUND"); }).length;
     var activeCount = Math.max(0, LEADS.length - failCount);
+    var pendingCount = Math.max(0, activeCount - passCount);
+    var kpiSub = state.hideFail
+      ? (passCount + " Đạt + " + pendingCount + " Chưa check (ẩn " + failCount + " Không đạt)")
+      : (passCount + " Đạt + " + pendingCount + " Chưa check + " + failCount + " Không đạt");
     var withPhone = LEADS.filter(function (l) { return l.has_phone; }).length;
     var withFb = LEADS.filter(function (l) { return l.has_fb; }).length;
     var high = LEADS.filter(function (l) { return l.priority === "high"; }).length;
     var okGroups = GROUPS.filter(function (g) { return !g.error; }).length;
     var contacted = LEADS.filter(function (l) { var s = crmOf(l.id).status; return s && s !== "new" && s !== "skip"; }).length;
     var items = [
-      { label: "Khách hàng tiềm năng", value: state.hideFail ? activeCount : LEADS.length, sub: passCount + " Đạt (có Maps) · " + failCount + " Không đạt (đã lọc)", cls: "accent" },
+      { label: "Khách hàng tiềm năng", value: state.hideFail ? activeCount : LEADS.length, sub: kpiSub, cls: "accent" },
       { label: "Có SĐT / Zalo", value: withPhone, sub: "gọi / nhắn được ngay" },
       { label: "Có Facebook cá nhân", value: withFb, sub: "nhắn tin trực tiếp" },
       { label: "Đã chăm sóc", value: contacted, sub: high + " khách ưu tiên cao" },
