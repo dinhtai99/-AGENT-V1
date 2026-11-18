@@ -2,7 +2,7 @@
 
 import unittest
 
-from filters import analyze_lead_behavior, classify_website_url, score_lead_web_priority
+from filters import analyze_lead_behavior, classify_website_url, extract_shop_name, score_lead_web_priority
 from lead_profiler import build_maps_search_queries
 
 
@@ -103,6 +103,12 @@ class TestLeadProfilerAndScoring(unittest.TestCase):
         qs = build_maps_search_queries(lead, beh)
         self.assertTrue(any("Phở Hà Nội Ikebukuro" == q for q, _ in qs))
         self.assertTrue(any("080-1111-2222" == q for q, _ in qs))
+
+    def test_extract_shop_name_variants(self):
+        self.assertEqual(extract_shop_name("678Quán chúc tất cả ACE ngày mới tốt lành"), "678Quán")
+        self.assertEqual(extract_shop_name("Ghé JAPAN TRAVEL lấy vé về thăm gia đình"), "JAPAN TRAVEL")
+        self.assertEqual(extract_shop_name("Linh Hiền Eyelashes kawaguchi Chuyên nối mi"), "Linh Hiền Eyelashes")
+        self.assertEqual(extract_shop_name("Tuyển mẫu free design ga ikebukuro", author_name="Queens Nail"), "Queens Nail")
 
 
 if __name__ == "__main__":

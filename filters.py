@@ -185,7 +185,7 @@ TIME_RE = re.compile(
 LEVEL_RE = re.compile(r"\b(TBY|TBK|TB\+\+|TB\+|TB-|TB|N[1-5])\b", re.IGNORECASE)
 
 STATION_RE = re.compile(
-    r"(?:ga|trạm)\s+([A-Za-zÀ-ỹ0-9\-]{2,25}(?:\s+[A-Za-zÀ-ỹ0-9\-]{2,20})?)(?=\s*(?:\(|,|;|\.|\n|$|\b(?:đi bộ|p\b|phút|tuyến|line|cách|tuyển|cần|lương|ở|tại)))|"
+    r"(?:ga|trạm)\s+([A-Za-zÀ-ỹ0-9\-]{2,25}(?:\s+[A-Za-zÀ-ỹ0-9\-]{2,20})?)(?=\s*(?:\(|,|;|\.|\n|$|\b(?:đi bộ|p\b|phút|tuyến|line|cách|tuyển|cần|lương|ở|tại|ạ\b|nhé|nha|từ|lịch|y/c|yc)))|"
     r"([A-Za-z0-9\-]{2,25})\s+eki\b|"
     r"([\u4e00-\u9faf\u3040-\u309f\u30a0-\u30ff]{1,12}駅)",
     re.IGNORECASE,
@@ -193,28 +193,35 @@ STATION_RE = re.compile(
 
 JP_AREAS = [
     # Tokyo
-    "Tokyo", "Shinjuku", "Shin-Okubo", "Shinokubo", "Ikebukuro", "Ueno", "Akihabara",
-    "Asakusa", "Kinshicho", "Otsuka", "Sugamo", "Takadanobaba", "Nakano", "Koenji",
-    "Ogikubo", "Kichijoji", "Shibuya", "Ebisu", "Roppongi", "Shinagawa", "Kamata",
-    "Akabane", "Kita-Senju", "Kitasenju", "Kameido", "Shin-Koiwa", "Shinkoiwa",
-    "Machida", "Hachioji", "Tachikawa",
+    "Tokyo", "Shinjuku", "Shin-Okubo", "Shinokubo", "Okubo", "Ikebukuro", "Ueno", "Akihabara",
+    "Asakusa", "Kinshicho", "Kameido", "Hirai", "Koiwa", "Shin-Koiwa", "Shinkoiwa",
+    "Otsuka", "Sugamo", "Komagome", "Tabata", "Nippori", "Nishi-Nippori", "Takadanobaba",
+    "Nakano", "Koenji", "Asagaya", "Ogikubo", "Nishi-Ogikubo", "Kichijoji", "Mitaka",
+    "Shibuya", "Harajuku", "Ebisu", "Meguro", "Gotanda", "Osaki", "Shinagawa", "Tamachi",
+    "Shimbashi", "Oimachi", "Omori", "Kamata", "Roppongi", "Akabane", "Oji",
+    "Kita-Senju", "Kitasenju", "Ayase", "Takenotsuka", "Nishiarai",
+    "Kasai", "Nishi-Kasai", "Nishikasai", "Chofu", "Fuchu", "Kokubunji", "Kunitachi",
+    "Tachikawa", "Hachioji", "Machida",
     # Saitama
     "Saitama", "Kawaguchi", "Nishi-Kawaguchi", "Nishikawaguchi", "Warabi", "Minami-Urawa",
-    "Urawa", "Omiya", "Koshigaya", "Soka", "Toda", "Kawagoe", "Tokorozawa",
+    "Urawa", "Kita-Urawa", "Omiya", "Koshigaya", "Soka", "Kasukabe", "Toda", "Kawagoe",
+    "Tokorozawa", "Asaka", "Shiki", "Wakoshi", "Narimasu",
     # Chiba
-    "Chiba", "Funabashi", "Nishi-Funabashi", "Matsudo", "Kashiwa", "Ichikawa",
-    "Gyotoku", "Motoyawata", "Urayasu", "Narita",
+    "Chiba", "Funabashi", "Nishi-Funabashi", "Tsudanuma", "Inage", "Matsudo", "Kashiwa",
+    "Ichikawa", "Motoyawata", "Gyotoku", "Minami-Gyotoku", "Myoden", "Urayasu", "Narita",
     # Kanagawa
-    "Kanagawa", "Yokohama", "Kawasaki", "Tsurumi", "Kannai", "Sakuragicho",
-    "Sagamihara", "Atsugi", "Fujisawa",
+    "Kanagawa", "Yokohama", "Kawasaki", "Tsurumi", "Higashi-Kanagawa", "Kannai",
+    "Sakuragicho", "Totsuka", "Ofuna", "Sagamihara", "Atsugi", "Fujisawa", "Yokosuka",
     # Kansai (Osaka, Kyoto, Hyogo)
-    "Osaka", "Namba", "Umeda", "Tennoji", "Shinsaibashi", "Nipponbashi", "Tsuruhashi",
-    "Kyobashi", "Shin-Osaka", "Higashi-Osaka", "Higashiosaka", "Sakai", "Yao",
-    "Kyoto", "Kobe", "Sannomiya", "Amagasaki", "Himeji",
+    "Osaka", "Namba", "Umeda", "Tennoji", "Abeno", "Shinsaibashi", "Nipponbashi",
+    "Tsuruhashi", "Imazato", "Fuse", "Kyobashi", "Tenma", "Shin-Osaka", "Shin-Imamiya",
+    "Higashi-Osaka", "Higashiosaka", "Sakai", "Yao", "Noda",
+    "Kyoto", "Kobe", "Sannomiya", "Motomachi", "Amagasaki", "Nishinomiya", "Himeji",
     # Chubu / Aichi
-    "Nagoya", "Sakae", "Kanayama", "Osu", "Aichi", "Toyohashi", "Toyota", "Gifu", "Shizuoka",
+    "Nagoya", "Sakae", "Kanayama", "Osu", "Fushimi", "Chikusa", "Ozone", "Hibino",
+    "Aichi", "Toyohashi", "Okazaki", "Toyota", "Gifu", "Shizuoka", "Hamamatsu",
     # Kyushu / Other
-    "Fukuoka", "Hakata", "Tenjin", "Hiroshima", "Sendai", "Sapporo", "Hokkaido", "Okinawa",
+    "Fukuoka", "Hakata", "Tenjin", "Ohashi", "Hiroshima", "Sendai", "Sapporo", "Hokkaido", "Okinawa",
 ]
 
 
@@ -650,16 +657,59 @@ def classify_baito_post(content: str, author_name: str = "") -> dict:
     }
 
 
-def extract_shop_name(content: str) -> str | None:
-    """Best-effort extraction of the shop/restaurant/salon name from post text."""
+_AUTHOR_SHOP_TOKENS = (
+    "nail", "nails", "eyelash", "eyelashes", "spa", "salon", "beauty", "hair", "barber",
+    "quán", "quan", "phở", "pho", "bún", "bun", "bếp", "bep", "cơm", "com", "bánh", "banh",
+    "nhà hàng", "izakaya", "ramen", "sushi", "yakiniku", "shop", "store", "mart", "market",
+    "food", "foods", "travel", "tour", "mobile", "wifi", "sim", "auto", "car", "house",
+    "home", "studio", "lounge", "cafe", "coffee", "bakery", "tạp hóa", "đồ cũ", "recycle",
+    "kitchen", "clinic", "dental", "massage", "bistro", "grill", "bbq",
+)
+_AUTHOR_NOT_SHOP_TOKENS = (
+    "tuyển dụng", "việc làm", "baito", "hội ", "nhóm ", "cộng đồng", "chưa rõ", "thành viên", "ẩn danh", "admin",
+)
+_CAPS_BRAND_STOP = {
+    "VND", "F&B", "CMT", "IB", "INBOX", "SDT", "SĐT", "ZALO", "LINE", "VIP", "FULL", "PART",
+    "OK", "JP", "VN", "ACE", "HANG", "HÀNG", "NHA", "NHÀ", "EM", "ANH", "CHỊ", "CHI", "CẦN",
+    "CAN", "TUYỂN", "TUYEN", "SHIP", "FREE", "FREESHIP", "CK", "COD", "HOT", "NEW", "SALE",
+    "KARAOKE", "MENU", "ORDER", "SET", "KG", "MAN", "YEN", "TOKYO", "OSAKA", "NAGOYA",
+}
+
+
+def extract_shop_name(content: str, author_name: str = "") -> str | None:
+    """Best-effort extraction of the shop/restaurant/salon name from post text or FB Page author name."""
     clean = clean_fb_noise(content or "")
+
+    # 1. Compact number/prefix + suffix shop name (e.g. '678Quán', 'MaySpa', 'VietMart')
+    m_compact = re.search(
+        r"\b([0-9]{1,5}[A-ZÀ-Ỹa-zà-ỹ]{0,15}|[A-ZÀ-Ỹ][A-Za-zÀ-ỹ0-9]{1,18})(Quán|Nail|Nails|Spa|Salon|Shop|Store|Mart|Kitchen|Cafe|Coffee|Travel|Eyelashes)\b",
+        clean,
+    )
+    if m_compact:
+        cand = (m_compact.group(1) + m_compact.group(2)).strip()
+        if 3 <= len(cand) <= 35:
+            return cand
+
+    # 2. Brand suffix pattern (e.g. 'Linh Hiền Eyelashes', 'Sakura Nail Salon', 'Phở Hà Nội Quán')
+    m_suffix = re.search(
+        r"(?:^|\n|\b(?:tại|ở|ghé|đến|tiệm|quán)\s+)([A-ZÀ-Ỹ][A-Za-zÀ-ỹ0-9&'\-]{1,22}(?:\s+[A-ZÀ-Ỹ0-9][A-Za-zÀ-ỹ0-9&'\-]{1,20}){0,2}\s+(?:Nail|Nails|Eyelashes|Eyelash|Salon|Spa|Beauty|Travel|Tours|Izakaya|Ramen|Kitchen|Bakery|Cafe|Coffee|Mart|Store))\b",
+        clean,
+    )
+    if m_suffix:
+        cand = m_suffix.group(1).strip(" -–—:.,!\"'")
+        first_w = cand.split()[0].lower() if cand.split() else ""
+        if first_w not in {"tuyển", "tìm", "cần", "mẫu", "thợ", "nhận", "làm", "chuyên", "hội"} and 4 <= len(cand) <= 42:
+            return cand
+
+    # 3. Explicit prefix pattern ('Quán ...', 'Tiệm ...', 'Tên quán: ...')
     patterns = [
-        r"(?:Quán|Tiệm|Nhà hàng|Shop|Cửa hàng|Izakaya|Tiệm nail|Quán ăn|Quán phở|Bếp)\s+([A-ZÀ-Ỹ0-9][^\n,.;:()!]{1,35})",
+        r"(?:Quán|Tiệm|Nhà hàng|Shop|Cửa hàng|Izakaya|Tiệm nail|Quán ăn|Quán phở|Bếp|Salon)\s+(?:bên|của|nhà)?\s*([A-ZÀ-Ỹ0-9][^\n,.;:()!]{1,35})",
         r"(?:Tên quán|Tên tiệm|🏠|🏪|🍜|💅)\s*[:\-]?\s*([^\n,;]{2,40})",
     ]
     stop_words = {
         "mình", "em", "anh", "chị", "tuyển", "cần", "đang", "ở", "tại", "gần",
-        "nhỏ", "mới", "việt", "nhật", "cầu", "baito",
+        "nhỏ", "mới", "việt", "nhật", "cầu", "baito", "ăn", "uống", "cũ", "này",
+        "đây", "đó", "nào", "nhà", "chúc", "làm", "bên", "gấp",
     }
     for pat in patterns:
         for m in re.finditer(pat, clean):
@@ -668,12 +718,33 @@ def extract_shop_name(content: str) -> str | None:
             if first_word in stop_words or len(candidate) < 2:
                 continue
             candidate = re.split(
-                r"\s+(?:cần tuyển|tuyển|đang cần|ở ga|tại ga|cách ga|gần ga)\b",
+                r"\s+(?:cần tuyển|tuyển|đang cần|đang mở|ở ga|tại ga|cách ga|gần ga|chúc|khu vực|ở tại|tại)\b",
                 candidate,
                 flags=re.IGNORECASE,
             )[0].strip()
             if 2 <= len(candidate) <= 40 and len(candidate.split()) <= 5:
                 return candidate
+
+    # 4. ALL-CAPS brand after action cue ('Ghé JAPAN TRAVEL', 'Tại SAKURA')
+    m_caps = re.search(
+        r"\b(?:[Gg]hé|[Tt]ại|[Đđ]ến|[Cc]ủa|[Nn]hà hàng|[Tt]iệm|[Qq]uán)\s+([A-Z][A-Z0-9&\-]{2,}(?:\s+[A-Z0-9&\-]{2,}){0,3})\b",
+        clean,
+    )
+    if m_caps:
+        cand = m_caps.group(1).strip()
+        words = cand.split()
+        if any(w not in _CAPS_BRAND_STOP for w in words) and 3 <= len(cand) <= 35:
+            return cand
+
+    # 5. Author / Facebook Page name when it clearly names a business (e.g. 'Queens Nail', 'Linh Hiền Eyelashes')
+    auth = (author_name or "").strip()
+    if auth and 3 <= len(auth) <= 45:
+        auth_low = auth.lower()
+        if not any(bad in auth_low for bad in _AUTHOR_NOT_SHOP_TOKENS):
+            if any(re.search(rf"(?:^|\b){re.escape(tok)}(?:\b|$)", auth_low) for tok in _AUTHOR_SHOP_TOKENS):
+                # Strip trailing location tag if user wrote 'Linh Hiền Eyelashes kawaguchi'
+                return auth
+
     return None
 
 
@@ -695,7 +766,7 @@ def analyze_business_and_needs(
     loc_info = extract_location_jp(clean, group_name=group_name, group_id=group_id)
     contact_info = extract_contact_channels(clean)
     wage = extract_wage_jp(clean)
-    shop_name = extract_shop_name(clean)
+    shop_name = extract_shop_name(clean, author_name=author_name)
 
     # Stage 1: Identify business type (Đang kinh doanh gì?)
     matched_types: list[str] = []
