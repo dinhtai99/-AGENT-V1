@@ -387,7 +387,11 @@ class WorkerManager:
                     )
                 elif hasattr(os, "killpg") and hasattr(os, "getpgid"):
                     try:
-                        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+                        pgid = os.getpgid(proc.pid)
+                        if pgid != os.getpgid(0):
+                            os.killpg(pgid, signal.SIGTERM)
+                        else:
+                            proc.terminate()
                     except Exception:
                         proc.terminate()
                 else:
@@ -715,6 +719,7 @@ class WorkerManager:
                     encoding="utf-8",
                     errors="replace",
                     bufsize=1,
+                    preexec_fn=os.setsid if hasattr(os, "setsid") else None,
                     env=sub_env,
                 )
                 with self.lock:
@@ -800,6 +805,7 @@ class WorkerManager:
                             encoding="utf-8",
                             errors="replace",
                             bufsize=1,
+                            preexec_fn=os.setsid if hasattr(os, "setsid") else None,
                             env=sub_env,
                         )
                         with self.lock:
@@ -811,13 +817,22 @@ class WorkerManager:
                                     self.add_log(s, "info")
                             proc.stdout.close()
                         rc = proc.wait()
+                    with self.lock:
+                        if self.scan_cancel_requested:
+                            self.add_log("🛑 Đã dừng phân tích theo lô theo yêu cầu.", "warn")
+                            break
                     if rc != 0 and self.session_expired:
                         self.add_log("🚨 Dừng lô phân tích do phiên Facebook bị đăng xuất!", "error")
                         break
                     if idx < len(keys):
                         import random
                         pause_s = random.uniform(15.0, 25.0)
-                        time.sleep(pause_s)
+                        end_t = time.time() + pause_s
+                        while time.time() < end_t:
+                            with self.lock:
+                                if self.scan_cancel_requested:
+                                    break
+                            time.sleep(0.5)
                 self.add_log("🎉 Hoàn tất đợt phân tích & chấm điểm theo lô!", "success")
             except Exception as exc:
                 self.add_log(f"❌ Lỗi phân tích theo lô: {exc}", "error")
