@@ -672,8 +672,29 @@ _CAPS_BRAND_STOP = {
     "VND", "F&B", "CMT", "IB", "INBOX", "SDT", "SĐT", "ZALO", "LINE", "VIP", "FULL", "PART",
     "OK", "JP", "VN", "ACE", "HANG", "HÀNG", "NHA", "NHÀ", "EM", "ANH", "CHỊ", "CHI", "CẦN",
     "CAN", "TUYỂN", "TUYEN", "SHIP", "FREE", "FREESHIP", "CK", "COD", "HOT", "NEW", "SALE",
-    "KARAOKE", "MENU", "ORDER", "SET", "KG", "MAN", "YEN", "TOKYO", "OSAKA", "NAGOYA",
+    "KARAOKE", "MENU", "ORDER", "SET", "KG", "MAN", "YEN", "TOKYO", "OSAKA", "NAGOYA", "NYSE",
 }
+_GENERIC_SHOP_PHRASES = {
+    "spa", "salon", "nail", "nails", "shop", "store", "mart", "quán", "tiệm", "bếp",
+    "đồ việt", "tạp hóa", "đồ ăn", "nhà hàng", "quán ăn", "chuyên tour", "chuyên tour nhật",
+    "tiệm nail", "tiệm spa", "quán việt", "cửa hàng", "bán hàng", "mỹ phẩm", "thực phẩm",
+    "aichi", "tokyo", "osaka", "nagoya", "kawasaki", "saitama", "chiba", "japan", "nhật bản",
+}
+
+
+def _is_valid_shop_candidate(cand: str) -> bool:
+    s = " ".join((cand or "").split()).strip(" -–—:.,!\"'()[]")
+    if len(s) < 3 or len(s) > 42:
+        return False
+    low = s.lower()
+    if low in _GENERIC_SHOP_PHRASES:
+        return False
+    if re.search(r"(?:http|☎️|📞|🏠|📍|👉|0\d{7,})", s):
+        return False
+    bad_frags = ("yêu cầu", "giấy khám", "bảo hiểm", "sầm uất", "tuyển ", "cần ", "đồ việt", "tạp hóa", "chuyên tour", "giảm giá", "free")
+    if any(b in low for b in bad_frags):
+        return False
+    return True
 
 
 def extract_shop_name(content: str, author_name: str = "") -> str | None:
@@ -686,8 +707,8 @@ def extract_shop_name(content: str, author_name: str = "") -> str | None:
         clean,
     )
     if m_compact:
-        cand = (m_compact.group(1) + m_compact.group(2)).strip()
-        if 3 <= len(cand) <= 35:
+        cand = " ".join((m_compact.group(1) + m_compact.group(2)).split())
+        if _is_valid_shop_candidate(cand):
             return cand
 
     # 2. Brand suffix pattern (e.g. 'Linh Hiền Eyelashes', 'Sakura Nail Salon', 'Phở Hà Nội Quán')
@@ -696,9 +717,9 @@ def extract_shop_name(content: str, author_name: str = "") -> str | None:
         clean,
     )
     if m_suffix:
-        cand = m_suffix.group(1).strip(" -–—:.,!\"'")
+        cand = " ".join(m_suffix.group(1).strip(" -–—:.,!\"'").split())
         first_w = cand.split()[0].lower() if cand.split() else ""
-        if first_w not in {"tuyển", "tìm", "cần", "mẫu", "thợ", "nhận", "làm", "chuyên", "hội"} and 4 <= len(cand) <= 42:
+        if first_w not in {"tuyển", "tìm", "cần", "mẫu", "thợ", "nhận", "làm", "chuyên", "hội"} and _is_valid_shop_candidate(cand):
             return cand
 
     # 3. Explicit prefix pattern ('Quán ...', 'Tiệm ...', 'Tên quán: ...')
@@ -713,16 +734,16 @@ def extract_shop_name(content: str, author_name: str = "") -> str | None:
     }
     for pat in patterns:
         for m in re.finditer(pat, clean):
-            candidate = m.group(1).strip(" -–—:.,!\"'")
+            candidate = " ".join(m.group(1).strip(" -–—:.,!\"'").split())
             first_word = candidate.split()[0].lower() if candidate.split() else ""
             if first_word in stop_words or len(candidate) < 2:
                 continue
             candidate = re.split(
-                r"\s+(?:cần tuyển|tuyển|đang cần|đang mở|ở ga|tại ga|cách ga|gần ga|chúc|khu vực|ở tại|tại)\b",
+                r"\s+(?:cần tuyển|tuyển|đang cần|đang mở|ở ga|tại ga|cách ga|gần ga|chúc|khu vực|ở tại|tại|yêu cầu)\b",
                 candidate,
                 flags=re.IGNORECASE,
             )[0].strip()
-            if 2 <= len(candidate) <= 40 and len(candidate.split()) <= 5:
+            if len(candidate.split()) <= 5 and _is_valid_shop_candidate(candidate):
                 return candidate
 
     # 4. ALL-CAPS brand after action cue ('Ghé JAPAN TRAVEL', 'Tại SAKURA')
@@ -731,19 +752,19 @@ def extract_shop_name(content: str, author_name: str = "") -> str | None:
         clean,
     )
     if m_caps:
-        cand = m_caps.group(1).strip()
+        cand = " ".join(m_caps.group(1).strip().split())
         words = cand.split()
-        if any(w not in _CAPS_BRAND_STOP for w in words) and 3 <= len(cand) <= 35:
+        if any(w not in _CAPS_BRAND_STOP for w in words) and _is_valid_shop_candidate(cand):
             return cand
 
     # 5. Author / Facebook Page name when it clearly names a business (e.g. 'Queens Nail', 'Linh Hiền Eyelashes')
-    auth = (author_name or "").strip()
+    auth = " ".join((author_name or "").strip().split())
     if auth and 3 <= len(auth) <= 45:
         auth_low = auth.lower()
         if not any(bad in auth_low for bad in _AUTHOR_NOT_SHOP_TOKENS):
             if any(re.search(rf"(?:^|\b){re.escape(tok)}(?:\b|$)", auth_low) for tok in _AUTHOR_SHOP_TOKENS):
-                # Strip trailing location tag if user wrote 'Linh Hiền Eyelashes kawaguchi'
-                return auth
+                if _is_valid_shop_candidate(auth):
+                    return auth
 
     return None
 

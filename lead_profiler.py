@@ -313,6 +313,15 @@ def _search_maps_via_playwright(queries: list[tuple[str, str]], log_fn=print) ->
                 }""")
 
                 if info and info.get("place_name"):
+                    pname = " ".join(info["place_name"].split())
+                    addr = " ".join((info.get("address") or "").split())
+                    cat = " ".join((info.get("category") or "").split())
+                    # Reject broad region/city cards (e.g. 'Aichi') or non-Japan hits (e.g. 'New York')
+                    broad_regions = {"aichi", "tokyo", "osaka", "nagoya", "kawasaki", "saitama", "chiba", "yokohama", "kyoto", "fukuoka", "japan", "nhật bản", "kanagawa"}
+                    is_broad = pname.lower() in broad_regions or (not cat and not addr)
+                    is_in_japan = (not addr) or bool(re.search(r"(?:nhật bản|japan|〒|[都府県市区町村])", addr, re.I))
+                    if is_broad or not is_in_japan:
+                        continue
                     rating = None
                     try:
                         if info.get("ratingText"):
@@ -366,19 +375,19 @@ def build_maps_search_queries(lead: dict, behavior: dict) -> list[tuple[str, str
     loc = b_model.get("location") or (stations[0] if stations else (areas[0] if areas else "Japan"))
 
     for shop in shop_names[:2]:
-        q = f"{shop} {loc}".strip()
-        if q:
+        q = " ".join(f"{shop} {loc}".split())
+        if q and len(shop) >= 3:
             queries.append((q, "Tên quán + Khu vực"))
 
     for ph in phones[:2]:
         digits = re.sub(r"[^\d+]", "", ph)
         if len(digits) >= 9:
-            queries.append((ph, "Số điện thoại"))
+            queries.append((" ".join(ph.split()), "Số điện thoại"))
 
     # If still no shop_name and no phone, try postal code / address clue if explicit Japanese address exists
     for addr in (behavior.get("address_clues") or [])[:1]:
         if re.search(r"(?:〒|\d+-\d+-\d+|[都道府県])", addr):
-            queries.append((addr, "Địa chỉ từ bài đăng"))
+            queries.append((" ".join(addr.split()), "Địa chỉ từ bài đăng"))
 
     return queries
 

@@ -764,8 +764,9 @@ class WorkerManager:
                 self.scan_cancel_requested = False
 
     def start_batch_profile(self, lead_keys: list[str], deep_fb: bool = True, check_maps: bool = True) -> tuple[bool, str]:
-        """Background batch profiling for selected leads (capped at 15/batch for safety)."""
-        keys = [str(k).strip() for k in lead_keys if str(k).strip()][:15]
+        """Background batch profiling for selected leads (capped at 15 for FB, up to 400 for Maps-only)."""
+        max_cap = 15 if deep_fb else 400
+        keys = [str(k).strip() for k in lead_keys if str(k).strip()][:max_cap]
         if not keys:
             return False, "Chưa chọn khách hàng nào để phân tích."
         with self.lock:
@@ -835,7 +836,7 @@ class WorkerManager:
                         break
                     if idx < len(keys):
                         import random
-                        pause_s = random.uniform(15.0, 25.0) if deep_fb else random.uniform(7.0, 13.0)
+                        pause_s = random.uniform(15.0, 25.0) if deep_fb else random.uniform(5.0, 9.0)
                         end_t = time.time() + pause_s
                         while time.time() < end_t:
                             with self.lock:

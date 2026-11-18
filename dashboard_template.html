@@ -724,7 +724,8 @@
           <option value="sector">Theo ngành nghề</option>
         </select>
       </label>
-      <button class="btn btn-sm btn-warning" id="btn-batch-profile-top10" type="button" title="Chỉ tra Google Maps & chấm điểm Web 1–10 cho 10 khách đầu tiên đã có Tên quán/SĐT (0 đụng Facebook, an toàn tuyệt đối cho nick FB)">📍 Check Maps Top 10 (Không đụng FB)</button>
+      <button class="btn btn-sm btn-warning" id="btn-batch-profile-top10" type="button" title="Chỉ tra Google Maps & chấm điểm Web 1–10 cho 10 khách đầu tiên đã có Tên quán/SĐT (0 đụng Facebook, an toàn tuyệt đối cho nick FB)">📍 Check Maps Top 10</button>
+      <button class="btn btn-sm btn-primary" id="btn-batch-profile-all" type="button" title="Chạy nền Check Google Maps cho TOÀN BỘ các khách hàng còn lại đã có Tên quán/SĐT (0 đụng Facebook)">🌐 Check Maps Hết còn lại</button>
       <button class="btn btn-sm" id="btn-recompute-scores" type="button" title="Tính lại ngay hành vi đa bài và điểm 1–10 cho toàn bộ khách">♻️ Chấm điểm lại</button>
       <div class="seg" role="group" aria-label="Kiểu hiển thị">
         <button type="button" data-view="cards" aria-pressed="true">Thẻ</button>
@@ -2507,41 +2508,49 @@
     var el = document.getElementById(p[0]);
     if (el) el.addEventListener("change", function (e) { state[p[1]] = e.target.value; renderLeads(); });
   });
+  function runMapsOnlyBatch(limitCount) {
+    if (!isServerMode) {
+      alert("Hãy mở Web Control Center (start-web.command / start-web.bat) để chạy kiểm tra Google Maps!");
+      return;
+    }
+    var list = filtered().filter(function (l) {
+      var st = (l.maps && l.maps.status) || "UNCHECKED";
+      var notChecked = st !== "FOUND" && st !== "NOT_FOUND";
+      return notChecked && !!l.ready_for_maps;
+    });
+    if (limitCount > 0) list = list.slice(0, limitCount);
+    if (!list.length) {
+      toast("Không còn khách nào đang lọc có sẵn Tên quán/SĐT mà chưa check Maps!");
+      return;
+    }
+    var estMins = Math.max(1, Math.round((list.length * 11) / 60));
+    if (!confirm("Chạy Check Google Maps & Chấm điểm Web 1–10 cho " + list.length + " khách hàng có sẵn Tên quán/SĐT?\n\n✅ Chế độ 0 đụng Facebook — hoàn toàn an toàn cho tài khoản FB.\n⏱️ Ước tính chạy nền ~" + estMins + " phút (lưu từng khách một, có thể bấm 'Dừng quét' bất cứ lúc nào và chạy tiếp phần còn lại sau).")) {
+      return;
+    }
+    document.getElementById("console-drawer").hidden = false;
+    fetch("/api/leads/profile-batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        lead_keys: list.map(function (l) { return l.lead_key || l.id; }),
+        deep_fb: false,
+        check_maps: true
+      })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      toast(res.message || ("Đã bắt đầu Check Google Maps cho " + list.length + " khách!"));
+      pollServerStatus();
+    }).catch(function (err) {
+      toast("Lỗi gửi lệnh check Maps: " + err);
+    });
+  }
+
   var btnBatchTop10 = document.getElementById("btn-batch-profile-top10");
   if (btnBatchTop10) {
-    btnBatchTop10.addEventListener("click", function () {
-      if (!isServerMode) {
-        alert("Hãy mở Web Control Center (start-web.command / start-web.bat) để chạy kiểm tra Google Maps!");
-        return;
-      }
-      var list = filtered().filter(function (l) {
-        var st = (l.maps && l.maps.status) || "UNCHECKED";
-        var notChecked = st !== "FOUND" && st !== "NOT_FOUND";
-        return notChecked && !!l.ready_for_maps;
-      }).slice(0, 10);
-      if (!list.length) {
-        toast("Không còn khách nào đang lọc có sẵn Tên quán/SĐT mà chưa check Maps!");
-        return;
-      }
-      if (!confirm("Chạy Check Google Maps & Chấm điểm Web 1–10 cho " + list.length + " khách hàng đầu tiên đã có Tên quán/SĐT?\n\n✅ Chế độ 0 đụng Facebook — hoàn toàn an toàn cho tài khoản FB của bạn (nghỉ 7–13s giữa mỗi quán để tránh CAPTCHA Google).")) {
-        return;
-      }
-      document.getElementById("console-drawer").hidden = false;
-      fetch("/api/leads/profile-batch", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          lead_keys: list.map(function (l) { return l.lead_key || l.id; }),
-          deep_fb: false,
-          check_maps: true
-        })
-      }).then(function (r) { return r.json(); }).then(function (res) {
-        toast(res.message || "Đã bắt đầu Check Google Maps Top 10!");
-        pollServerStatus();
-      }).catch(function (err) {
-        toast("Lỗi gửi lệnh check Maps: " + err);
-      });
-    });
+    btnBatchTop10.addEventListener("click", function () { runMapsOnlyBatch(10); });
+  }
+  var btnBatchAll = document.getElementById("btn-batch-profile-all");
+  if (btnBatchAll) {
+    btnBatchAll.addEventListener("click", function () { runMapsOnlyBatch(0); });
   }
   var btnRecomputeScores = document.getElementById("btn-recompute-scores");
   if (btnRecomputeScores) {

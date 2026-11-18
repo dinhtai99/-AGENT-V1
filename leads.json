@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18T09:21:05",
+  "updated_at": "2026-11-18T10:02:05",
   "total_leads": 1081,
   "leads": [
     {
@@ -688,10 +688,9 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Nagoya (theo nhóm)",
+        "location": "Hibino",
         "stations": [],
         "areas": [
-          "Nagoya (theo nhóm)",
           "Hibino"
         ]
       },
@@ -729,7 +728,6 @@
         "phones": [],
         "stations": [],
         "areas": [
-          "Nagoya (theo nhóm)",
           "Hibino"
         ],
         "address_clues": [],
@@ -747,7 +745,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị, em thấy cửa hàng mình ở khu vực Nagoya (theo nhóm) hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị, em thấy cửa hàng mình ở khu vực Hibino hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -774,7 +772,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Ga shinokubo | Shinokubo",
+        "location": "Ga shinokubo | Shinokubo, Okubo",
         "stations": [
           "shinokubo"
         ],
@@ -867,7 +865,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Shinokubo",
+        "location": "Shinokubo, Okubo",
         "stations": [],
         "areas": [
           "Shinokubo",
@@ -952,7 +950,7 @@
         ],
         "shop_name": "Queens Nail",
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Ikebukuro",
+        "location": "Ga ikebukuro từ10h-14h | Ikebukuro",
         "stations": [
           "ikebukuro từ10h-14h"
         ],
@@ -2025,7 +2023,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Ga shinokubo | Shinokubo",
+        "location": "Ga shinokubo | Shinokubo, Okubo",
         "stations": [
           "shinokubo"
         ],
@@ -2667,12 +2665,12 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Shin-Okubo",
+        "location": "Shin-Okubo, Okubo",
         "stations": [],
         "areas": [
           "Shin-Okubo",
-          "Shinokubo",
-          "Okubo"
+          "Okubo",
+          "Shinokubo"
         ]
       },
       "step2_deep_needs": {
@@ -2806,8 +2804,8 @@
         "stations": [],
         "areas": [
           "Shin-Okubo",
-          "Shinokubo",
-          "Okubo"
+          "Okubo",
+          "Shinokubo"
         ],
         "address_clues": [],
         "social_links": [],
@@ -2854,7 +2852,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
-        "location": "Harajuku, cách ga Harajuku khoảng 3 phút đi bộ, ngay khu phố Takeshita.",
+        "location": "Harajuku",
         "stations": [],
         "areas": [
           "Harajuku"
@@ -3302,7 +3300,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Shin-Okubo",
+        "location": "Shin-Okubo, Okubo",
         "stations": [],
         "areas": [
           "Shin-Okubo",
@@ -4967,7 +4965,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Shinokubo",
+        "location": "Shinokubo, Okubo",
         "stations": [],
         "areas": [
           "Shinokubo",
@@ -8735,7 +8733,7 @@
         "all_business_types": [
           "Kinh doanh Online / Bán hàng cá nhân tại Nhật"
         ],
-        "shop_name": "Chủ Nhật",
+        "shop_name": "G-Mission Shop, xem tin",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Tokyo (theo nhóm)",
         "stations": [],
@@ -8806,8 +8804,8 @@
         "styles": [],
         "primary_style": "Chưa phân loại rõ",
         "shop_names": [
-          "Chủ Nhật",
           "G-Mission Shop, xem tin",
+          "Chủ Nhật",
           "Quán em mở rùi nha"
         ],
         "phones": [],
@@ -8834,7 +8832,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị G-Mission Shop, xem tin, em thấy tiệm/quán Chủ Nhật ở khu vực Tokyo (theo nhóm) hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị G-Mission Shop, xem tin, em thấy tiệm/quán G-Mission Shop, xem tin ở khu vực Tokyo (theo nhóm) hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -13801,7 +13799,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Shin-Okubo",
+        "location": "Shin-Okubo, Okubo",
         "stations": [],
         "areas": [
           "Shin-Okubo",
@@ -15443,7 +15441,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Ga Fukiage | Nagoya",
+        "location": "Ga Fukiage | Nagoya, Chikusa",
         "stations": [
           "Fukiage"
         ],
@@ -15947,7 +15945,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Aichi",
+        "location": "Aichi, Okazaki",
         "stations": [],
         "areas": [
           "Aichi",
@@ -18142,7 +18140,7 @@
         "all_business_types": [
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "Nail Gác Nhỏ",
+        "shop_name": "Tiệm Nail",
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
         "location": null,
         "stations": [],
@@ -18181,8 +18179,8 @@
         ],
         "primary_style": "Bán hàng / Khuyến mãi (1 bài)",
         "shop_names": [
-          "Nail Gác Nhỏ",
-          "Tiệm Nail"
+          "Tiệm Nail",
+          "Nail Gác Nhỏ"
         ],
         "phones": [],
         "stations": [],
@@ -18203,7 +18201,7 @@
           "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị, em thấy tiệm/quán Nail Gác Nhỏ hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị, em thấy tiệm/quán Tiệm Nail hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -19590,12 +19588,11 @@
         ],
         "shop_name": null,
         "scale_estimate": "Mô hình nhỏ (< 20 người) — Đang tuyển 5 người",
-        "location": "Ga Higashi-okazaki | Nagoya (theo nhóm)",
+        "location": "Ga Higashi-okazaki | Okazaki",
         "stations": [
           "Higashi-okazaki"
         ],
         "areas": [
-          "Nagoya (theo nhóm)",
           "Okazaki"
         ]
       },
@@ -19641,7 +19638,6 @@
           "Higashi-okazaki"
         ],
         "areas": [
-          "Nagoya (theo nhóm)",
           "Okazaki"
         ],
         "address_clues": [],
@@ -21052,7 +21048,7 @@
         ],
         "shop_name": "TokyoSpa",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Tokyo",
+        "location": "Ga nippori-kasai ce | Tokyo, Nippori, Kasai",
         "stations": [
           "nippori-kasai ce"
         ],
@@ -22291,10 +22287,9 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Aichi (theo nhóm)",
+        "location": "Narimasu",
         "stations": [],
         "areas": [
-          "Aichi (theo nhóm)",
           "Narimasu"
         ]
       },
@@ -22359,7 +22354,6 @@
         "phones": [],
         "stations": [],
         "areas": [
-          "Aichi (theo nhóm)",
           "Narimasu"
         ],
         "address_clues": [],
@@ -22377,7 +22371,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị, em thấy cửa hàng mình ở khu vực Aichi (theo nhóm) hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị, em thấy cửa hàng mình ở khu vực Narimasu hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -26144,12 +26138,13 @@
           "Tiệm Nail / Mi / Spa / Làm đẹp",
           "Quán Cafe / Trà sữa / Tiệm bánh"
         ],
-        "shop_name": null,
+        "shop_name": "TuyenThoNail",
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Nakano",
+        "location": "Nakano, Asagaya",
         "stations": [],
         "areas": [
           "Nakano",
+          "Asagaya",
           "Tokyo"
         ]
       },
@@ -26190,31 +26185,34 @@
           "Bán hàng / Khuyến mãi (1 bài)"
         ],
         "primary_style": "Tuyển nhân sự / Baito (1 bài)",
-        "shop_names": [],
+        "shop_names": [
+          "TuyenThoNail"
+        ],
         "phones": [],
         "stations": [],
         "areas": [
           "Nakano",
-          "Tokyo",
-          "Asagaya"
+          "Asagaya",
+          "Tokyo"
         ],
         "address_clues": [],
         "social_links": [],
         "external_websites": []
       },
       "web_priority": {
-        "score": 4,
-        "tier": "C",
-        "tier_label": "⚪ Thấp (1–4đ)",
+        "score": 6,
+        "tier": "B",
+        "tier_label": "📌 Trung bình (5–6đ)",
         "is_preliminary": true,
         "reasons": [
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Tiệm Nail / Mi / Spa / Làm đẹp' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
+          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Thanh Thảo, xem tin, em thấy cửa hàng mình ở khu vực Nakano hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Thanh Thảo, xem tin, em thấy tiệm/quán TuyenThoNail ở khu vực Nakano hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -27788,7 +27786,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Shinjuku",
+        "location": "Shinjuku, Asagaya",
         "stations": [],
         "areas": [
           "Shinjuku",
@@ -28476,7 +28474,8 @@
         "web_opener": "Chào anh/chị http://aanime.biz, em thấy tiệm/quán VEJUN ở khu vực yêu cầu có giấy khám sức khỏe, bảo hiểm xe và đăng ký xe giao hàng hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
-      }
+      },
+      "deep_profiled_at": "2026-11-18 09:58:11"
     },
     {
       "lead_key": "fb:https://www.facebook.com/profile.php?id=100015231794897",
@@ -30528,7 +30527,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Shizuoka",
+        "location": "Shizuoka, Hamamatsu",
         "stations": [],
         "areas": [
           "Shizuoka",
@@ -32704,7 +32703,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Tokyo",
+        "location": "Tokyo, Nippori, Nishi-Nippori",
         "stations": [],
         "areas": [
           "Tokyo",
@@ -32794,15 +32793,15 @@
         "all_business_types": [
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "🏻✨",
+        "shop_name": "Ghé Queen Beauty Spa",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Tokyo, Funabashi, Osaka",
+        "location": "Tokyo, Kasai, Funabashi",
         "stations": [],
         "areas": [
           "Tokyo",
+          "Kasai",
           "Funabashi",
-          "Osaka",
-          "Kasai"
+          "Osaka"
         ]
       },
       "step2_deep_needs": {
@@ -32838,7 +32837,6 @@
         ],
         "primary_style": "Bán hàng / Khuyến mãi (1 bài)",
         "shop_names": [
-          "🏻✨",
           "Ghé Queen Beauty Spa"
         ],
         "phones": [
@@ -32847,9 +32845,9 @@
         "stations": [],
         "areas": [
           "Tokyo",
+          "Kasai",
           "Funabashi",
-          "Osaka",
-          "Kasai"
+          "Osaka"
         ],
         "address_clues": [],
         "social_links": [],
@@ -32869,7 +32867,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị, em thấy tiệm/quán 🏻✨ ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị, em thấy tiệm/quán Ghé Queen Beauty Spa ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -34331,7 +34329,7 @@
           "Nhà hàng / Quán ăn Việt Nam",
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "Nối móng (Nail Extension)",
+        "shop_name": "CatEyeNails",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Tokyo, Shinjuku",
         "stations": [],
@@ -34371,7 +34369,7 @@
         "styles": [],
         "primary_style": "Chưa phân loại rõ",
         "shop_names": [
-          "Nối móng (Nail Extension)"
+          "CatEyeNails"
         ],
         "phones": [],
         "stations": [],
@@ -34396,7 +34394,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị, em thấy tiệm/quán Nối móng (Nail Extension) ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị, em thấy tiệm/quán CatEyeNails ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -34424,7 +34422,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Saitama",
+        "location": "Saitama, Shiki",
         "stations": [],
         "areas": [
           "Saitama",
@@ -35478,7 +35476,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Mô hình nhỏ (< 20 người) — Đang tuyển 1 người",
-        "location": "Ga SHIN-OKUBO, Shin-Okubo | Tokyo, Shin-Okubo",
+        "location": "Ga SHIN-OKUBO, Shin-Okubo | Tokyo, Shin-Okubo, Okubo",
         "stations": [
           "SHIN-OKUBO",
           "Shin-Okubo"
@@ -36226,7 +36224,7 @@
           "Quán Cafe / Trà sữa / Tiệm bánh",
           "Shop bán hàng / Kho Online / Livestream"
         ],
-        "shop_name": "Nhà hàng Nhật",
+        "shop_name": "Hair Salon",
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
         "location": "Tokyo",
         "stations": [
@@ -36248,16 +36246,16 @@
           "Chiba",
           "Funabashi",
           "Shin-Okubo",
+          "Okubo",
           "Kichijoji",
           "Machida",
           "Ichikawa",
-          "Asakusa",
-          "Takadanobaba",
-          "Koenji",
-          "Okubo",
           "Koiwa",
           "Nippori",
-          "Noda"
+          "Asakusa",
+          "Noda",
+          "Takadanobaba",
+          "Koenji"
         ]
       },
       "step2_deep_needs": {
@@ -36663,8 +36661,8 @@
         ],
         "primary_style": "Bán hàng / Khuyến mãi (35 bài)",
         "shop_names": [
-          "Nhà hàng Nhật",
-          "Tiệm Nail\nSpa"
+          "Hair Salon",
+          "Tiệm Nail Spa"
         ],
         "phones": [
           "070-8549-5198"
@@ -36693,22 +36691,37 @@
         "external_websites": []
       },
       "web_priority": {
-        "score": 7,
-        "tier": "A",
-        "tier_label": "⭐ Tiềm năng cao (7–8đ)",
-        "is_preliminary": true,
+        "score": 9,
+        "tier": "S",
+        "tier_label": "🔥 Chốt ngay (9–10đ)",
+        "is_preliminary": false,
         "reasons": [
           "Có SĐT / Line / Zalo liên hệ ngay (+2đ)",
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Nhà hàng / Quán ăn Việt Nam' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
-          "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
-          "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
+          "Đã xác minh mặt bằng thật trên GG Maps (+1đ)",
+          "🎯 Google Maps CHƯA gắn Website/Landing Page (+3đ)"
         ],
-        "web_opener": "Chào anh/chị Kim Dung, em thấy tiệm/quán Nhà hàng Nhật ở khu vực Takane-Kido hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
-        "maps_status": "UNCHECKED",
-        "website_status": "UNCHECKED"
+        "web_opener": "Chào anh/chị Kim Dung, em thấy tiệm/quán ToKyO_ Nail ở khu vực Takane-Kido trên Google Maps đang có đánh giá rất tốt (4.6⭐), nhưng mục Website trên Maps hiện đang để trống. Nhiều khách tìm quán trên Google muốn xem nhanh bảng giá / menu hoặc đặt lịch ngay mà chưa thấy link. Bên em chuyên làm Landing Page đặt lịch & bảng giá tối ưu cho tiệm người Việt tại Nhật (chỉ 1–2 ngày xong). Anh/chị có muốn xem thử vài mẫu bên em đã làm không ạ?",
+        "maps_status": "FOUND",
+        "website_status": "NO_WEB"
+      },
+      "deep_profiled_at": "2026-11-18 09:53:58",
+      "maps_info": {
+        "status": "FOUND",
+        "place_name": "ToKyO_ Nail",
+        "address": "14 Ng. Báo Khánh, Hoàn Kiếm, Hà Nội, Việt Nam",
+        "phone": "Số điện thoại: +84 965 788 075",
+        "website": "",
+        "website_status": "NO_WEB",
+        "rating": 4.6,
+        "review_count": 0,
+        "category": "Tiệm chăm sóc móng",
+        "maps_url": "https://www.google.com/maps/place/ToKyO_+Nail/@21.0308257,87.3929888,5z/data=!4m10!1m2!2m1!1zVGnhu4dtIE5haWwKU3BhIFRva3lv!3m6!1s0x3135ab7de2c3df4d:0x2c21e95fed8b9832!8m2!3d21.0308257!4d105.8500201!15sChVUaeG7h20gTmFpbApTcGEgVG9reW-SAQpuYWlsX3NhbG9u4AEA!16s%2Fg%2F11fs61yqlt?hl=vi&entry=ttu&g_ep=EgoyMDI2MTExNS4wIKXMDSoASAFQAw%3D%3D",
+        "query_used": "Tiệm Nail\nSpa Tokyo",
+        "match_confidence": "Tên quán + Khu vực",
+        "checked_at": "2026-11-18 09:54:11"
       }
     },
     {
@@ -38097,7 +38110,7 @@
           "Quán nhậu / Izakaya / Yakiniku / Ramen",
           "Quán Cafe / Trà sữa / Tiệm bánh"
         ],
-        "shop_name": "Gửi tin nhắn",
+        "shop_name": "678Quán",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Nagoya",
         "stations": [],
@@ -38139,7 +38152,6 @@
         ],
         "primary_style": "Tuyển nhân sự / Baito (1 bài)",
         "shop_names": [
-          "Gửi tin nhắn",
           "678Quán"
         ],
         "phones": [
@@ -38167,7 +38179,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị 鳥678 Quán, xem tin, em thấy tiệm/quán Gửi tin nhắn ở khu vực Nagoya hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị 鳥678 Quán, xem tin, em thấy tiệm/quán 678Quán ở khu vực Nagoya hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -39580,13 +39592,13 @@
         ],
         "shop_name": "Bánh Nhật Vi",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Ga Kasai Rinkai | Gyotoku",
+        "location": "Ga Kasai Rinkai | Kasai, Gyotoku",
         "stations": [
           "Kasai Rinkai"
         ],
         "areas": [
-          "Gyotoku",
-          "Kasai"
+          "Kasai",
+          "Gyotoku"
         ]
       },
       "step2_deep_needs": {
@@ -39631,8 +39643,8 @@
           "Kasai Rinkai"
         ],
         "areas": [
-          "Gyotoku",
-          "Kasai"
+          "Kasai",
+          "Gyotoku"
         ],
         "address_clues": [],
         "social_links": [],
@@ -43495,14 +43507,14 @@
         "areas": [
           "Shinjuku",
           "Shinokubo",
+          "Okubo",
           "Tokyo",
           "Shibuya",
-          "Shinagawa",
-          "Shin-Okubo",
-          "Okubo",
           "Meguro",
           "Osaki",
-          "Harajuku"
+          "Shinagawa",
+          "Harajuku",
+          "Shin-Okubo"
         ]
       },
       "step2_deep_needs": {
@@ -43649,9 +43661,9 @@
         "areas": [
           "Shinjuku",
           "Shinokubo",
+          "Okubo",
           "Tokyo",
-          "Shibuya",
-          "Shinagawa"
+          "Shibuya"
         ],
         "address_clues": [
           "Đừng bỏ qua mặt bằng tầng 4 vô cùng thoáng đãng và sáng",
@@ -44313,7 +44325,7 @@
         "all_business_types": [
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "Nail",
+        "shop_name": "Shop Nail",
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
         "location": null,
         "stations": [],
@@ -44353,7 +44365,6 @@
         ],
         "primary_style": "Tuyển nhân sự / Baito (1 bài)",
         "shop_names": [
-          "Nail",
           "Shop Nail"
         ],
         "phones": [
@@ -44378,7 +44389,7 @@
           "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Chloe Nguyen, em thấy tiệm/quán Nail hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Chloe Nguyen, em thấy tiệm/quán Shop Nail hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -45267,7 +45278,8 @@
         "web_opener": "Chào anh/chị Bá Thương, em thấy tiệm/quán Hợp Salon ở khu vực sầm uất hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
-      }
+      },
+      "deep_profiled_at": "2026-11-18 09:55:15"
     },
     {
       "lead_key": "fb:https://www.facebook.com/profile.php?id=100007214702007",
@@ -45691,7 +45703,7 @@
           "Tiệm Nail / Mi / Spa",
           "Shop bán hàng / Kho Online / Livestream"
         ],
-        "shop_name": "NYSE",
+        "shop_name": "USD",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Kawasaki",
         "stations": [],
@@ -45795,7 +45807,7 @@
         ],
         "primary_style": "Bán hàng / Khuyến mãi (7 bài)",
         "shop_names": [
-          "NYSE"
+          "USD"
         ],
         "phones": [
           "08077213070"
@@ -45824,10 +45836,11 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Duy, em thấy tiệm/quán NYSE ở khu vực Kawasaki hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Duy, em thấy tiệm/quán USD ở khu vực Kawasaki hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
-      }
+      },
+      "deep_profiled_at": "2026-11-18 09:53:23"
     },
     {
       "lead_key": "fb:https://www.facebook.com/profile.php?id=100078689135085",
@@ -48289,7 +48302,8 @@
         ],
         "primary_style": "Bán hàng / Khuyến mãi (2 bài)",
         "shop_names": [
-          "Hồng Hạnh Nail\nNail"
+          "Hồng Hạnh Nail\nNail",
+          "Hồng Hạnh Nail Nail"
         ],
         "phones": [],
         "stations": [],
@@ -53250,7 +53264,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Osaka",
+        "location": "Osaka, Imazato",
         "stations": [],
         "areas": [
           "Osaka",
@@ -53617,7 +53631,7 @@
           "Nhà hàng / Quán ăn Việt Nam",
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "ăn",
+        "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Osaka, Yao",
         "stations": [],
@@ -53659,9 +53673,7 @@
           "Thanh lý / Sang nhượng (1 bài)"
         ],
         "primary_style": "Bán hàng / Khuyến mãi (1 bài)",
-        "shop_names": [
-          "ăn"
-        ],
+        "shop_names": [],
         "phones": [],
         "stations": [],
         "areas": [
@@ -53678,19 +53690,18 @@
         "external_websites": []
       },
       "web_priority": {
-        "score": 6,
-        "tier": "B",
-        "tier_label": "📌 Trung bình (5–6đ)",
+        "score": 4,
+        "tier": "C",
+        "tier_label": "⚪ Thấp (1–4đ)",
         "is_preliminary": true,
         "reasons": [
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Nhà hàng / Quán ăn Việt Nam' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị HappyOtter1357, em thấy tiệm/quán ăn ở khu vực Osaka hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị HappyOtter1357, em thấy cửa hàng mình ở khu vực Osaka hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -54172,11 +54183,11 @@
         ],
         "shop_name": null,
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
-        "location": "Hiroshima",
+        "location": "Motomachi, Hiroshima",
         "stations": [],
         "areas": [
-          "Hiroshima",
-          "Motomachi"
+          "Motomachi",
+          "Hiroshima"
         ]
       },
       "step2_deep_needs": {
@@ -54217,8 +54228,8 @@
         "phones": [],
         "stations": [],
         "areas": [
-          "Hiroshima",
-          "Motomachi"
+          "Motomachi",
+          "Hiroshima"
         ],
         "address_clues": [],
         "social_links": [],
@@ -54236,7 +54247,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Tuan Hoang, em thấy cửa hàng mình ở khu vực Hiroshima hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Tuan Hoang, em thấy cửa hàng mình ở khu vực Motomachi hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -56361,7 +56372,7 @@
         "all_business_types": [
           "Quán Cafe / Trà sữa / Tiệm bánh"
         ],
-        "shop_name": "Chuyên Tour Nhật",
+        "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Tokyo",
         "stations": [],
@@ -56409,9 +56420,7 @@
           "Bán hàng / Khuyến mãi (1 bài)"
         ],
         "primary_style": "Bán hàng / Khuyến mãi (1 bài)",
-        "shop_names": [
-          "Chuyên Tour Nhật"
-        ],
+        "shop_names": [],
         "phones": [
           "+81 708 386 9293"
         ],
@@ -56424,23 +56433,23 @@
         "external_websites": []
       },
       "web_priority": {
-        "score": 7,
-        "tier": "A",
-        "tier_label": "⭐ Tiềm năng cao (7–8đ)",
+        "score": 6,
+        "tier": "B",
+        "tier_label": "📌 Trung bình (5–6đ)",
         "is_preliminary": true,
         "reasons": [
           "Có SĐT / Line / Zalo liên hệ ngay (+2đ)",
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Quán Cafe / Trà sữa / Tiệm bánh' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Chuyên Tour Nhật, em thấy tiệm/quán Chuyên Tour Nhật ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Chuyên Tour Nhật, em thấy cửa hàng mình ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
-      }
+      },
+      "deep_profiled_at": "2026-11-18 09:55:51"
     },
     {
       "lead_key": "fb:https://www.facebook.com/profile.php?id=100001723498160",
@@ -59103,22 +59112,44 @@
         "external_websites": []
       },
       "web_priority": {
-        "score": 7,
-        "tier": "A",
-        "tier_label": "⭐ Tiềm năng cao (7–8đ)",
-        "is_preliminary": true,
+        "score": 6,
+        "tier": "B",
+        "tier_label": "📌 Trung bình (5–6đ)",
+        "is_preliminary": false,
         "reasons": [
           "Có SĐT / Line / Zalo liên hệ ngay (+2đ)",
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Quán nhậu / Izakaya / Yakiniku / Ramen' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
-          "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
-          "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
+          "Đã xác minh mặt bằng thật trên GG Maps (+1đ)",
+          "🌐 Đã có Website riêng trên Maps (chỉ chào Landing Page phụ) (+0.5đ)"
         ],
-        "web_opener": "Chào anh/chị Bùi Nhâm, em thấy tiệm/quán KYOTO SACHI ở khu vực Kyoto hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
-        "maps_status": "UNCHECKED",
-        "website_status": "UNCHECKED"
+        "web_opener": "Chào anh/chị Bùi Nhâm, em thấy tiệm/quán Nhà Hàng Nhật Bản Kyoto Sachi ở khu vực Kyoto hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "maps_status": "FOUND",
+        "website_status": "HAS_WEB"
+      },
+      "deep_profiled_at": "2026-11-18 09:57:03",
+      "maps_info": {
+        "status": "FOUND",
+        "place_name": "Nhà Hàng Nhật Bản Kyoto Sachi",
+        "address": "29 P. Mạc Thái Tông, Khu đô thị Nam Trung Yên, Yên Hòa, Hà Nội 100000, Việt Nam",
+        "phone": "Số điện thoại: +84 916 992 929",
+        "website": "http://kyotosachi.vn/",
+        "website_status": "HAS_WEB",
+        "rating": 4.7,
+        "review_count": 0,
+        "category": "Nhà hàng Nhật Bản",
+        "maps_url": "https://www.google.com/maps/place/Nh%C3%A0+H%C3%A0ng+Nh%E1%BA%ADt+B%E1%BA%A3n+Kyoto+Sachi/@21.0125072,87.336462,5z/data=!4m10!1m2!2m1!1sKYOTO+SACHI+Kyoto!3m6!1s0x3135ab0015013737:0x1290e5dd6fc8c097!8m2!3d21.0125072!4d105.7934932!15sChFLWU9UTyBTQUNISSBLeW90b1oTIhFreW90byBzYWNoaSBreW90b5IBE2phcGFuZXNlX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xp6hfbnn?hl=vi&entry=ttu&g_ep=EgoyMDI2MTExNS4wIKXMDSoASAFQAw%3D%3D",
+        "query_used": "KYOTO SACHI Kyoto",
+        "match_confidence": "Tên quán + Khu vực",
+        "checked_at": "2026-11-18 09:57:10",
+        "website_audit": {
+          "status": "HAS_WEB",
+          "http_code": 200,
+          "is_https": true,
+          "mobile_ready": true,
+          "final_url": "https://kyotosachi.vn/"
+        }
       }
     },
     {
@@ -61829,19 +61860,24 @@
         "score": 7,
         "tier": "A",
         "tier_label": "⭐ Tiềm năng cao (7–8đ)",
-        "is_preliminary": true,
+        "is_preliminary": false,
         "reasons": [
           "Có SĐT / Line / Zalo liên hệ ngay (+2đ)",
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Nhà hàng / Quán ăn Việt Nam' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
-          "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
-          "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
+          "📍 Chưa thấy quán trên GG Maps (Home salon/Mới mở — cần combo Maps + Web) (+2đ)"
         ],
-        "web_opener": "Chào anh/chị Ngô Hải Yến, em thấy tiệm/quán Minh Tiep Secondhand Store ở khu vực Shinmisato hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
-        "maps_status": "UNCHECKED",
-        "website_status": "UNCHECKED"
+        "web_opener": "Chào anh/chị Ngô Hải Yến, em thấy bài đăng của tiệm/quán Minh Tiep Secondhand Store ở khu vực Shinmisato trong hội nhóm tại Nhật. Hiện bên em đang hỗ trợ trọn gói đưa quán lên Google Maps chuẩn SEO + Landing Page bảng giá/đặt lịch giúp khách quanh ga tự tìm đến đều đặn hàng tuần. Anh/chị có tiện trao đổi 5 phút để em tư vấn thử không ạ?",
+        "maps_status": "NOT_FOUND",
+        "website_status": "NOT_FOUND"
+      },
+      "deep_profiled_at": "2026-11-18 09:57:38",
+      "maps_info": {
+        "status": "NOT_FOUND",
+        "website_status": "NOT_FOUND",
+        "query_used": "Minh Tiep Secondhand Store Ga Shinmisato",
+        "checked_at": "2026-11-18 09:57:49"
       }
     },
     {
@@ -64044,7 +64080,7 @@
         "all_business_types": [
           "Kinh doanh Online / Bán hàng cá nhân tại Nhật"
         ],
-        "shop_name": "☎️:0984348841",
+        "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Aichi",
         "stations": [],
@@ -64084,9 +64120,7 @@
           "Bán hàng / Khuyến mãi (1 bài)"
         ],
         "primary_style": "Bán hàng / Khuyến mãi (1 bài)",
-        "shop_names": [
-          "☎️:0984348841"
-        ],
+        "shop_names": [],
         "phones": [
           "0984348841"
         ],
@@ -64099,23 +64133,23 @@
         "external_websites": []
       },
       "web_priority": {
-        "score": 7,
-        "tier": "A",
-        "tier_label": "⭐ Tiềm năng cao (7–8đ)",
+        "score": 6,
+        "tier": "B",
+        "tier_label": "📌 Trung bình (5–6đ)",
         "is_preliminary": true,
         "reasons": [
           "Có SĐT / Line / Zalo liên hệ ngay (+2đ)",
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Kinh doanh Online / Bán hàng cá nhân tại Nhật' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị, em thấy tiệm/quán ☎️:0984348841 ở khu vực Aichi hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị, em thấy cửa hàng mình ở khu vực Aichi hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
-      }
+      },
+      "deep_profiled_at": "2026-11-18 09:58:44"
     },
     {
       "lead_key": "fb:https://www.facebook.com/profile.php?id=1997991207580933",
@@ -64765,7 +64799,7 @@
           "Nhà hàng / Quán ăn Việt Nam",
           "Bất động sản / Cho thuê nhà ở tại Nhật"
         ],
-        "shop_name": "ăn",
+        "shop_name": "UNO",
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
         "location": null,
         "stations": [],
@@ -64806,7 +64840,6 @@
         ],
         "primary_style": "Tuyển nhân sự / Baito (1 bài)",
         "shop_names": [
-          "ăn",
           "UNO"
         ],
         "phones": [],
@@ -64828,7 +64861,7 @@
           "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Bùi Lan, em thấy tiệm/quán ăn hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Bùi Lan, em thấy tiệm/quán UNO hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -64852,7 +64885,7 @@
           "Nhà hàng / Quán ăn Việt Nam",
           "Bất động sản / Cho thuê nhà ở tại Nhật"
         ],
-        "shop_name": "ăn",
+        "shop_name": "UNO",
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
         "location": null,
         "stations": [],
@@ -64893,7 +64926,6 @@
         ],
         "primary_style": "Tuyển nhân sự / Baito (1 bài)",
         "shop_names": [
-          "ăn",
           "UNO"
         ],
         "phones": [],
@@ -64915,7 +64947,7 @@
           "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Uno Law Support, em thấy tiệm/quán ăn hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Uno Law Support, em thấy tiệm/quán UNO hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -65305,7 +65337,7 @@
           "Tiệm Nail / Mi / Spa / Làm đẹp",
           "Kinh doanh Thực phẩm / Hoa quả / Tạp hóa Việt"
         ],
-        "shop_name": "ăn / quán nhậu",
+        "shop_name": null,
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
         "location": "Ga Keio Hachioji, 京王八王子駅 | Tokyo, Hachioji",
         "stations": [
@@ -65351,9 +65383,7 @@
           "Bán hàng / Khuyến mãi (1 bài)"
         ],
         "primary_style": "Bán hàng / Khuyến mãi (1 bài)",
-        "shop_names": [
-          "ăn / quán nhậu"
-        ],
+        "shop_names": [],
         "phones": [
           "070-1293-9921",
           "03-5981-9799"
@@ -65371,23 +65401,23 @@
         "external_websites": []
       },
       "web_priority": {
-        "score": 7,
-        "tier": "A",
-        "tier_label": "⭐ Tiềm năng cao (7–8đ)",
+        "score": 6,
+        "tier": "B",
+        "tier_label": "📌 Trung bình (5–6đ)",
         "is_preliminary": true,
         "reasons": [
           "Có SĐT / Line / Zalo liên hệ ngay (+2đ)",
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Nhà hàng / Quán ăn Việt Nam' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Vũ Nguyễn, em thấy tiệm/quán ăn / quán nhậu ở khu vực Keio Hachioji hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Vũ Nguyễn, em thấy cửa hàng mình ở khu vực Keio Hachioji hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
-      }
+      },
+      "deep_profiled_at": "2026-11-18 09:56:26"
     },
     {
       "lead_key": "fb:https://www.facebook.com/profile.php?id=100002969558770",
@@ -65409,7 +65439,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Ga Imazato",
+        "location": "Ga Imazato | Imazato",
         "stations": [
           "Imazato"
         ],
@@ -68816,7 +68846,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Sakae",
+        "location": "Sakae, Fushimi",
         "stations": [],
         "areas": [
           "Sakae",
@@ -71755,12 +71785,11 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Ga OKAZAKI | Aichi (theo nhóm)",
+        "location": "Ga OKAZAKI | Okazaki",
         "stations": [
           "OKAZAKI"
         ],
         "areas": [
-          "Aichi (theo nhóm)",
           "Okazaki"
         ]
       },
@@ -71804,7 +71833,6 @@
           "OKAZAKI"
         ],
         "areas": [
-          "Aichi (theo nhóm)",
           "Okazaki"
         ],
         "address_clues": [
@@ -72308,7 +72336,7 @@
           "Quán Cafe / Trà sữa / Tiệm bánh",
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "Nail ngay cạnh ga Kameari",
+        "shop_name": "Tiệm Nail",
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
         "location": "Ga Kameari, 亀有駅",
         "stations": [
@@ -72369,8 +72397,8 @@
         ],
         "primary_style": "Tuyển nhân sự / Baito (3 bài)",
         "shop_names": [
-          "Nail ngay cạnh ga Kameari",
-          "Tiệm Nail"
+          "Tiệm Nail",
+          "Nail ngay cạnh ga Kameari"
         ],
         "phones": [],
         "stations": [
@@ -72395,7 +72423,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị 山本南, em thấy tiệm/quán Nail ngay cạnh ga Kameari ở khu vực Kameari hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị 山本南, em thấy tiệm/quán Tiệm Nail ở khu vực Kameari hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -72902,7 +72930,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Ga Nippori 2p, Chiba 9p | Kinshicho, Chiba",
+        "location": "Ga Nippori 2p, Chiba 9p | Kinshicho, Nippori, Chiba",
         "stations": [
           "Nippori 2p",
           "Chiba 9p",
@@ -72910,8 +72938,8 @@
         ],
         "areas": [
           "Kinshicho",
-          "Chiba",
-          "Nippori"
+          "Nippori",
+          "Chiba"
         ]
       },
       "step2_deep_needs": {
@@ -72956,8 +72984,8 @@
         ],
         "areas": [
           "Kinshicho",
-          "Chiba",
-          "Nippori"
+          "Nippori",
+          "Chiba"
         ],
         "address_clues": [],
         "social_links": [],
@@ -73291,7 +73319,7 @@
         ],
         "shop_name": "Thanh Thảo\n28 Nails",
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Tokyo, Nakano",
+        "location": "Tokyo, Nakano, Asagaya",
         "stations": [],
         "areas": [
           "Tokyo",
@@ -73346,7 +73374,8 @@
         ],
         "primary_style": "Tuyển nhân sự / Baito (1 bài)",
         "shop_names": [
-          "Thanh Thảo\n28 Nails"
+          "Thanh Thảo\n28 Nails",
+          "Thanh Thảo 28 Nails"
         ],
         "phones": [],
         "stations": [],
@@ -73955,7 +73984,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Ga Shin-Okubo, 新大久保駅 | Shin-Okubo",
+        "location": "Ga Shin-Okubo, 新大久保駅 | Shin-Okubo, Okubo",
         "stations": [
           "Shin-Okubo",
           "新大久保駅"
@@ -75901,19 +75930,24 @@
         "score": 7,
         "tier": "A",
         "tier_label": "⭐ Tiềm năng cao (7–8đ)",
-        "is_preliminary": true,
+        "is_preliminary": false,
         "reasons": [
           "Có SĐT / Line / Zalo liên hệ ngay (+2đ)",
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Nhà hàng / Quán ăn Việt Nam' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
-          "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
-          "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
+          "📍 Chưa thấy quán trên GG Maps (Home salon/Mới mở — cần combo Maps + Web) (+2đ)"
         ],
-        "web_opener": "Chào anh/chị Hera Beauty Spa, em thấy tiệm/quán Hera Beauty Spa ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
-        "maps_status": "UNCHECKED",
-        "website_status": "UNCHECKED"
+        "web_opener": "Chào anh/chị Hera Beauty Spa, em thấy bài đăng của tiệm/quán Hera Beauty Spa ở khu vực Tokyo trong hội nhóm tại Nhật. Hiện bên em đang hỗ trợ trọn gói đưa quán lên Google Maps chuẩn SEO + Landing Page bảng giá/đặt lịch giúp khách quanh ga tự tìm đến đều đặn hàng tuần. Anh/chị có tiện trao đổi 5 phút để em tư vấn thử không ạ?",
+        "maps_status": "NOT_FOUND",
+        "website_status": "NOT_FOUND"
+      },
+      "deep_profiled_at": "2026-11-18 09:54:37",
+      "maps_info": {
+        "status": "NOT_FOUND",
+        "website_status": "NOT_FOUND",
+        "query_used": "Hera Beauty Spa Tokyo",
+        "checked_at": "2026-11-18 09:54:49"
       }
     },
     {
@@ -76037,7 +76071,7 @@
           "Tiệm Nail / Mi / Spa / Làm đẹp",
           "Shop bán hàng / Kho Online / Livestream"
         ],
-        "shop_name": null,
+        "shop_name": "Hamila Beauty",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": null,
         "stations": [],
@@ -76833,7 +76867,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Ikebukuro",
+        "location": "Ga ikebukuro từ10h-14h | Ikebukuro",
         "stations": [
           "ikebukuro từ10h-14h"
         ],
@@ -82535,7 +82569,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
-        "location": "Kobe",
+        "location": "Kobe, Motomachi",
         "stations": [],
         "areas": [
           "Kobe",
@@ -87130,7 +87164,7 @@
           "Nhà hàng / Quán ăn Việt Nam",
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "Nối móng (Nail Extension)",
+        "shop_name": "CatEyeNails",
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Tokyo, Shinjuku",
         "stations": [],
@@ -87170,6 +87204,7 @@
         "styles": [],
         "primary_style": "Chưa phân loại rõ",
         "shop_names": [
+          "CatEyeNails",
           "Nối móng (Nail Extension)"
         ],
         "phones": [],
@@ -87195,7 +87230,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị, em thấy tiệm/quán Nối móng (Nail Extension) ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị, em thấy tiệm/quán CatEyeNails ở khu vực Tokyo hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -87828,14 +87863,14 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Tsuruhashi",
+        "location": "Tsuruhashi, Imazato",
         "stations": [
           "Tsuruhashi"
         ],
         "areas": [
           "Tsuruhashi",
-          "Osaka",
-          "Imazato"
+          "Imazato",
+          "Osaka"
         ]
       },
       "step2_deep_needs": {
@@ -87891,8 +87926,8 @@
         ],
         "areas": [
           "Tsuruhashi",
-          "Osaka",
-          "Imazato"
+          "Imazato",
+          "Osaka"
         ],
         "address_clues": [],
         "social_links": [],
@@ -87939,7 +87974,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Ga fuse",
+        "location": "Ga fuse | Fuse",
         "stations": [
           "fuse"
         ],
@@ -88211,7 +88246,7 @@
           "Nhà hàng / Quán ăn Việt Nam",
           "Tiệm Nail / Mi / Spa / Làm đẹp"
         ],
-        "shop_name": "ăn",
+        "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
         "location": "Osaka, Yao",
         "stations": [],
@@ -88253,9 +88288,7 @@
           "Thanh lý / Sang nhượng (1 bài)"
         ],
         "primary_style": "Bán hàng / Khuyến mãi (1 bài)",
-        "shop_names": [
-          "ăn"
-        ],
+        "shop_names": [],
         "phones": [],
         "stations": [],
         "areas": [
@@ -88272,19 +88305,18 @@
         "external_websites": []
       },
       "web_priority": {
-        "score": 6,
-        "tier": "B",
-        "tier_label": "📌 Trung bình (5–6đ)",
+        "score": 4,
+        "tier": "C",
+        "tier_label": "⚪ Thấp (1–4đ)",
         "is_preliminary": true,
         "reasons": [
           "Có Facebook cá nhân nhắn tin trực tiếp (+1đ)",
           "Ngành 'Nhà hàng / Quán ăn Việt Nam' chuyển đổi Web/Landing Page cao (+1đ)",
           "Đang hoạt động tích cực / tuyển nhân sự (+1đ)",
-          "Đã nhận diện được tên quán/thương hiệu (+1đ sơ bộ)",
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị HappyOtter1357, em thấy tiệm/quán ăn ở khu vực Osaka hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị HappyOtter1357, em thấy cửa hàng mình ở khu vực Osaka hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -88652,9 +88684,8 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Ga namba | Osaka, Namba",
+        "location": "Ga namba\nLịch | Osaka, Namba",
         "stations": [
-          "namba",
           "namba\nLịch"
         ],
         "areas": [
@@ -88700,7 +88731,6 @@
         "shop_names": [],
         "phones": [],
         "stations": [
-          "namba",
           "namba\nLịch"
         ],
         "areas": [
@@ -88723,7 +88753,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Ōsaka, Nhật Bản, em thấy cửa hàng mình ở khu vực namba hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Ōsaka, Nhật Bản, em thấy cửa hàng mình ở khu vực namba\nLịch hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -88837,7 +88867,7 @@
         ],
         "shop_name": "Tuyển thợ nail",
         "scale_estimate": "Cơ sở kinh doanh nhỏ (< 20 người)",
-        "location": "Shinjuku, Shinokubo",
+        "location": "Shinjuku, Shinokubo, Okubo",
         "stations": [],
         "areas": [
           "Shinjuku",
@@ -94249,7 +94279,7 @@
         ],
         "shop_name": null,
         "scale_estimate": "Chủ quán / Tiệm kinh doanh nhỏ (< 20 người)",
-        "location": "Osaka",
+        "location": "Osaka, Imazato",
         "stations": [],
         "areas": [
           "Osaka",
@@ -95748,13 +95778,13 @@
         ],
         "shop_name": null,
         "scale_estimate": "Cá nhân / Hộ kinh doanh nhỏ tại Nhật (< 5 người)",
-        "location": "Shinagawa, Shinkoiwa, Narita",
+        "location": "Shinkoiwa, Shinagawa, Omori",
         "stations": [],
         "areas": [
-          "Shinagawa",
           "Shinkoiwa",
-          "Narita",
-          "Omori"
+          "Shinagawa",
+          "Omori",
+          "Narita"
         ]
       },
       "step2_deep_needs": {
@@ -95798,10 +95828,10 @@
         ],
         "stations": [],
         "areas": [
-          "Shinagawa",
           "Shinkoiwa",
-          "Narita",
-          "Omori"
+          "Shinagawa",
+          "Omori",
+          "Narita"
         ],
         "address_clues": [],
         "social_links": [
@@ -95822,7 +95852,7 @@
           "Đã rõ khu vực/ga tàu tại Nhật (+1đ sơ bộ)",
           "⏳ Điểm sơ bộ (Hãy bấm 'Check GG Maps' để chốt điểm 1–10 chính thức)"
         ],
-        "web_opener": "Chào anh/chị Jp Shipspe, em thấy cửa hàng mình ở khu vực Shinagawa hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
+        "web_opener": "Chào anh/chị Jp Shipspe, em thấy cửa hàng mình ở khu vực Shinkoiwa hoạt động rất đều trong các hội nhóm tại Nhật. Bên em chuyên làm Landing Page giới thiệu quán, bảng giá/menu và nút đặt lịch tự động qua Line cho chủ kinh doanh Việt tại Nhật. Anh/chị có quan tâm tham khảo vài mẫu thực tế bên em không ạ?",
         "maps_status": "UNCHECKED",
         "website_status": "UNCHECKED"
       }
@@ -98937,7 +98967,8 @@
         ],
         "primary_style": "Tuyển nhân sự / Baito (2 bài)",
         "shop_names": [
-          "Địa điểm\nSalon"
+          "Địa điểm\nSalon",
+          "Địa điểm Salon"
         ],
         "phones": [],
         "stations": [
